@@ -1,0 +1,60 @@
+alpha:0.0, embedding_size:64, reg_weights:[0.0001,0.0001]
+Valid result:
+recall@10 : 0.1686    mrr@10 : 0.3002    ndcg@10 : 0.1778    hit@10 : 0.6649    precision@10 : 0.1298
+Test result:
+recall@10 : 0.2033    mrr@10 : 0.3838    ndcg@10 : 0.2262    hit@10 : 0.7338    precision@10 : 0.1632
+
+alpha:1.0, embedding_size:128, reg_weights:[0.00001,0.00001]
+Valid result:
+recall@10 : 0.1272    mrr@10 : 0.2723    ndcg@10 : 0.1442    hit@10 : 0.5737    precision@10 : 0.0989
+Test result:
+recall@10 : 0.1407    mrr@10 : 0.327    ndcg@10 : 0.172    hit@10 : 0.6098    precision@10 : 0.1165
+
+alpha:1.0, embedding_size:256, reg_weights:[0.01,0.01]
+Valid result:
+recall@10 : 0.1105    mrr@10 : 0.2305    ndcg@10 : 0.1208    hit@10 : 0.5355    precision@10 : 0.0912
+Test result:
+recall@10 : 0.122    mrr@10 : 0.2669    ndcg@10 : 0.1409    hit@10 : 0.562    precision@10 : 0.1055
+
+alpha:1.0, embedding_size:256, reg_weights:[0.001,0.001]
+Valid result:
+recall@10 : 0.1105    mrr@10 : 0.2305    ndcg@10 : 0.1208    hit@10 : 0.5355    precision@10 : 0.0912
+Test result:
+recall@10 : 0.122    mrr@10 : 0.2669    ndcg@10 : 0.1409    hit@10 : 0.562    precision@10 : 0.1055
+
+alpha:0.0, embedding_size:32, reg_weights:[0.00001,0.00001]
+Valid result:
+recall@10 : 0.149    mrr@10 : 0.28    ndcg@10 : 0.1584    hit@10 : 0.6235    precision@10 : 0.1125
+Test result:
+recall@10 : 0.1758    mrr@10 : 0.3358    ndcg@10 : 0.1962    hit@10 : 0.684    precision@10 : 0.1413
+
+alpha:1.0, embedding_size:64, reg_weights:[0.00001,0.00001]
+Valid result:
+recall@10 : 0.1515    mrr@10 : 0.2792    ndcg@10 : 0.1556    hit@10 : 0.614    precision@10 : 0.1048
+Test result:
+recall@10 : 0.1658    mrr@10 : 0.3281    ndcg@10 : 0.1823    hit@10 : 0.6501    precision@10 : 0.1193
+
+alpha:0.5, embedding_size:256, reg_weights:[0.001,0.001]
+Valid result:
+recall@10 : 0.1504    mrr@10 : 0.2773    ndcg@10 : 0.1562    hit@10 : 0.6235    precision@10 : 0.1102
+Test result:
+recall@10 : 0.178    mrr@10 : 0.3494    ndcg@10 : 0.1952    hit@10 : 0.6702    precision@10 : 0.132
+
+alpha:0.5, embedding_size:64, reg_weights:[0.00001,0.00001]
+Valid result:
+recall@10 : 0.1325    mrr@10 : 0.2648    ndcg@10 : 0.1383    hit@10 : 0.5461    precision@10 : 0.0864
+Test result:
+recall@10 : 0.1498    mrr@10 : 0.3059    ndcg@10 : 0.1615    hit@10 : 0.5896    precision@10 : 0.0987
+
+alpha:1.0, embedding_size:128, reg_weights:[0.0001,0.0001]
+Valid result:
+recall@10 : 0.1105    mrr@10 : 0.2305    ndcg@10 : 0.1208    hit@10 : 0.5355    precision@10 : 0.0912
+Test result:
+recall@10 : 0.122    mrr@10 : 0.2669    ndcg@10 : 0.1409    hit@10 : 0.562    precision@10 : 0.1055
+
+alpha:1.0, embedding_size:64, reg_weights:[0.01,0.01]
+Valid result:
+recall@10 : 0.1105    mrr@10 : 0.2305    ndcg@10 : 0.1208    hit@10 : 0.5355    precision@10 : 0.0912
+Test result:
+recall@10 : 0.122    mrr@10 : 0.2669    ndcg@10 : 0.1409    hit@10 : 0.562    precision@10 : 0.1055
+

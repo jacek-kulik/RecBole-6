@@ -625,11 +625,14 @@ class Config(object):
     def compatibility_settings(self):
         import numpy as np
 
+        # Keep RecBole's uses of NumPy's removed scalar aliases working on
+        # both NumPy 1.x and 2.x. NumPy 2.0 also removed several of the
+        # underscore-suffixed names that this compatibility shim used before.
         np.bool = np.bool_
-        np.int = np.int_
-        np.float = np.float_
-        np.complex = np.complex_
+        np.int = np.int64
+        np.float = np.float64
+        np.complex = np.complex128
         np.object = np.object_
         np.str = np.str_
-        np.long = np.int_
-        np.unicode = np.unicode_
+        np.long = np.int64
+        np.unicode = np.str_

@@ -114,7 +114,9 @@ def exhaustive_search(new_ids, domain, trials, seed, nbMaxSucessiveFailures=1000
         ]
     )
 
-    rng = np.random.RandomState(seed)
+    # Current Hyperopt sampling functions use the Generator API (for example,
+    # ``integers``), which is not available on NumPy's legacy RandomState.
+    rng = np.random.default_rng(seed)
     rval = []
     for _, new_id in enumerate(new_ids):
         newSample = False

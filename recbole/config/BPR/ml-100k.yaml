@@ -13,11 +13,12 @@ train_neg_sample_args:
 
 # Training
 epochs: 20
-train_batch_size: 2048
+train_batch_size: 512
 learner: adam
-learning_rate: 0.001
+learning_rate: 0.0015
 eval_step: 10
 stopping_step: 20
+mlp_hidden_size: [128,128]
 
 # Evaluation
 eval_args:

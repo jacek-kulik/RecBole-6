@@ -1,0 +1,6 @@
+seed:2020
+Valid result:
+recall@10 : 0.0802    mrr@10 : 0.1792    ndcg@10 : 0.0922    hit@10 : 0.4602    precision@10 : 0.0741
+Test result:
+recall@10 : 0.0849    mrr@10 : 0.19    ndcg@10 : 0.1018    hit@10 : 0.4708    precision@10 : 0.0825
+

@@ -1,0 +1,60 @@
+k:100, shrink:100.0
+Valid result:
+recall@10 : 0.2009    mrr@10 : 0.3866    ndcg@10 : 0.2216    hit@10 : 0.7264    precision@10 : 0.1496
+Test result:
+recall@10 : 0.2404    mrr@10 : 0.4819    ndcg@10 : 0.282    hit@10 : 0.7922    precision@10 : 0.1832
+
+k:50, shrink:200.0
+Valid result:
+recall@10 : 0.2006    mrr@10 : 0.3731    ndcg@10 : 0.2161    hit@10 : 0.7296    precision@10 : 0.1478
+Test result:
+recall@10 : 0.2339    mrr@10 : 0.4644    ndcg@10 : 0.2744    hit@10 : 0.7762    precision@10 : 0.1817
+
+k:100, shrink:0.0
+Valid result:
+recall@10 : 0.2059    mrr@10 : 0.3779    ndcg@10 : 0.2214    hit@10 : 0.7328    precision@10 : 0.1555
+Test result:
+recall@10 : 0.2469    mrr@10 : 0.4623    ndcg@10 : 0.2833    hit@10 : 0.7847    precision@10 : 0.193
+
+k:200, shrink:0.0
+Valid result:
+recall@10 : 0.2073    mrr@10 : 0.3706    ndcg@10 : 0.223    hit@10 : 0.7328    precision@10 : 0.155
+Test result:
+recall@10 : 0.2528    mrr@10 : 0.4758    ndcg@10 : 0.2889    hit@10 : 0.7922    precision@10 : 0.1933
+
+k:200, shrink:200.0
+Valid result:
+recall@10 : 0.1943    mrr@10 : 0.3691    ndcg@10 : 0.2142    hit@10 : 0.7116    precision@10 : 0.1458
+Test result:
+recall@10 : 0.2269    mrr@10 : 0.4602    ndcg@10 : 0.2686    hit@10 : 0.7603    precision@10 : 0.1758
+
+k:20, shrink:100.0
+Valid result:
+recall@10 : 0.1965    mrr@10 : 0.3501    ndcg@10 : 0.2081    hit@10 : 0.7137    precision@10 : 0.1474
+Test result:
+recall@10 : 0.234    mrr@10 : 0.4396    ndcg@10 : 0.2633    hit@10 : 0.7699    precision@10 : 0.1811
+
+k:200, shrink:100.0
+Valid result:
+recall@10 : 0.1971    mrr@10 : 0.3779    ndcg@10 : 0.219    hit@10 : 0.719    precision@10 : 0.1486
+Test result:
+recall@10 : 0.2341    mrr@10 : 0.4696    ndcg@10 : 0.2765    hit@10 : 0.7646    precision@10 : 0.1801
+
+k:10, shrink:200.0
+Valid result:
+recall@10 : 0.1808    mrr@10 : 0.3495    ndcg@10 : 0.1963    hit@10 : 0.6946    precision@10 : 0.1343
+Test result:
+recall@10 : 0.2116    mrr@10 : 0.4242    ndcg@10 : 0.2441    hit@10 : 0.7434    precision@10 : 0.1656
+
+k:20, shrink:0.0
+Valid result:
+recall@10 : 0.1884    mrr@10 : 0.3551    ndcg@10 : 0.2063    hit@10 : 0.7041    precision@10 : 0.1471
+Test result:
+recall@10 : 0.2328    mrr@10 : 0.4363    ndcg@10 : 0.2637    hit@10 : 0.7762    precision@10 : 0.1852
+
+k:100, shrink:200.0
+Valid result:
+recall@10 : 0.1974    mrr@10 : 0.3809    ndcg@10 : 0.2183    hit@10 : 0.7222    precision@10 : 0.1466
+Test result:
+recall@10 : 0.2338    mrr@10 : 0.4751    ndcg@10 : 0.2755    hit@10 : 0.772    precision@10 : 0.1789
+

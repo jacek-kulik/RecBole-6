@@ -1,0 +1,9 @@
+model,hyperparameters,precision@10,recall@10,ndcg@10,mrr@10
+ItemKNN,"k:100, shrink:200.0",0.1789,0.2338,0.2755,0.4751
+UserKNN,"k:10, shrink:0.0",0.1597,0.2181,0.2382,0.4003
+BPR,"embedding_size:64, learning_rate:0.0015, train_batch_size:256",0.1918,0.2462,0.2818,0.4646
+SLIMElastic,"alpha:0.005, l1_ratio:0.005",0.2051,0.2597,0.3019,0.4846
+EASE,reg_weight:1000.0,0.2131,0.2701,0.3228,0.5343
+FISM,"alpha:1.0, embedding_size:64, reg_weights:[0.01,0.01]",0.1055,0.1220,0.1409,0.2669
+Pop,seed:2020,0.0825,0.0849,0.1018,0.1900
+Random,seed:2020,0.0065,0.0056,0.0065,0.0145

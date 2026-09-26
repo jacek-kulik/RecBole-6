@@ -1,0 +1,3 @@
+learning_rate choice [0.0005,0.001,0.0015,0.002]
+embedding_size choice [32,64,128,256]
+train_batch_size choice [256,512,1024]
