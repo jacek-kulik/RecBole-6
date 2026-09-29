@@ -7,7 +7,8 @@ This is a proposed working agreement for five students. Replace `PERSON-1` throu
 The project uses RecBole, MovieLens 100K, and an offline **ranking** evaluation.
 The group will submit one PDF report and a directory of runnable code in a ZIP
 named after its group number. Each student submits a peer evaluation separately.
-The course deadline is **26 October 2026, 23:59**. Our proposed internal deadline
+The proposed project start is **30 September 2026**. The course deadline is
+**26 October 2026, 23:59**. Our proposed internal deadline
 for a complete, approved submission package is **25 October, 18:00**. All
 subtask corrections should be accepted by **24 October, 18:00**, so packaging
 does not depend on unfinished experiments or reviews.
@@ -158,12 +159,12 @@ assigns someone to drive each discussion.
 
 | Decision | Driver | Proposal recorded by | Reviewer(s) | Decision agreed by | Why it matters |
 | --- | --- | --- | --- | --- | --- |
-| Models and hybrid methods from the lectures | PERSON-2 and PERSON-3 | 30 Sep | All five | 1 Oct | Sets implementation and compute scope while covering the required methods. |
-| Ranking cutoff(s), candidate policy, relevance definition, splits, seed, primary metric | PERSON-1 and PERSON-4 | 30 Sep | All five | 1 Oct | Makes every model and reranker comparison comparable. |
-| Regression target, coefficient fitting data, score normalization | PERSON-3 | 2 Oct | PERSON-1 and PERSON-2 | 3 Oct | Prevents leakage and makes coefficients interpretable. Bring unresolved points to the 7-8 Oct feedback session; record any resulting revision by 9 Oct. |
-| Exact beyond-accuracy and fairness definitions from lectures | PERSON-4 and PERSON-5 | 2 Oct | PERSON-1 and PERSON-3 | 3 Oct | Determines metadata, reranker objectives, and group analyses. Record feedback-session clarifications by 9 Oct. |
-| User and item groups, minimum useful group size | PERSON-5 | 4 Oct | PERSON-1 and PERSON-3 | 5 Oct | Avoids choosing groups after seeing test results. |
-| Final experiment grid and compute budget | PERSON-1 | 9 Oct | All five | 10 Oct | Keeps every required comparison feasible before the final runs. Writing begins with the first results. |
+| Models and hybrid methods from the lectures | PERSON-2 and PERSON-3 | 1 Oct | All five | 2 Oct | Sets implementation and compute scope while covering the required methods. |
+| Ranking cutoff(s), candidate policy, relevance definition, splits, seed, primary metric | PERSON-1 and PERSON-4 | 1 Oct | All five | 2 Oct | Makes every model and reranker comparison comparable. |
+| Regression target, coefficient fitting data, score normalization | PERSON-3 | 3 Oct | PERSON-1 and PERSON-2 | 5 Oct | Prevents leakage and makes coefficients interpretable. Bring unresolved points to the 7-8 Oct feedback session; record any resulting revision by 9 Oct. |
+| Exact beyond-accuracy and fairness definitions from lectures | PERSON-4 and PERSON-5 | 3 Oct | PERSON-1 and PERSON-3 | 5 Oct | Determines metadata, reranker objectives, and group analyses. Record feedback-session clarifications by 9 Oct. |
+| User and item groups, minimum useful group size | PERSON-5 | 5 Oct | PERSON-1 and PERSON-3 | 7 Oct | Avoids choosing groups after seeing test results. |
+| Final experiment grid and compute budget | PERSON-1 | 10 Oct | All five | 11 Oct | Keeps every required comparison feasible before the final runs. Writing begins with the first results. |
 
 The regression requirement deserves a specific instructor question: should
 Task 1.3 fit coefficients to raw ratings, a binary relevance label, or another
@@ -201,18 +202,19 @@ coefficients using development data only.
 
 The periods below give the overall sequence; the tables in **Detailed internal
 deadlines** give the actual handoff, review, and acceptance dates. Start report
-sections when their first results appear. Hold a 20-30 minute team check-in at
-**17:00 on Tuesdays and Fridays**: 29 Sep; 2, 6, 9, 13, 16, 20, and 23 Oct.
+sections when their first results appear. Hold a 20-30 minute kickoff at
+**10:00 on 30 Sep**, then team check-ins at **17:00 on Tuesdays and Fridays**:
+2, 6, 9, 13, 16, 20, and 23 Oct.
 Each owner reports a completed artifact, the next handoff, and any blocker.
 
 | Period | Milestone | Owner and handoff |
 | --- | --- | --- |
-| **28 Sep-4 Oct** | Set up the task board and report outline, agree scope and protocol, and review the environment, runner, and result format. | PERSON-1 coordinates setup; PERSON-2/3 list models and hybrids; PERSON-4/5 settle metric, reranker, and group definitions. |
-| **5-6 Oct** | Complete the first end-to-end run: individual outputs, random/popularity baselines, independent accuracy metrics, initial weighted hybrid, and draft report sections. Prepare the feedback-session questions. | PERSON-2 hands predictions to PERSON-3; PERSON-1 supplies run/split details to PERSON-4; all five inspect the working example. |
+| **30 Sep-5 Oct** | Kick off, assign names, set up the task board and report outline, agree scope and protocol, and produce working runner, baseline, and metric pilots. | PERSON-1 coordinates setup; PERSON-2/3 list models and hybrids; PERSON-4/5 settle metric, reranker, and group definitions. |
+| **6 Oct** | Complete the first end-to-end example: individual outputs, random/popularity baselines, an independent accuracy calculation, and an initial weighted hybrid. Prepare the feedback-session questions. | PERSON-2 hands predictions to PERSON-3; PERSON-1 supplies run/split details to PERSON-4; all five inspect the example. |
 | **7-8 Oct** | Attend the scheduled course feedback session with a working run and a short list of unresolved methodological questions, especially the regression target and fairness definitions. | PERSON-3 prepares the coefficient question; PERSON-4/5 prepare metric and fairness questions; PERSON-1 records answers and updates the protocol. |
-| **9-15 Oct** | Accept the metrics, tuned individual models, hybrid implementations, and all four rerankers. Agree the final experiment grid before committing the compute budget. | PERSON-2 hands selected individual configs to PERSON-1/3; PERSON-4 integrates PERSON-2/5's rerankers; designated reviewers check code and representative outputs. |
-| **16-18 Oct** | Accept hybrid tuning and hand off the final model comparison and reranking sweeps. Run both hybrid/reranker orders and start analyses as results become available. | PERSON-1 coordinates run records; PERSON-3/4 supply results to PERSON-5. |
-| **19-22 Oct** | Complete all 15 numbered subtask drafts, coefficient and explanatory analyses, and user/item-group results. Review the sections as they arrive. | Each owner writes their sections; each designated reviewer checks code/results and prose; PERSON-5 assembles the report. |
+| **9-16 Oct** | Accept the metrics, tuned individual models, hybrid implementations, and all four rerankers. Agree the final experiment grid before committing the compute budget. | PERSON-2 hands selected individual configs to PERSON-1/3; PERSON-4 integrates PERSON-2/5's rerankers; designated reviewers check code and representative outputs. |
+| **17-19 Oct** | Accept hybrid tuning, hand off the final model comparison and reranking sweeps, and run both hybrid/reranker orders. Start analyses as provisional results become available. | PERSON-1 coordinates run records; PERSON-3/4 supply results to PERSON-5. |
+| **20-22 Oct** | Complete all 15 numbered subtask drafts, coefficient and explanatory analyses, and user/item-group results. Review the sections as they arrive. | Each owner writes their sections; each designated reviewer checks code/results and prose; PERSON-5 assembles the report. |
 | **23-24 Oct** | Close the remaining reviews and corrections, reproduce representative results from a clean checkout, and check the report against the brief. | All subtask fixes accepted by **24 Oct, 18:00**; PERSON-1/5 finish the code and report checks. |
 | **25 Oct** | Inspect the actual submission ZIP, complete individual peer evaluations, and obtain all five students' sign-off. | **Complete approved package by 18:00**; PERSON-1 coordinates upload readiness and PERSON-5 records sign-off. |
 | **26 Oct** | Submit by the team's target of **18:00**, share the receipt, and use the remaining time to resolve upload problems. The official deadline is **23:59**. | One nominated submitter uploads the group ZIP; every person submits their individual peer-evaluation file. |
@@ -221,7 +223,9 @@ Each owner reports a completed artifact, the next handoff, and any blocker.
 
 These are **proposed team deadlines**, not additional course requirements. All
 dates below are in **2026**, and deadlines are **18:00 in Europe/Amsterdam**
-unless a different time is stated. Agree the schedule at the 29 Sep check-in.
+unless a different time is stated. Agree the schedule at the 30 Sep kickoff.
+No work is scheduled before the 30 Sep kickoff; the final package and official
+submission dates are unchanged.
 
 - **Owner handoff:** the deliverable in the subtask table above is ready for
   review, including runnable code/configs where applicable, result provenance,
@@ -246,22 +250,23 @@ the shared artifacts that the numbered subtasks need.
 
 | Shared deliverable | Owner | Reviewer | Handoff | Review due | Fixes accepted |
 | --- | --- | --- | --- | --- | --- |
-| Names assigned to all roles; task board with owners, reviewers, and dates; feedback-session slot booked | PERSON-1 | PERSON-5 | 29 Sep | 30 Sep | 1 Oct |
-| Report outline with all 15 numbered sections, shared terminology, and figure/table conventions | PERSON-5 | PERSON-2 | 1 Oct | 2 Oct | 3 Oct |
-| Runnable environment and dependency instructions; record of any RecBole patches | PERSON-1 | PERSON-2 | 2 Oct | 3 Oct | 4 Oct |
-| Shared runner, fixed split/candidates, prediction contract, and result record containing run ID/config/seed/code version | PERSON-1, with PERSON-3 | PERSON-4 | 2 Oct | 3 Oct | 4 Oct |
-| Reranker interface and a small example that consumes the shared predictions | PERSON-4 | PERSON-3 | 4 Oct | 5 Oct | 6 Oct |
-| Random and popularity baselines with candidate-aligned outputs | PERSON-1 | PERSON-2 | 4 Oct | 5 Oct | 6 Oct |
-| First independent accuracy calculation on recorded outputs; known-answer examples | PERSON-4 | PERSON-5 | 4 Oct | 5 Oct | 6 Oct |
-| Task 2.4 analysis proposal: hypothesis, comparison, required outputs, and planned figure | PERSON-5 | PERSON-3 | 4 Oct | 5 Oct | 6 Oct |
+| Names assigned to all roles; task board with owners, reviewers, and dates; feedback-session slot booked | PERSON-1 | PERSON-5 | 30 Sep | 1 Oct | 2 Oct |
+| Report outline with all 15 numbered sections, shared terminology, and figure/table conventions | PERSON-5 | PERSON-2 | 2 Oct | 3 Oct | 4 Oct |
+| Runnable environment and dependency instructions; record of any RecBole patches | PERSON-1 | PERSON-2 | 3 Oct | 4 Oct | 5 Oct |
+| Shared runner, fixed split/candidates, prediction contract, and result record containing run ID/config/seed/code version | PERSON-1, with PERSON-3 | PERSON-4 | 3 Oct | 4 Oct | 5 Oct |
+| Reranker interface and a small example that consumes the shared predictions | PERSON-4 | PERSON-3 | 5 Oct | 6 Oct | 7 Oct |
+| Random and popularity baselines with candidate-aligned outputs | PERSON-1 | PERSON-2 | 5 Oct | 6 Oct | 7 Oct |
+| First independent accuracy calculation on recorded outputs; known-answer examples | PERSON-4 | PERSON-5 | 5 Oct | 6 Oct | 7 Oct |
+| Task 2.4 analysis proposal: hypothesis, comparison, required outputs, and planned figure | PERSON-5 | PERSON-3 | 5 Oct | 6 Oct | 7 Oct |
 
 Additional milestones for the feedback session:
 
-- **4 Oct:** PERSON-2 supplies initial candidate-aligned predictions to
-  PERSON-3, ahead of the full Task 1.1 handoff on 5 Oct.
-- **5 Oct:** PERSON-3 supplies a first weighted-hybrid output to PERSON-1,
-  using those initial predictions. PERSON-2 inspects its alignment by
-  **6 Oct**; the final Task 1.3 handoff below incorporates course feedback.
+- **5 Oct:** PERSON-2 supplies initial candidate-aligned predictions to
+  PERSON-3, ahead of the full Task 1.1 handoff on 6 Oct.
+- **6 Oct, 12:00:** PERSON-3 supplies a first weighted-hybrid output to
+  PERSON-1, using those initial predictions. PERSON-2 inspects its alignment
+  before the feedback pack is finalized; the final Task 1.3 handoff below
+  incorporates course feedback.
 - **6 Oct, 16:00:** PERSON-1 assembles the working end-to-end example and the
   question list. PERSON-3 supplies the regression question; PERSON-4/5 supply
   metric and fairness questions. All five check the pack at the 17:00 meeting
@@ -279,34 +284,34 @@ review if later results change their claims.
 
 | Subtask | Owner | Reviewer | Owner handoff | Review due | Fixes accepted |
 | --- | --- | --- | --- | --- | --- |
-| 1.1 Individual recommenders | PERSON-2 | PERSON-3 | 5 Oct | 6 Oct | 7 Oct |
-| 1.2 Tune individual models | PERSON-2 | PERSON-4 | 11 Oct | 12 Oct | 13 Oct |
-| 1.3 Weighted hybrid | PERSON-3 | PERSON-2 | 9 Oct | 10 Oct | 11 Oct |
-| 1.4 Other hybrids | PERSON-3 | PERSON-5 | 12 Oct | 13 Oct | 14 Oct |
-| 1.5 Tune hybrids | PERSON-3 | PERSON-1 | 15 Oct | 16 Oct | 17 Oct |
-| 2.1 Implement all agreed metrics | PERSON-4 | PERSON-5 | 9 Oct | 10 Oct | 11 Oct |
-| 2.2 Compare selected models and baselines | PERSON-1 | PERSON-2 | 18 Oct | 19 Oct | 20 Oct |
+| 1.1 Individual recommenders | PERSON-2 | PERSON-3 | 6 Oct | 7 Oct | 8 Oct |
+| 1.2 Tune individual models | PERSON-2 | PERSON-4 | 12 Oct | 13 Oct | 14 Oct |
+| 1.3 Weighted hybrid | PERSON-3 | PERSON-2 | 10 Oct | 11 Oct | 12 Oct |
+| 1.4 Other hybrids | PERSON-3 | PERSON-5 | 13 Oct | 14 Oct | 15 Oct |
+| 1.5 Tune hybrids | PERSON-3 | PERSON-1 | 16 Oct | 17 Oct | 18 Oct |
+| 2.1 Implement all agreed metrics | PERSON-4 | PERSON-5 | 10 Oct | 11 Oct | 12 Oct |
+| 2.2 Compare selected models and baselines | PERSON-1 | PERSON-2 | 19 Oct | 20 Oct | 21 Oct |
 | 2.3 Analyze hybrid coefficients/contributions | PERSON-3 | PERSON-5 | 19 Oct | 20 Oct | 21 Oct |
 | 2.4 Complete explanatory analysis | PERSON-5 | PERSON-3 | 19 Oct | 20 Oct | 21 Oct |
 | 2.5 Analyze user/item groups | PERSON-5 | PERSON-1 | 20 Oct | 21 Oct | 22 Oct |
 | 2.6 Synthesize insights and propose improvement | PERSON-5 | PERSON-4 | 22 Oct | 23 Oct | 24 Oct |
-| 3.1 Integrate all four rerankers | PERSON-4 | PERSON-2 | 13 Oct | 14 Oct | 15 Oct |
-| 3.2 Evaluate reranked models and trade-offs | PERSON-4 | PERSON-1 | 18 Oct | 19 Oct | 20 Oct |
+| 3.1 Integrate all four rerankers | PERSON-4 | PERSON-2 | 14 Oct | 15 Oct | 16 Oct |
+| 3.2 Evaluate reranked models and trade-offs | PERSON-4 | PERSON-1 | 19 Oct | 20 Oct | 21 Oct |
 | 3.3 Compare both hybrid/reranker orders | PERSON-3 | PERSON-4 | 19 Oct | 20 Oct | 21 Oct |
 | 3.4 Analyze reranker effects on user/item groups | PERSON-5 | PERSON-3 | 21 Oct | 22 Oct | 23 Oct |
 
 Dependencies that determine the order:
 
-- **1.2 and 2.1 are accepted by 13 Oct** before the final individual-model
-  evaluation; **1.3-1.4 are accepted by 14 Oct** before final hybrid selection.
-- **1.5 is accepted by 17 Oct** before the final 2.2/3.2 comparisons. PERSON-1
+- **1.2 and 2.1 are accepted by 14 Oct** before the final individual-model
+  evaluation; **1.3-1.4 are accepted by 15 Oct** before final hybrid selection.
+- **1.5 is accepted by 18 Oct** before the final 2.2/3.2 comparisons. PERSON-1
   records the selected base/hybrid configurations and their validation results
-  on **17 Oct**; PERSON-2/3/4 check the selection before final evaluation runs.
-- **3.1 is accepted by 15 Oct**, so 3.2 and 3.3 can consume the same reviewed
+  on **18 Oct**; PERSON-2/3/4 check the selection before final evaluation runs.
+- **3.1 is accepted by 16 Oct**, so 3.2 and 3.3 can consume the same reviewed
   reranker implementations. Both 3.3 orders use the same underlying models
   and conditions.
 - PERSON-3 sends coefficient/ablation outputs to PERSON-5 by **19 Oct**.
-  PERSON-1/4 send the final comparison and reranking outputs by **18 Oct**.
+  PERSON-1/4 send the final comparison and reranking outputs by **19 Oct**.
   PERSON-5 uses these for 2.4-2.6 and 3.4, rather than waiting for prose reviews
   to finish before starting the analyses.
 - **2.5 is accepted by 22 Oct** before 2.6's review. Any proposed improvement
@@ -322,14 +327,14 @@ parameter, required metadata, example output, and explanation for the report.
 
 | Method | Implementer | Method reviewer | Handoff | Review due | Fixes accepted |
 | --- | --- | --- | --- | --- | --- |
-| Diversification | PERSON-2 | PERSON-4 | 9 Oct | 10 Oct | 11 Oct |
-| Calibration | PERSON-4 | PERSON-5 | 10 Oct | 11 Oct | 12 Oct |
-| Item-side fairness | PERSON-4 | PERSON-2 | 10 Oct | 11 Oct | 12 Oct |
-| User-side fairness | PERSON-5 | PERSON-4 | 10 Oct | 11 Oct | 12 Oct |
+| Diversification | PERSON-2 | PERSON-4 | 10 Oct | 11 Oct | 12 Oct |
+| Calibration | PERSON-4 | PERSON-5 | 11 Oct | 12 Oct | 13 Oct |
+| Item-side fairness | PERSON-4 | PERSON-2 | 11 Oct | 12 Oct | 13 Oct |
+| User-side fairness | PERSON-5 | PERSON-4 | 11 Oct | 12 Oct | 13 Oct |
 
-PERSON-2's overall 3.1 review on **14 Oct** checks all four methods together,
+PERSON-2's overall 3.1 review on **15 Oct** checks all four methods together,
 including the common interface and candidate handling. PERSON-4 closes any
-integration issues by **15 Oct**.
+integration issues by **16 Oct**.
 
 ### Full-task reviews and submission deadlines
 
@@ -338,7 +343,7 @@ reviews. They do not replace the code/evidence reviews above.
 
 | Deliverable or check | Responsible | Reviewer / sign-off | Deadline and completion condition |
 | --- | --- | --- | --- |
-| Task 1 combined section | PERSON-2 and PERSON-3 | PERSON-1 and PERSON-4 | **18 Oct:** review model identities, tuning protocol, score transformations, and coefficient claims across 1.1-1.5. Owners close comments by **19 Oct**. |
+| Task 1 combined section | PERSON-2 and PERSON-3 | PERSON-1 and PERSON-4 | **19 Oct:** review model identities, tuning protocol, score transformations, and coefficient claims across 1.1-1.5. Owners close comments by **20 Oct**. |
 | Task 2 combined section | PERSON-1, PERSON-3, and PERSON-5 | PERSON-2 and PERSON-4 | **23 Oct:** review consistency across 2.1-2.6 and the link from evidence to conclusions. Owners close comments by **24 Oct**. |
 | Task 3 combined section | PERSON-3, PERSON-4, and PERSON-5 | PERSON-1 and PERSON-2 | **23 Oct:** review consistency across 3.1-3.4, especially the two pipeline orders and group effects. Owners close comments by **24 Oct**. |
 | Full report draft | PERSON-5, with all section owners | All five | **22 Oct:** assemble every section, figure, citation, and any appendix; outstanding review comments may remain explicitly tracked until 24 Oct. |
