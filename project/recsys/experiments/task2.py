@@ -1,7 +1,10 @@
-"""Tasks 2.1-2.6: PERSON-1/3/4/5 contribute their shared modules."""
+"""Optional Task 2 coordination point; keep each owner's work in its module."""
 
 
 def run():
+    # PERSON-1 supplies selected comparable scores and both baselines.
+    # PERSON-4 supplies independent metric definitions and calculations.
+    # PERSON-3/5 use the same saved results for coefficient and group analyses.
     # TODO: load selected individual/hybrid runs and baselines on one split;
     # check ScoreTable alignment; rank and call all independent project metrics;
     # save per-user/per-item and aggregate results, then invoke analysis modules.

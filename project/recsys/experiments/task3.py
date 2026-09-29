@@ -1,4 +1,4 @@
-"""Tasks 3.1-3.4: PERSON-4 leads reranking, PERSON-3 orders, PERSON-5 groups."""
+"""Task 3 order interfaces; an overall runner is optional."""
 
 
 def rerank_then_combine(component_scores, reranker, hybrid, context, settings):
@@ -16,6 +16,9 @@ def combine_then_rerank(component_scores, reranker, hybrid, context, settings):
 
 
 def run():
+    # PERSON-4 integrates four rerankers with PERSON-2/5 contributions.
+    # PERSON-3 owns the two order comparisons above; PERSON-5 examines groups.
+    # A small experiment script can call these directly if no shared CLI helps.
     # TODO: 3.1 integrate the four methods; 3.2 evaluate strength sweeps on selected
     # individual models; 3.3 call BOTH orders above; 3.4 compare group outcomes.
     # Select strengths on development data, freeze them, then report test effects.

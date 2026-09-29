@@ -5,6 +5,11 @@ code and change it only when a documented extension cannot live in the project
 adapter. This gives each part a clear home without moving existing coursework
 scripts or mixing generated results into source directories.
 
+This is a map of ownership and interfaces, not a list of 36 files to finish.
+The task files show where work can go; the team can use existing repository
+scripts when they meet the agreed protocol. Only build shared helpers when a
+required experiment needs them.
+
 ## Start here
 
 Run commands from the repository root with Python 3.9 or newer. The demo and
@@ -46,9 +51,30 @@ configuration, split hash, checkpoint path, and validation diagnostics. It does
 not yet export model scores or perform the complete independent evaluation.
 
 The `task1`, `task2`, and `task3` commands deliberately stop with a descriptive
-`NotImplementedError` until the corresponding orchestration is filled in. The
-same applies to the unfinished algorithms; there are no fabricated zero metrics
-or silent pass-through implementations.
+`NotImplementedError`. They are optional places to connect completed work, not
+three extra deliverables. The same applies to the unfinished algorithms; there
+are no fabricated zero metrics or silent pass-through implementations.
+
+## What the team needs first
+
+| Handoff | Owner | Consumer | Minimum shared result |
+| --- | --- | --- | --- |
+| Protocol and candidate policy | PERSON-1 with PERSON-4 | Everyone | Agreed split, relevance rule, cutoff, external IDs, and candidate set; record decisions in `PROTOCOL.md`. |
+| Individual predictions | PERSON-2 with PERSON-1 | PERSON-3 and PERSON-4 | Model/config/run ID and comparable `ScoreTable` values on the agreed development split. |
+| First weighted hybrid | PERSON-3 | PERSON-1 and PERSON-4 | Fitting rule, component run IDs, coefficients, and predictions for the same candidates. |
+| Independent metric pilot | PERSON-4 | PERSON-1 and PERSON-5 | Metric definition, known-answer example, and result on the first real model output. |
+| Reranker inputs | PERSON-4 with PERSON-2/5 | PERSON-3 and PERSON-5 | Agreed `RerankContext`, method objective, strength, and ordered output. |
+
+The first four rows support the 6 October end-to-end checkpoint in
+`work_distribution.md`; the reranker interface follows for Task 3. The
+synthetic demo only illustrates the interfaces. Real score export, hybrid
+fitting, metrics, and rerankers remain team work.
+
+The generic `experiments/task*.py` commands, `tuning.py`, and
+`configs/experiments.yaml` are optional coordination placeholders. Keep the
+working algorithm files separate, but use `run_hyper.py` or a small script if it
+already covers an experiment. The artifact helpers are available for recording
+runs; do not build a larger run framework before a required comparison needs it.
 
 ## File layout
 
@@ -66,12 +92,12 @@ project/
     __main__.py                # CLI: demo, train, task1, task2, task3
     contracts.py               # ScoreTable, alignment checks, ranking, metadata types
     data.py                    # Candidate helper and metadata-preparation placeholder
-    artifacts.py               # Run directories, JSON, hashes, Git provenance
+    artifacts.py               # Small run-record helpers; extend only if needed
     baselines.py               # Random and training-popularity scoring examples
     demo.py                    # Small runnable example joining the shared pieces
     recbole_adapter.py         # Real training/split export; full-score export TODO
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
-    tuning.py                  # Individual/hybrid search and selection placeholder
+    tuning.py                  # Optional search wrapper; existing scripts may suffice
     metrics/
       accuracy.py              # Recall reference and remaining accuracy metrics TODO
       beyond_accuracy.py       # Diversity, novelty, calibration, fairness, bias TODO
@@ -85,9 +111,9 @@ project/
       groups.py                # User/item comparisons: PERSON-5
       explanations.py          # Mechanisms and improvement evidence: PERSON-5
     experiments/
-      task1.py                 # Model training, tuning, and hybrid orchestration
-      task2.py                 # Independent evaluation and analysis orchestration
-      task3.py                 # Reranking sweeps and both required pipeline orders
+      task1.py                 # Optional Task 1 orchestration placeholder
+      task2.py                 # Optional Task 2 orchestration placeholder
+      task3.py                 # Required order interfaces; optional overall runner
   tests/test_starter.py         # Focused checks for the working shared pieces
   scripts/                     # Existing batch/tuning-summary helpers
   artifacts/                   # Generated run directories; ignored by Git
@@ -96,9 +122,10 @@ project/
 Keep reusable algorithms in their own modules; experiment files should call
 them and record the experiment settings. `configs/experiments.yaml` supplies
 commented placeholders for those settings; the unfinished task commands do not
-consume it yet. Put one-off exploration in an optional
-`project/notebooks/` directory, then move reusable logic into `recsys/`. Put
-selected report figures under an optional `project/report/figures/` directory,
+consume it yet, and the team need not fill unused fields. Put one-off exploration
+in an optional `project/notebooks/` directory, then move reusable logic into
+`recsys/`. Put selected report figures under an optional
+`project/report/figures/` directory,
 with their generating command and source run ID recorded. This starter does not
 add the separately prepared Overleaf ZIP to the repository.
 
@@ -135,20 +162,20 @@ unexpected nonfinite scores are errors, not missing candidates to quietly drop.
 | Subtask | Main files | Owner / first reviewer |
 | --- | --- | --- |
 | 1.1 Individual recommenders | `configs/models/`, `recsys/recbole_adapter.py` | PERSON-2 / PERSON-3 |
-| 1.2 Individual tuning | `recsys/tuning.py`, `recsys/experiments/task1.py` | PERSON-2 / PERSON-4 |
+| 1.2 Individual tuning | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py` | PERSON-2 / PERSON-4 |
 | 1.3 Weighted regression hybrid | `recsys/hybrids.py` | PERSON-3 / PERSON-2 |
 | 1.4 Other hybrids | `recsys/hybrids.py` (split into modules as needed) | PERSON-3 / PERSON-5 |
-| 1.5 Hybrid tuning | `recsys/tuning.py`, `recsys/experiments/task1.py` | PERSON-3 / PERSON-1 |
+| 1.5 Hybrid tuning | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py` | PERSON-3 / PERSON-1 |
 | 2.1 Independent metrics | `recsys/metrics/` | PERSON-4 / PERSON-5 |
-| 2.2 Model/baseline comparison | `recsys/baselines.py`, `recsys/experiments/task2.py` | PERSON-1 / PERSON-2 |
+| 2.2 Model/baseline comparison | `recsys/baselines.py`; optional `recsys/experiments/task2.py` | PERSON-1 / PERSON-2 |
 | 2.3 Coefficient analysis | `recsys/analysis/coefficients.py` | PERSON-3 / PERSON-5 |
 | 2.4 Explanatory analysis | `recsys/analysis/explanations.py` | PERSON-5 / PERSON-3 |
 | 2.5 User/item groups | `recsys/analysis/groups.py`, `recsys/data.py` | PERSON-5 / PERSON-1 |
 | 2.6 Insights and improvement | `recsys/analysis/explanations.py`, report discussion | PERSON-5 / PERSON-4 |
 | 3.1 Four rerankers | `recsys/rerankers/` | PERSON-4, with PERSON-2/5 / PERSON-2 |
-| 3.2 Reranking trade-offs | `recsys/experiments/task3.py`, `recsys/metrics/` | PERSON-4 / PERSON-1 |
+| 3.2 Reranking trade-offs | `recsys/metrics/` and `recsys/rerankers/`; optional `recsys/experiments/task3.py` | PERSON-4 / PERSON-1 |
 | 3.3 Both pipeline orders | `recsys/experiments/task3.py`, `recsys/hybrids.py` | PERSON-3 / PERSON-4 |
-| 3.4 Reranker group effects | `recsys/analysis/groups.py`, `recsys/experiments/task3.py` | PERSON-5 / PERSON-3 |
+| 3.4 Reranker group effects | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py` | PERSON-5 / PERSON-3 |
 
 ## First contributions
 

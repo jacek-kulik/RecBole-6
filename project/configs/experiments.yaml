@@ -1,6 +1,7 @@
-# Planning template for experiments/task1.py, task2.py, and task3.py.
-# Those TODO entry points do not read this file yet. Empty/null entries mean
-# decisions are outstanding, not that those required methods can be skipped.
+# Optional planning template for the team; task commands do not read it yet.
+# Record approved choices here or in PROTOCOL.md, without filling fields that
+# are irrelevant to the agreed experiments. Empty/null entries mean decisions
+# are outstanding, not that the assignment requirement can be skipped.
 status: draft
 
 # PERSON-2: add the entire agreed lecture model set and bounded search spaces.
