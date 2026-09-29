@@ -1,0 +1,22 @@
+# PERSON-1/4: PROVISIONAL example. Agree and record all choices in PROTOCOL.md.
+# Shared settings are loaded AFTER the model YAML to keep comparisons consistent.
+dataset: ml-100k
+seed: 42
+reproducibility: true
+use_gpu: false
+show_progress: false
+load_col:
+  inter: [user_id, item_id, rating, timestamp]
+eval_args:
+  split: {RS: [0.8, 0.1, 0.1]}
+  group_by: user
+  order: RO
+  mode: full
+# This example treats all recorded interactions as implicit positive feedback.
+# TODO: agree relevance semantics and candidate/seen-item rules before experiments.
+metrics: [Recall, MRR, NDCG]
+topk: [10]
+valid_metric: MRR@10
+valid_metric_bigger: true
+save_dataset: false
+save_dataloaders: false

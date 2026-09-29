@@ -1,0 +1,39 @@
+# Planning template for experiments/task1.py, task2.py, and task3.py.
+# Those TODO entry points do not read this file yet. Empty/null entries mean
+# decisions are outstanding, not that those required methods can be skipped.
+status: draft
+
+# PERSON-2: add the entire agreed lecture model set and bounded search spaces.
+model_configs: [models/bpr.yaml]
+individual_search_spaces: {}
+max_trials_per_model: null
+
+# PERSON-3: fill after the regression/fitting protocol is agreed.
+weighted_hybrid:
+  regression_target: null
+  coefficient_fit_subset: null
+  selection_subset: null
+  score_normalization: null
+  search_space: {}
+other_hybrids: []
+
+# PERSON-4: fill with implemented independent metric names and exact definitions.
+# RecBole's protocol.yaml metrics are only training/validation diagnostics.
+project_accuracy_metrics: []
+project_beyond_accuracy_metrics: []
+
+# PERSON-2/4/5: choose development-set strength grids for all four methods.
+rerankers:
+  diversification: {strengths: []}
+  calibration: {strengths: []}
+  item_fairness: {strengths: []}
+  user_fairness: {strengths: []}
+
+# PERSON-3: implement both; define how reranked lists become hybrid inputs.
+pipeline_orders: [rerank_then_combine, combine_then_rerank]
+reranked_list_fusion_rule: null
+
+# PERSON-5: define groups from training information, before test evaluation.
+user_group_definition: null
+item_group_definition: null
+explanatory_hypothesis: null
