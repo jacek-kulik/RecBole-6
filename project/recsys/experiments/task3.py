@@ -18,6 +18,8 @@ def combine_then_rerank(component_scores, reranker, hybrid, context, settings):
 def run():
     # PERSON-4 integrates four rerankers with PERSON-2/5 contributions.
     # PERSON-3 owns the two order comparisons above; PERSON-5 examines groups.
+    # PERSON-2 reviews integration (3.1); PERSON-4 reviews the orders (3.3).
+    # PERSON-1 reviews trade-offs (3.2) and group effects (3.4), with closure.
     # A small experiment script can call these directly if no shared CLI helps.
     # TODO: 3.1 integrate the four methods; 3.2 evaluate strength sweeps on selected
     # individual models; 3.3 call BOTH orders above; 3.4 compare group outcomes.

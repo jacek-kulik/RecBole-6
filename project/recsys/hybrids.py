@@ -1,4 +1,4 @@
-"""PERSON-3: Tasks 1.3-1.5. Reuse shared scores; keep RecBole changes separate."""
+"""PERSON-3: Tasks 1.3-1.5; PERSON-2 reviews 1.3, PERSON-1 reviews 1.4/1.5."""
 
 from .contracts import ScoreTable, require_aligned
 

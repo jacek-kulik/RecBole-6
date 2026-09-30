@@ -1,4 +1,4 @@
-"""Task 2.1. Recall is a working example; add the agreed lecture metrics here."""
+"""Task 2.1: PERSON-4 implements, PERSON-1 reviews; Recall is a working example."""
 
 
 def recall_at_k(rankings, relevant, k):

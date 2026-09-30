@@ -162,11 +162,11 @@ unexpected nonfinite scores are errors, not missing candidates to quietly drop.
 | Subtask | Main files | Owner / first reviewer |
 | --- | --- | --- |
 | 1.1 Individual recommenders | `configs/models/`, `recsys/recbole_adapter.py` | PERSON-2 / PERSON-3 |
-| 1.2 Individual tuning | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py` | PERSON-2 / PERSON-4 |
+| 1.2 Individual tuning | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py` | PERSON-2 / PERSON-1 |
 | 1.3 Weighted regression hybrid | `recsys/hybrids.py` | PERSON-3 / PERSON-2 |
-| 1.4 Other hybrids | `recsys/hybrids.py` (split into modules as needed) | PERSON-3 / PERSON-5 |
+| 1.4 Other hybrids | `recsys/hybrids.py` (split into modules as needed) | PERSON-3 / PERSON-1 |
 | 1.5 Hybrid tuning | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py` | PERSON-3 / PERSON-1 |
-| 2.1 Independent metrics | `recsys/metrics/` | PERSON-4 / PERSON-5 |
+| 2.1 Independent metrics | `recsys/metrics/` | PERSON-4 / PERSON-1 |
 | 2.2 Model/baseline comparison | `recsys/baselines.py`; optional `recsys/experiments/task2.py` | PERSON-1 / PERSON-2 |
 | 2.3 Coefficient analysis | `recsys/analysis/coefficients.py` | PERSON-3 / PERSON-5 |
 | 2.4 Explanatory analysis | `recsys/analysis/explanations.py` | PERSON-5 / PERSON-3 |
@@ -175,13 +175,21 @@ unexpected nonfinite scores are errors, not missing candidates to quietly drop.
 | 3.1 Four rerankers | `recsys/rerankers/` | PERSON-4, with PERSON-2/5 / PERSON-2 |
 | 3.2 Reranking trade-offs | `recsys/metrics/` and `recsys/rerankers/`; optional `recsys/experiments/task3.py` | PERSON-4 / PERSON-1 |
 | 3.3 Both pipeline orders | `recsys/experiments/task3.py`, `recsys/hybrids.py` | PERSON-3 / PERSON-4 |
-| 3.4 Reranker group effects | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py` | PERSON-5 / PERSON-3 |
+| 3.4 Reranker group effects | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py` | PERSON-5 / PERSON-1 |
+
+Use `work_distribution.md` as the source for assignments and dates. A consumer
+of a result is not necessarily its reviewer. Workers supply runnable evidence
+and the matching report section, make corrections, and record their resolution.
+PERSON-1 checks closure for the seven tasks assigned to them for review;
+reranker contribution reviews follow the separate table in the work plan.
 
 ## First contributions
 
 - PERSON-1: settle the split/candidate contract with PERSON-4, then finish the
   adapter's batched full-score export with PERSON-2. Reuse the working artifact
-  helpers so model runs can be compared and traced.
+  helpers so model runs can be compared and traced. Review Tasks 1.2, 1.4, 1.5,
+  2.1, 2.5, 3.2, and 3.4, including their evidence and report claims; check that
+  workers resolve the feedback.
 - PERSON-2: add the lecture model configurations and establish a bounded tuning
   search. Start the diversification method once metadata is agreed.
 - PERSON-3: choose coefficient-fitting and selection data, implement the

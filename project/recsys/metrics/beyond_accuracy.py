@@ -1,4 +1,4 @@
-"""PERSON-4, Task 2.1: implement the exact definitions agreed from lectures."""
+"""Task 2.1: PERSON-4 implements lecture definitions; PERSON-1 reviews."""
 
 
 def evaluate(rankings, context, training_statistics):

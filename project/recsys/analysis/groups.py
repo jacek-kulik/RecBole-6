@@ -1,4 +1,4 @@
-"""PERSON-5: Tasks 2.5 and 3.4; reviewed by PERSON-1/3."""
+"""PERSON-5: Tasks 2.5 and 3.4; both reviewed by PERSON-1."""
 
 
 def compare_groups(per_user_results, item_results, context):

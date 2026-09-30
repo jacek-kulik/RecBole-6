@@ -5,6 +5,8 @@ def run():
     # PERSON-2 hands comparable model ScoreTables and run IDs to PERSON-3.
     # PERSON-3 hands hybrid scores, fitted coefficients, and selection records
     # to PERSON-1/4. This file is only needed if one shared runner helps.
+    # Reviews: PERSON-3 checks 1.1; PERSON-2 checks 1.3;
+    # PERSON-1 checks 1.2, 1.4, and 1.5 and closure of their feedback.
     # TODO: (1.1) train the full agreed lecture model set with recbole_adapter;
     # (1.2) tune individuals with an existing script or tuning.py; export aligned scores;
     # (1.3-1.4) fit weighted/alternative hybrids using hybrids.py;

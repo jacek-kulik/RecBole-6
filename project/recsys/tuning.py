@@ -6,7 +6,8 @@ def run_search(search_space, evaluate_on_validation, budget, seed):
 
     Use this only if a shared wrapper makes both tuning tasks easier. The
     required handoff is the search space, trial outcomes, and selected run;
-    PERSON-4 reviews individual tuning and PERSON-1 reviews hybrid tuning.
+    PERSON-1 reviews both individual tuning (1.2) and hybrid tuning (1.5),
+    including the evidence, report claims, and resolution of review feedback.
     Save every trial's config, split ID, seed, validation metrics, failure status,
     and artifact directory. Select by the agreed primary validation metric and
     direction, not test scores or execution order. Keep individual-model tuning
