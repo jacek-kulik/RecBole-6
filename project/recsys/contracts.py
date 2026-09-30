@@ -1,4 +1,4 @@
-"""PERSON-1/3: shared external-ID contract for models, hybrids, and rerankers."""
+"""Caio and Bogdan: shared external-ID contract for models, hybrids, and rerankers."""
 
 from dataclasses import dataclass, field
 from math import isfinite
@@ -62,7 +62,7 @@ def require_aligned(tables: Sequence[ScoreTable]):
 
 @dataclass
 class RerankContext:
-    """PERSON-4/5: fill from training data and approved metadata, not test outcomes.
+    """Jacek and Victor: fill from training data and approved metadata, not test outcomes.
 
     TODO: agree feature definitions, profile normalization, group construction,
     and missing-metadata behavior before implementing the four rerankers.

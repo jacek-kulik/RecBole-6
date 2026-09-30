@@ -1,8 +1,8 @@
-"""PERSON-5: Tasks 2.5 and 3.4; both reviewed by PERSON-1."""
+"""Victor: Tasks 2.5 and 3.4; both reviewed by Caio."""
 
 
 def compare_groups(per_user_results, item_results, context):
     # TODO: use fixed groups from training data, report counts and the same
     # accuracy/beyond-accuracy metrics before and after reranking. Keep user-side
     # and item-side aggregation explicit and expose small/empty groups.
-    raise NotImplementedError("PERSON-5: implement user/item group comparisons.")
+    raise NotImplementedError("Victor: implement user/item group comparisons.")

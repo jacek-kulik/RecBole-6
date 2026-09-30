@@ -1,4 +1,4 @@
-# PERSON-1/4: PROVISIONAL example. Agree and record all choices in PROTOCOL.md.
+# Caio and Jacek: PROVISIONAL example. Agree and record all choices in PROTOCOL.md.
 # Shared settings are loaded AFTER the model YAML to keep comparisons consistent.
 dataset: ml-100k
 seed: 42

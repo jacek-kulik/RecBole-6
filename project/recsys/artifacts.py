@@ -1,4 +1,4 @@
-"""PERSON-1: small file helpers; one new directory per run."""
+"""Caio: small file helpers; one new directory per run."""
 
 import hashlib
 import json

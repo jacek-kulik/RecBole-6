@@ -1,4 +1,4 @@
-"""PERSON-1: data preparation shared by all tasks."""
+"""Caio: data preparation shared by all tasks."""
 
 from dataclasses import dataclass
 from typing import Iterable
@@ -25,10 +25,10 @@ def candidate_items(train: Iterable[Interaction], users, catalog):
 
 
 def prepare_metadata(train_rows, item_file, user_file=None):
-    """TODO PERSON-1/5: load genre/features and training-derived profiles/groups.
+    """TODO Caio and Victor: load genre/features and training-derived profiles/groups.
 
     Preserve original IDs. Define relevance, cold-item policy, and available
     attributes in PROTOCOL.md. Do not infer demographic groups from model scores.
     Keep ratings/timestamps when reading the exported split CSVs.
     """
-    raise NotImplementedError("PERSON-1/5: implement approved metadata preparation.")
+    raise NotImplementedError("Caio and Victor: implement approved metadata preparation.")

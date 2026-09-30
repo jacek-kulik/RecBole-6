@@ -1,6 +1,6 @@
 # Experiment protocol to agree
 
-Owner: PERSON-1, with PERSON-4. Use `work_distribution.md` for the other owners
+Owner: Caio, with Jacek. Use `work_distribution.md` for the other owners
 and reviewers. This is a decision sheet, not an approved experimental protocol.
 The starter YAML contains provisional values so training can run immediately.
 
@@ -11,12 +11,12 @@ The starter YAML contains provisional values so training can run immediately.
 | Relevance | The example uses all observed interactions as implicit positives. Decide whether/how ratings determine relevance and update preparation and independent evaluation together. |
 | Candidates | Provisional full-sort evaluation. Agree catalog scope, cold items, and train/validation history masking for each evaluation partition. |
 | Cutoffs and selection | Provisional K=10 and validation MRR@10. Agree metrics, direction, seed count, and uncertainty reporting. |
-| Individual models | TODO PERSON-2: list every required lecture model and add its model YAML. BPR is only a starter example. |
-| Hybrids | TODO PERSON-3: list lecture alternatives and regression target; choose coefficient-fitting data and separate selection data, normalization, and constraints. |
-| Metrics | TODO PERSON-4: write exact accuracy and beyond-accuracy definitions, averaging, and missing-data behavior. |
-| Rerankers | TODO PERSON-2/4/5: record diversity, calibration, user-fairness, and item-fairness objectives and strength grids. |
-| Groups | TODO PERSON-5: training-derived user/item groups, metadata, counts, and minimum useful group size. |
-| Compute/search budget | TODO PERSON-1/2/3: trials, seeds, failure handling, and maximum run times. |
+| Individual models | TODO Gabriel: list every required lecture model and add its model YAML. BPR is only a starter example. |
+| Hybrids | TODO Bogdan: list lecture alternatives and regression target; choose coefficient-fitting data and separate selection data, normalization, and constraints. |
+| Metrics | TODO Jacek: write exact accuracy and beyond-accuracy definitions, averaging, and missing-data behavior. |
+| Rerankers | TODO Gabriel, Jacek and Victor: record diversity, calibration, user-fairness, and item-fairness objectives and strength grids. |
+| Groups | TODO Victor: training-derived user/item groups, metadata, counts, and minimum useful group size. |
+| Compute/search budget | TODO Caio, Gabriel and Bogdan: trials, seeds, failure handling, and maximum run times. |
 
 Record each agreement with its date, rationale, and reviewer. Re-run affected
 experiments if the split, candidate policy, metadata processing, or metric

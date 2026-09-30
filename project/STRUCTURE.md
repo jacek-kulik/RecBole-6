@@ -59,11 +59,11 @@ are no fabricated zero metrics or silent pass-through implementations.
 
 | Handoff | Owner | Consumer | Minimum shared result |
 | --- | --- | --- | --- |
-| Protocol and candidate policy | PERSON-1 with PERSON-4 | Everyone | Agreed split, relevance rule, cutoff, external IDs, and candidate set; record decisions in `PROTOCOL.md`. |
-| Individual predictions | PERSON-2 with PERSON-1 | PERSON-3 and PERSON-4 | Model/config/run ID and comparable `ScoreTable` values on the agreed development split. |
-| First weighted hybrid | PERSON-3 | PERSON-1 and PERSON-4 | Fitting rule, component run IDs, coefficients, and predictions for the same candidates. |
-| Independent metric pilot | PERSON-4 | PERSON-1 and PERSON-5 | Metric definition, known-answer example, and result on the first real model output. |
-| Reranker inputs | PERSON-4 with PERSON-2/5 | PERSON-3 and PERSON-5 | Agreed `RerankContext`, method objective, strength, and ordered output. |
+| Protocol and candidate policy | Caio with Jacek | Everyone | Agreed split, relevance rule, cutoff, external IDs, and candidate set; record decisions in `PROTOCOL.md`. |
+| Individual predictions | Gabriel with Caio | Bogdan and Jacek | Model/config/run ID and comparable `ScoreTable` values on the agreed development split. |
+| First weighted hybrid | Bogdan | Caio and Jacek | Fitting rule, component run IDs, coefficients, and predictions for the same candidates. |
+| Independent metric pilot | Jacek | Caio and Victor | Metric definition, known-answer example, and result on the first real model output. |
+| Reranker inputs | Jacek with Gabriel and Victor | Bogdan and Victor | Agreed `RerankContext`, method objective, strength, and ordered output. |
 
 The first four rows support the 6 October end-to-end checkpoint in
 `work_distribution.md`; the reranker interface follows for Task 3. The
@@ -102,14 +102,14 @@ project/
       accuracy.py              # Recall reference and remaining accuracy metrics TODO
       beyond_accuracy.py       # Diversity, novelty, calibration, fairness, bias TODO
     rerankers/
-      diversification.py       # PERSON-2
-      calibration.py           # PERSON-4
-      item_fairness.py          # PERSON-4
-      user_fairness.py          # PERSON-5
+      diversification.py       # Gabriel
+      calibration.py           # Jacek
+      item_fairness.py          # Jacek
+      user_fairness.py          # Victor
     analysis/
-      coefficients.py          # Contribution/ablation analysis: PERSON-3
-      groups.py                # User/item comparisons: PERSON-5
-      explanations.py          # Mechanisms and improvement evidence: PERSON-5
+      coefficients.py          # Contribution/ablation analysis: Bogdan
+      groups.py                # User/item comparisons: Victor
+      explanations.py          # Mechanisms and improvement evidence: Victor
     experiments/
       task1.py                 # Optional Task 1 orchestration placeholder
       task2.py                 # Optional Task 2 orchestration placeholder
@@ -161,42 +161,42 @@ unexpected nonfinite scores are errors, not missing candidates to quietly drop.
 
 | Subtask | Main files | Owner / first reviewer |
 | --- | --- | --- |
-| 1.1 Individual recommenders | `configs/models/`, `recsys/recbole_adapter.py` | PERSON-2 / PERSON-3 |
-| 1.2 Individual tuning | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py` | PERSON-2 / PERSON-1 |
-| 1.3 Weighted regression hybrid | `recsys/hybrids.py` | PERSON-3 / PERSON-2 |
-| 1.4 Other hybrids | `recsys/hybrids.py` (split into modules as needed) | PERSON-3 / PERSON-1 |
-| 1.5 Hybrid tuning | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py` | PERSON-3 / PERSON-1 |
-| 2.1 Independent metrics | `recsys/metrics/` | PERSON-4 / PERSON-1 |
-| 2.2 Model/baseline comparison | `recsys/baselines.py`; optional `recsys/experiments/task2.py` | PERSON-1 / PERSON-2 |
-| 2.3 Coefficient analysis | `recsys/analysis/coefficients.py` | PERSON-3 / PERSON-5 |
-| 2.4 Explanatory analysis | `recsys/analysis/explanations.py` | PERSON-5 / PERSON-3 |
-| 2.5 User/item groups | `recsys/analysis/groups.py`, `recsys/data.py` | PERSON-5 / PERSON-1 |
-| 2.6 Insights and improvement | `recsys/analysis/explanations.py`, report discussion | PERSON-5 / PERSON-4 |
-| 3.1 Four rerankers | `recsys/rerankers/` | PERSON-4, with PERSON-2/5 / PERSON-2 |
-| 3.2 Reranking trade-offs | `recsys/metrics/` and `recsys/rerankers/`; optional `recsys/experiments/task3.py` | PERSON-4 / PERSON-1 |
-| 3.3 Both pipeline orders | `recsys/experiments/task3.py`, `recsys/hybrids.py` | PERSON-3 / PERSON-4 |
-| 3.4 Reranker group effects | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py` | PERSON-5 / PERSON-1 |
+| 1.1 Individual recommenders | `configs/models/`, `recsys/recbole_adapter.py` | Gabriel / Bogdan |
+| 1.2 Individual tuning | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py` | Gabriel / Caio |
+| 1.3 Weighted regression hybrid | `recsys/hybrids.py` | Bogdan / Gabriel |
+| 1.4 Other hybrids | `recsys/hybrids.py` (split into modules as needed) | Bogdan / Caio |
+| 1.5 Hybrid tuning | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py` | Bogdan / Caio |
+| 2.1 Independent metrics | `recsys/metrics/` | Jacek / Caio |
+| 2.2 Model/baseline comparison | `recsys/baselines.py`; optional `recsys/experiments/task2.py` | Caio / Gabriel |
+| 2.3 Coefficient analysis | `recsys/analysis/coefficients.py` | Bogdan / Victor |
+| 2.4 Explanatory analysis | `recsys/analysis/explanations.py` | Victor / Bogdan |
+| 2.5 User/item groups | `recsys/analysis/groups.py`, `recsys/data.py` | Victor / Caio |
+| 2.6 Insights and improvement | `recsys/analysis/explanations.py`, report discussion | Victor / Jacek |
+| 3.1 Four rerankers | `recsys/rerankers/` | Jacek, with Gabriel and Victor / Gabriel |
+| 3.2 Reranking trade-offs | `recsys/metrics/` and `recsys/rerankers/`; optional `recsys/experiments/task3.py` | Jacek / Caio |
+| 3.3 Both pipeline orders | `recsys/experiments/task3.py`, `recsys/hybrids.py` | Bogdan / Jacek |
+| 3.4 Reranker group effects | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py` | Victor / Caio |
 
 Use `work_distribution.md` as the source for assignments and dates. A consumer
 of a result is not necessarily its reviewer. Workers supply runnable evidence
 and the matching report section, make corrections, and record their resolution.
-PERSON-1 checks closure for the seven tasks assigned to them for review;
+Caio checks closure for the seven tasks assigned to them for review;
 reranker contribution reviews follow the separate table in the work plan.
 
 ## First contributions
 
-- PERSON-1: settle the split/candidate contract with PERSON-4, then finish the
-  adapter's batched full-score export with PERSON-2. Reuse the working artifact
+- Caio: settle the split/candidate contract with Jacek, then finish the
+  adapter's batched full-score export with Gabriel. Reuse the working artifact
   helpers so model runs can be compared and traced. Review Tasks 1.2, 1.4, 1.5,
   2.1, 2.5, 3.2, and 3.4, including their evidence and report claims; check that
   workers resolve the feedback.
-- PERSON-2: add the lecture model configurations and establish a bounded tuning
+- Gabriel: add the lecture model configurations and establish a bounded tuning
   search. Start the diversification method once metadata is agreed.
-- PERSON-3: choose coefficient-fitting and selection data, implement the
+- Bogdan: choose coefficient-fitting and selection data, implement the
   regression hybrid, then add the other hybrids and both reranking orders.
-- PERSON-4: implement the agreed metrics with known-answer cases, then calibration
+- Jacek: implement the agreed metrics with known-answer cases, then calibration
   and item fairness. Review score masking before the larger experiment runs.
-- PERSON-5: prepare training-derived groups/profiles with PERSON-1, implement user
+- Victor: prepare training-derived groups/profiles with Caio, implement user
   fairness, and draft the explanatory comparisons and report figures.
 
 Search for `TODO` and `NotImplementedError` under `project/recsys/` to find the

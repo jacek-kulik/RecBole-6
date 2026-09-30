@@ -1,4 +1,4 @@
-"""PERSON-1, Task 2.2: working reference baselines for the shared score contract."""
+"""Caio, Task 2.2: working reference baselines for the shared score contract."""
 
 from collections import Counter
 import random

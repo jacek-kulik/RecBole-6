@@ -1,4 +1,4 @@
-"""Task 2.1: PERSON-4 implements, PERSON-1 reviews; Recall is a working example."""
+"""Task 2.1: Jacek implements, Caio reviews; Recall is a working example."""
 
 
 def recall_at_k(rankings, relevant, k):
@@ -19,7 +19,7 @@ def recall_at_k(rankings, relevant, k):
 
 
 def additional_accuracy_metrics(rankings, relevant, k):
-    # TODO PERSON-4: independently implement the agreed Precision/MRR/NDCG/etc.
+    # TODO Jacek: independently implement the agreed Precision/MRR/NDCG/etc.
     # State gain, discount, cutoff, averaging, and empty-user behavior. Add small
     # known-answer checks before using these in model selection or final tables.
-    raise NotImplementedError("PERSON-4: implement the remaining accuracy metrics.")
+    raise NotImplementedError("Jacek: implement the remaining accuracy metrics.")

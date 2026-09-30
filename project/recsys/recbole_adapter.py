@@ -1,4 +1,4 @@
-"""PERSON-1/2: boundary between this project and the existing RecBole fork."""
+"""Caio and Gabriel: boundary between this project and the existing RecBole fork."""
 
 import csv
 import hashlib
@@ -81,7 +81,7 @@ def train(model_config, output):
         model = get_model(config["model"])(config, train_data.dataset).to(config["device"])
         trainer = get_trainer(config["MODEL_TYPE"], config["model"])(config, model)
         best_score, best_metrics = trainer.fit(train_data, valid_data, saved=True, show_progress=False)
-        # TODO PERSON-1/2: load the selected checkpoint and call export_scores
+        # TODO Caio and Gabriel: load the selected checkpoint and call export_scores
         # for the agreed evaluation partition. Do not export last-epoch weights
         # while labelling them as the best validation checkpoint.
         write_json(output / "validation.json", {
@@ -107,7 +107,7 @@ def train(model_config, output):
 
 
 def export_scores(model, dataset, loader, split_id, partition) -> ScoreTable:
-    """TODO PERSON-1/2: connect a selected RecBole model to the score contract.
+    """TODO Caio and Gabriel: connect a selected RecBole model to the score contract.
 
     Use recbole.utils.case_study.full_sort_scores in user batches. Translate BOTH
     axes using dataset.id2token; exclude padding and agreed seen/history items.
@@ -116,4 +116,4 @@ def export_scores(model, dataset, loader, split_id, partition) -> ScoreTable:
     Record and compare the actual candidate sets using require_aligned.
     The provided loader must belong to the same exported split as split_id.
     """
-    raise NotImplementedError("PERSON-1/2: implement aligned full-candidate score export.")
+    raise NotImplementedError("Caio and Gabriel: implement aligned full-candidate score export.")

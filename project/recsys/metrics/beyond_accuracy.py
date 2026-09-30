@@ -1,4 +1,4 @@
-"""Task 2.1: PERSON-4 implements lecture definitions; PERSON-1 reviews."""
+"""Task 2.1: Jacek implements lecture definitions; Caio reviews."""
 
 
 def evaluate(rankings, context, training_statistics):
@@ -10,4 +10,4 @@ def evaluate(rankings, context, training_statistics):
     Record missing metadata and group sizes; never replace unavailable metrics
     with zero or report the demo's Recall as a complete evaluation.
     """
-    raise NotImplementedError("PERSON-4: implement agreed beyond-accuracy metrics.")
+    raise NotImplementedError("Jacek: implement agreed beyond-accuracy metrics.")
