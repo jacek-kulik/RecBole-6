@@ -1,0 +1,27 @@
+"""Task 3 order interfaces; an overall runner is optional."""
+
+
+def rerank_then_combine(component_scores, reranker, hybrid, context, settings):
+    # TODO Bogdan (3.3 order 1): rerank each individual model, then combine.
+    # Rerankers return ordered lists, while hybrids consume full candidate scores.
+    # Agree and record a rank-to-score/fusion rule, truncation depth, and missing
+    # candidate treatment. Do not accidentally combine the original score tables.
+    raise NotImplementedError("Bogdan: implement rerank-then-combine.")
+
+
+def combine_then_rerank(component_scores, reranker, hybrid, context, settings):
+    # TODO Bogdan (3.3 order 2): combine aligned component scores first, then
+    # rerank the hybrid. Match models, candidates, K, and strengths to order 1.
+    raise NotImplementedError("Bogdan: implement combine-then-rerank.")
+
+
+def run():
+    # Jacek integrates four rerankers with contributions from Gabriel and Victor.
+    # Bogdan owns the two order comparisons above; Victor examines groups.
+    # Gabriel reviews integration (3.1); Jacek reviews the orders (3.3).
+    # Caio reviews trade-offs (3.2) and group effects (3.4), with closure.
+    # A small experiment script can call these directly if no shared CLI helps.
+    # TODO: 3.1 integrate the four methods; 3.2 evaluate strength sweeps on selected
+    # individual models; 3.3 call BOTH orders above; 3.4 compare group outcomes.
+    # Select strengths on development data, freeze them, then report test effects.
+    raise NotImplementedError("Task 3 orchestration awaits rerankers and pipeline orders.")

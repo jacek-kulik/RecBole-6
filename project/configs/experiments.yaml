@@ -1,0 +1,44 @@
+# Optional planning template for the team; task commands do not read it yet.
+# Record approved choices here or in PROTOCOL.md, without filling fields that
+# are irrelevant to the agreed experiments. Empty/null entries mean decisions
+# are outstanding, not that the assignment requirement can be skipped.
+status: draft
+
+# Gabriel: add the entire agreed lecture model set and bounded search spaces.
+# Bogdan reviews models (1.1); Caio reviews tuning (1.2).
+model_configs: [models/bpr.yaml]
+individual_search_spaces: {}
+max_trials_per_model: null
+
+# Bogdan: fill after the regression/fitting protocol is agreed.
+# Gabriel reviews the weighted hybrid (1.3); Caio reviews 1.4 and 1.5.
+weighted_hybrid:
+  regression_target: null
+  coefficient_fit_subset: null
+  selection_subset: null
+  score_normalization: null
+  search_space: {}
+other_hybrids: []
+
+# Jacek: fill with implemented independent metric names and exact definitions.
+# Caio reviews the metric implementation, evidence, and report claims (2.1).
+# RecBole's protocol.yaml metrics are only training/validation diagnostics.
+project_accuracy_metrics: []
+project_beyond_accuracy_metrics: []
+
+# Gabriel, Jacek and Victor: choose development-set strength grids for all four methods.
+rerankers:
+  diversification: {strengths: []}
+  calibration: {strengths: []}
+  item_fairness: {strengths: []}
+  user_fairness: {strengths: []}
+
+# Bogdan: implement both; define how reranked lists become hybrid inputs.
+pipeline_orders: [rerank_then_combine, combine_then_rerank]
+reranked_list_fusion_rule: null
+
+# Victor: define groups from training information, before test evaluation.
+# Caio reviews group comparisons (2.5) and reranker group effects (3.4).
+user_group_definition: null
+item_group_definition: null
+explanatory_hypothesis: null

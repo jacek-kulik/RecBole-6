@@ -1,0 +1,6 @@
+{
+  "description": "Synthetic wiring example, not MovieLens or report evidence",
+  "catalog": ["a", "b", "c", "d", "e"],
+  "train": [["u1", "a"], ["u1", "b"], ["u2", "b"], ["u2", "c"], ["u3", "a"], ["u3", "d"]],
+  "valid": [["u1", "c"], ["u2", "d"], ["u3", "e"]]
+}

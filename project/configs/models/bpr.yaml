@@ -1,0 +1,12 @@
+# Gabriel: small starting configuration, not a tuned result or full model list.
+model: BPR
+embedding_size: 32
+epochs: 5
+train_batch_size: 2048
+eval_batch_size: 4096
+learning_rate: 0.001
+eval_step: 1
+stopping_step: 3
+train_neg_sample_args:
+  distribution: uniform
+  sample_num: 1

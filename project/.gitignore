@@ -1,0 +1,3 @@
+# Recreate run outputs; commit configs, source, and selected report figures.
+artifacts/
+__pycache__/
