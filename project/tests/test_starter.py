@@ -11,6 +11,7 @@ from project.recsys.data import Interaction, candidate_items
 from project.recsys.demo import run
 from project.recsys.hybrids import fit_weighted_hybrid
 from project.recsys.metrics.accuracy import recall_at_k
+from project.recsys.recbole_adapter import _scores_to_table
 
 
 class StarterTests(unittest.TestCase):
@@ -65,6 +66,24 @@ class StarterTests(unittest.TestCase):
         table = ScoreTable("a", "split", "test", {"u": {"x": 1.0}})
         with self.assertRaisesRegex(ValueError, "Test scores"):
             fit_weighted_hybrid([table], [1.0])
+
+    def test_score_export_keeps_only_eligible_external_ids(self):
+        items = ["[PAD]", "10", "20", "30"]
+        rows = [[float("-inf"), 0.5, float("-inf"), 0.1], [float("-inf"), 0.2, 0.3, 0.0]]
+        table = _scores_to_table("m", "split", "valid", ["u1", "u2"], items, rows, [[1, 3], [1, 2, 3]])
+        self.assertEqual(table.scores, {"u1": {"10": 0.5, "30": 0.1}, "u2": {"10": 0.2, "20": 0.3, "30": 0.0}})
+
+    def test_score_export_rejects_nonfinite_eligible_scores(self):
+        for value in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(ValueError, "nonfinite"):
+                    _scores_to_table("m", "split", "valid", ["u"], ["[PAD]", "a"], [[0.0, value]], [[1]])
+
+    def test_exported_models_with_same_masking_are_aligned(self):
+        args = ("split", "valid", ["u"], ["[PAD]", "a", "b"])
+        a = _scores_to_table("itemknn", *args, [[0.0, 1.0, 2.0]], [[1, 2]])
+        b = _scores_to_table("ease", *args, [[0.0, 3.0, 1.0]], [[1, 2]])
+        require_aligned([a, b])
 
     def test_demo_writes_traceable_artifacts_without_overwriting(self):
         with tempfile.TemporaryDirectory() as directory:
