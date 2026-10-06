@@ -1,4 +1,4 @@
-"""Checks for shared behavior that could silently invalidate model comparisons."""
+"""Checks for shared behaviour that could silently invalidate model comparisons."""
 
 import json
 from pathlib import Path
