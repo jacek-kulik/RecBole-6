@@ -6,7 +6,8 @@ import math
 import unittest
 
 from project.recsys.metrics.accuracy import (
-    additional_accuracy_metrics, evaluate_accuracy, recall_at_k,
+    evaluate_accuracy, get_aggregate_accuracy_metrics, get_aggregate_mrr,
+    get_per_user_accuracy_metrics, recall_at_k,
 )
 
 
@@ -51,11 +52,30 @@ class AccuracyTests(unittest.TestCase):
             self.assertGreater(early[f"{name}@2"], late[f"{name}@2"])
 
     def test_wrappers_and_ignored_suffix(self) -> None:
-        rankings, relevant = {"u": ["a", "x", "x"]}, {"u": {"a"}}
+        rankings, relevant = {"u": ["x", "a", "a"]}, {"u": {"a"}}
         self.assertEqual(recall_at_k(rankings, relevant, 2), 1)
-        extra = additional_accuracy_metrics(rankings, relevant, 2)
-        self.assertEqual(len(extra), 5)
-        self.assertNotIn("Recall@2", extra)
+        self.assertEqual(get_aggregate_mrr(rankings, relevant, 2), 0.5)
+        expected = {
+            "Precision@2": 0.5, "Recall@2": 1.0, "F1@2": 2 / 3,
+            "MRR@2": 0.5, "MAP@2": 0.5, "NDCG@2": 1 / math.log2(3),
+        }
+        self.assertEqual(get_aggregate_accuracy_metrics(rankings, relevant, 2), expected)
+        self.assertEqual(get_per_user_accuracy_metrics(rankings, relevant, 2), {"u": expected})
+
+    def test_mrr_wrapper_averages_users_with_hits_and_misses(self) -> None:
+        rankings = {"late": ["x", "a"], "miss": ["x", "y"]}
+        relevant = {"late": {"a"}, "miss": {"b"}}
+        self.assertEqual(get_aggregate_mrr(rankings, relevant, 2), 0.25)
+
+    def test_relevance_accepts_supported_containers_and_deduplicates(self) -> None:
+        for positives in ({"a", "b"}, frozenset({"a", "b"}), ["a", "a", "b"], ("a", "b")):
+            with self.subTest(positives=positives):
+                self.assertEqual(recall_at_k({"u": ("a", "x")}, {"u": positives}, 2), 0.5)
+
+    def test_default_cutoff(self) -> None:
+        result = evaluate_accuracy({"u": [str(i) for i in range(10)]}, {"u": {"0"}})
+        self.assertEqual(result["aggregate"]["Precision@10"], 0.1)
+        self.assertEqual(result["aggregate"]["Recall@10"], 1)
 
     def test_invalid_inputs(self) -> None:
         cases = [({}, {}, 1), ({"u": ["a"]}, {"v": {"a"}}, 1),
@@ -65,6 +85,10 @@ class AccuracyTests(unittest.TestCase):
                  ({"u": "a"}, {"u": {"a"}}, 1),
                  ({"u": [1]}, {"u": {"a"}}, 1),
                  ({"u": ["a"]}, {"u": {1}}, 1)]
+        cases.extend(
+            ({"u": ["a"]}, relevant, 1)
+            for relevant in (None, [], {"u": "a"}, {"u": {""}}, {"u": {"a": 1}}, {"u": None})
+        )
         cases.extend(({"u": ["a"]}, {"u": {"a"}}, k) for k in (0, -1, 1.5, True))
         for rankings, relevant, k in cases:
             with self.subTest(rankings=rankings, relevant=relevant, k=k):

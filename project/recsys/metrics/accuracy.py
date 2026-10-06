@@ -14,7 +14,7 @@ def evaluate_accuracy(
     rows = validate_rankings(rankings, k)
     if not isinstance(relevant, Mapping) or rows.keys() != relevant.keys():
         raise ValueError("Relevance data does not have the evaluation users")
-    per_user = dict[str, dict[str, float]] = {}
+    per_user: Dict[str, Dict[str, float]] = {}
 
     for user, items in rows.items():
         positives = relevant[user]
@@ -67,8 +67,7 @@ def get_per_user_accuracy_metrics(rankings: RankingInput, relevant: RelevanceInp
     return evaluate_accuracy(rankings, relevant, k)["per_user"]
 
 def get_aggregate_mrr(rankings: RankingInput, relevant: RelevanceInput, k: int) -> float:
-    return evaluate_accuracy(rankings, relevant, k)["aggregate"][f"Recall@{k}"]
+    return evaluate_accuracy(rankings, relevant, k)["aggregate"][f"MRR@{k}"]
 
 def get_aggregate_accuracy_metrics(rankings: RankingInput, relevant: RelevanceInput, k: int) -> Dict[str, float]:
     return evaluate_accuracy(rankings, relevant, k)["aggregate"]
-

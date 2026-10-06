@@ -74,9 +74,41 @@ class StarterTests(unittest.TestCase):
             self.assertEqual(manifest["kind"], "synthetic-demo")
             self.assertEqual(manifest["status"], "complete")
             self.assertTrue(all(table["split_id"] == manifest["split_id"] for table in tables))
-            self.assertEqual(json.loads((output / "metrics.json").read_text())["popularity"]["Recall@2"], 2 / 3)
+            metrics = json.loads((output / "metrics.json").read_text())
+            self.assertEqual(metrics["popularity"]["Recall@2"], 2 / 3)
+            per_user = json.loads((output / "per_user_metrics.json").read_text())
+            rankings = json.loads((output / "rankings.json").read_text())
+            fixture = json.loads((output / "split.json").read_text())
+            users = {user for user, _ in fixture["valid"]}
+            names = {f"{name}@2" for name in ("Precision", "Recall", "F1", "MRR", "MAP", "NDCG")}
+            self.assertEqual(set(metrics), {"popularity", "random"})
+            self.assertEqual(set(per_user), set(metrics))
+            for model, rows in per_user.items():
+                self.assertEqual(set(rows), users)
+                self.assertEqual(set(rankings[model]), users)
+                self.assertEqual(set(metrics[model]), names)
+                for name in names:
+                    self.assertAlmostEqual(metrics[model][name], sum(row[name] for row in rows.values()) / len(users))
             with self.assertRaises(FileExistsError):
                 run(output)
+
+    def test_demo_supports_string_paths_and_records_seed_and_cutoff(self):
+        with tempfile.TemporaryDirectory() as directory:
+            outputs = [run(str(Path(directory) / name), seed=7, k=1) for name in ("first", "second")]
+            manifest = json.loads((outputs[0] / "manifest.json").read_text())
+            self.assertEqual((manifest["seed"], manifest["k"]), (7, 1))
+            for filename in ("scores.json", "rankings.json", "metrics.json", "per_user_metrics.json"):
+                self.assertEqual((outputs[0] / filename).read_bytes(), (outputs[1] / filename).read_bytes())
+            rankings = json.loads((outputs[0] / "rankings.json").read_text())
+            self.assertTrue(all(len(items) == 1 for rows in rankings.values() for items in rows.values()))
+
+    def test_demo_invalid_cutoff_does_not_create_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "demo"
+            for k in (0, -1, 100):
+                with self.subTest(k=k), self.assertRaises(ValueError):
+                    run(output, k=k)
+                self.assertFalse(output.exists())
 
 
 if __name__ == "__main__":

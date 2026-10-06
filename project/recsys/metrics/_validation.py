@@ -22,7 +22,7 @@ def validate_rankings(
 
     rows = {}
     for user, ranking in rankings.items():
-        if not external_id(user) or not isinstance(rankings, Sequence) or isinstance(ranking, str):
+        if not external_id(user) or not isinstance(ranking, Sequence) or isinstance(ranking, str):
             raise ValueError("External ids not valid or not in a sequence")
         items = ranking[:k]
         if len(items) != k or any(not external_id(item) for item in items):
