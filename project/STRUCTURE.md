@@ -12,7 +12,7 @@ required experiment needs them.
 
 ## Start here
 
-Run commands from the repository root with Python 3.9 or newer. The demo and
+Run commands from the repository root with Python 3.10 or newer. The demo and
 starter tests use only the standard library:
 
 ```sh
@@ -59,6 +59,11 @@ python -m project.recsys evaluate \
   --output project/artifacts/bpr-valid-001 \
   --k 10 --batch-size 1024
 ```
+
+This produces an independent evaluation on the validation set only loading it on the CPU for consistency.
+Also compares the metrics to the ones produced by RecBole to see if we agree.
+Saves the rankings, relevance, aggregate and per-user metrics, comparisons, an example user,
+and a manifest storing run information.
 
 The `task1`, `task2`, and `task3` commands deliberately stop with a descriptive
 `NotImplementedError`. They are optional places to connect completed work, not
@@ -110,11 +115,12 @@ project/
     recbole_adapter.py         # Real training/split export; full-score export TODO
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
+    evaluate.py                # Runner for the independent validation accuracy evaluation
     metrics/
-      accuracy.py              # Computes Precision@k, Recall@k, F1@k, MRR@k, NDCG@k, MAP@k, saving in aggregate and per-user
-      types.py                 # Shared types used for the metrics computation
+      _validation.py           # External ID and ranking list validation for metric computation
+      accuracy.py              # Computes Precision@k, Recall@k, F1@k, MRR@k, NDCG@k, MAP@k, returning in aggregate and per-user
       beyond_accuracy.py       # Diversity, novelty, calibration, fairness, bias TODO
-      _validation.py           # Internal ID and ranking list validation for metric computation
+      types.py                 # Shared types used for the metrics computation
     rerankers/
       diversification.py       # Gabriel
       calibration.py           # Jacek
@@ -157,8 +163,8 @@ add the separately prepared Overleaf ZIP to the repository.
    `require_aligned` before combining scores. Save fitted normalization and
    regression coefficients with the component run IDs.
 5. Produce rankings, run the group's independent metrics, and save both detailed
-   and aggregate measurements. The existing Recall function demonstrates one
-   definition; it does not settle the lecture metric set or cohort policy.
+   and aggregate measurements. The accuracy.py file computes the accuracy metrics, the beyond accuracy
+   and rerankers are still TODO 
 6. Apply the four rerankers and compare strengths. Task 3.3 needs both rerank then
    combine and combine then rerank. A reranker returns an ordered list; combining
    those lists requires an explicit fusion/rank-to-score and truncation policy.
@@ -173,23 +179,23 @@ unexpected nonfinite scores are errors, not missing candidates to quietly drop.
 
 ## Where each numbered subtask belongs
 
-| Subtask | Main files | Owner / first reviewer |
-| --- | --- | --- |
-| 1.1 Individual recommenders | `configs/models/`, `recsys/recbole_adapter.py` | Gabriel / Bogdan |
-| 1.2 Individual tuning | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py` | Gabriel / Caio |
-| 1.3 Weighted regression hybrid | `recsys/hybrids.py` | Bogdan / Gabriel |
-| 1.4 Other hybrids | `recsys/hybrids.py` (split into modules as needed) | Bogdan / Caio |
-| 1.5 Hybrid tuning | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py` | Bogdan / Caio |
-| 2.1 Independent metrics | `recsys/metrics/` | Jacek / Caio |
-| 2.2 Model/baseline comparison | `recsys/baselines.py`; optional `recsys/experiments/task2.py` | Caio / Gabriel |
-| 2.3 Coefficient analysis | `recsys/analysis/coefficients.py` | Bogdan / Victor |
-| 2.4 Explanatory analysis | `recsys/analysis/explanations.py` | Victor / Bogdan |
-| 2.5 User/item groups | `recsys/analysis/groups.py`, `recsys/data.py` | Victor / Caio |
-| 2.6 Insights and improvement | `recsys/analysis/explanations.py`, report discussion | Victor / Jacek |
-| 3.1 Four rerankers | `recsys/rerankers/` | Jacek, with Gabriel and Victor / Gabriel |
-| 3.2 Reranking trade-offs | `recsys/metrics/` and `recsys/rerankers/`; optional `recsys/experiments/task3.py` | Jacek / Caio |
-| 3.3 Both pipeline orders | `recsys/experiments/task3.py`, `recsys/hybrids.py` | Bogdan / Jacek |
-| 3.4 Reranker group effects | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py` | Victor / Caio |
+| Subtask                        | Main files                                                                        | Owner / first reviewer                   |
+|--------------------------------|-----------------------------------------------------------------------------------|------------------------------------------|
+| 1.1 Individual recommenders    | `configs/models/`, `recsys/recbole_adapter.py`                                    | Gabriel / Bogdan                         |
+| 1.2 Individual tuning          | `run_hyper.py` or `recsys/tuning.py`; optional `recsys/experiments/task1.py`      | Gabriel / Caio                           |
+| 1.3 Weighted regression hybrid | `recsys/hybrids.py`                                                               | Bogdan / Gabriel                         |
+| 1.4 Other hybrids              | `recsys/hybrids.py` (split into modules as needed)                                | Bogdan / Caio                            |
+| 1.5 Hybrid tuning              | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py`      | Bogdan / Caio                            |
+| 2.1 Independent metrics        | `recsys/metrics/`                                                                 | Jacek / Caio                             |
+| 2.2 Model/baseline comparison  | `recsys/baselines.py`; optional `recsys/experiments/task2.py`                     | Caio / Gabriel                           |
+| 2.3 Coefficient analysis       | `recsys/analysis/coefficients.py`                                                 | Bogdan / Victor                          |
+| 2.4 Explanatory analysis       | `recsys/analysis/explanations.py`                                                 | Victor / Bogdan                          |
+| 2.5 User/item groups           | `recsys/analysis/groups.py`, `recsys/data.py`                                     | Victor / Caio                            |
+| 2.6 Insights and improvement   | `recsys/analysis/explanations.py`, report discussion                              | Victor / Jacek                           |
+| 3.1 Four rerankers             | `recsys/rerankers/`                                                               | Jacek, with Gabriel and Victor / Gabriel |
+| 3.2 Reranking trade-offs       | `recsys/metrics/` and `recsys/rerankers/`; optional `recsys/experiments/task3.py` | Jacek / Caio                             |
+| 3.3 Both pipeline orders       | `recsys/experiments/task3.py`, `recsys/hybrids.py`                                | Bogdan / Jacek                           |
+| 3.4 Reranker group effects     | `recsys/analysis/groups.py`; optional `recsys/experiments/task3.py`               | Victor / Caio                            |
 
 Use `work_distribution.md` as the source for assignments and dates. A consumer
 of a result is not necessarily its reviewer. Workers supply runnable evidence
@@ -208,14 +214,14 @@ reranker contribution reviews follow the separate table in the work plan.
   search. Start the diversification method once metadata is agreed.
 - Bogdan: choose coefficient-fitting and selection data, implement the
   regression hybrid, then add the other hybrids and both reranking orders.
-- Jacek: implement the agreed metrics with known-answer cases, then calibration
+- Jacek: implement the agreed metrics with known-answer cases (DONE), then calibration
   and item fairness. Review score masking before the larger experiment runs.
 - Victor: prepare training-derived groups/profiles with Caio, implement user
   fairness, and draft the explanatory comparisons and report figures.
 
 Search for `TODO` and `NotImplementedError` under `project/recsys/` to find the
 remaining implementation points. Update the matching tests when adding actual
-behavior, especially alignment, relevance, group aggregation, and leakage checks.
+behaviour, especially alignment, relevance, group aggregation, and leakage checks.
 
 ## Existing tools and framework changes
 
