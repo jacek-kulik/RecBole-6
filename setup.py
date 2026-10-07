@@ -7,7 +7,7 @@ import os
 from setuptools import setup, find_packages
 
 install_requires = [
-    "torch>=1.10.0",
+    "torch>=2.3.0",
     "numpy>=1.17.2",
     "scipy>=1.6.0",
     "pandas>=1.3.0",

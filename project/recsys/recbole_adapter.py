@@ -52,6 +52,7 @@ def _load_validation_checkpoint(checkpoint: str | PathLike[str]
 
     saved = torch.load(str(checkpoint), map_location="cpu", weights_only=False)
     config = saved["config"]
+    config["data_path"] = str(REPO_ROOT / "dataset" / config["dataset"])
     config["device"] = torch.device("cpu")
     config["use_gpu"] = False
     init_seed(config["seed"], config["reproducibility"])

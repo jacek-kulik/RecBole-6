@@ -9,6 +9,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from project.recsys.recbole_adapter import _export_splits, _load_validation_checkpoint, validation_predictions
+from project.recsys.artifacts import REPO_ROOT
 
 
 class Values:
@@ -138,7 +139,15 @@ class ValidationPredictionTests(unittest.TestCase):
 
 class CheckpointLoadingTests(unittest.TestCase):
     def test_restores_selected_weights_and_reconstructs_on_cpu(self):
-        config = {"device": "cuda", "use_gpu": True, "seed": 42, "reproducibility": True, "model": "BPR"}
+        config = {
+            "device": "cuda",
+            "use_gpu": True,
+            "seed": 42,
+            "reproducibility": True,
+            "model": "BPR",
+            "dataset": "ml-100k",
+            "data_path": "/old-checkout/dataset/ml-100k",
+        }
         saved = {"config": config, "state_dict": {"weights": "best"}, "other_parameter": "extra"}
         torch = SimpleNamespace(load=Mock(return_value=saved), device=Mock(return_value="cpu"))
         dataset = object()
@@ -166,6 +175,10 @@ class CheckpointLoadingTests(unittest.TestCase):
         model.load_other_parameter.assert_called_once_with("extra")
         self.assertEqual(seed.call_count, 2)
         self.assertEqual(result, (config, model, dataset, train, valid, test))
+        self.assertEqual(
+            config["data_path"],
+            str(REPO_ROOT / "dataset" / "ml-100k"),
+        )
 
 
 if __name__ == "__main__":
