@@ -1,0 +1,5 @@
+model: SLIMElastic
+alpha: 0.2
+l1_ratio: 0.01
+positive_only: true
+hide_item: true

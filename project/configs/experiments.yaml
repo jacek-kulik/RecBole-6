@@ -6,7 +6,8 @@ status: draft
 
 # Gabriel: add the entire agreed lecture model set and bounded search spaces.
 # Bogdan reviews models (1.1); Caio reviews tuning (1.2).
-model_configs: [models/bpr.yaml]
+model_configs: [models/itemknn.yaml, models/userknn.yaml, models/bpr.yaml,
+                models/slimelastic.yaml, models/ease.yaml, models/fism.yaml]
 individual_search_spaces: {}
 max_trials_per_model: null
 

@@ -11,7 +11,7 @@ The starter YAML contains provisional values so training can run immediately.
 | Relevance | The example uses all observed interactions as implicit positives. Decide whether/how ratings determine relevance and update preparation and independent evaluation together. |
 | Candidates | Provisional full-sort evaluation. Agree catalog scope, cold items, and train/validation history masking for each evaluation partition. |
 | Cutoffs and selection | Provisional K=10 and validation MRR@10. Agree metrics, direction, seed count, and uncertainty reporting. |
-| Individual models | TODO Gabriel: list every required lecture model and add its model YAML. BPR is only a starter example. |
+| Individual models | Gabriel (Task 1.1): ItemKNN, UserKNN, BPR, SLIMElastic, EASE, FISM in `configs/models/`, using the course defaults from `recbole/config/<Model>/ml-100k.yaml` until Task 1.2 tunes them. Pop and Random are Caio's baselines. Reviewer: Bogdan. |
 | Hybrids | TODO Bogdan: list lecture alternatives and regression target; choose coefficient-fitting data and separate selection data, normalization, and constraints. |
 | Metrics | TODO Jacek: write exact accuracy and beyond-accuracy definitions, averaging, and missing-data behavior. |
 | Rerankers | TODO Gabriel, Jacek and Victor: record diversity, calibration, user-fairness, and item-fairness objectives and strength grids. |

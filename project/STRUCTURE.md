@@ -47,8 +47,12 @@ working directory at this worktree's root.
 Training runs the local RecBole implementation, selects a checkpoint using
 validation, and exports the actual train/validation/test interaction splits with
 external IDs, ratings, and timestamps. It saves the supplied YAMLs, resolved
-configuration, split hash, checkpoint path, and validation diagnostics. It does
-not yet export model scores or perform the complete independent evaluation.
+configuration, split hash, checkpoint path, and validation diagnostics. From the
+validation-selected checkpoint it exports `scores-valid.json.gz` and
+`scores-test.json.gz`: a `ScoreTable` over every eligible candidate (all items
+except training history for valid; training and validation history for test).
+Read them with `recbole_adapter.load_scores`. It does not evaluate test data.
+`project/scripts/train_individuals.sh` trains the full Task 1.1 model set.
 
 The `task1`, `task2`, and `task3` commands deliberately stop with a descriptive
 `NotImplementedError`. They are optional places to connect completed work, not
@@ -86,7 +90,7 @@ project/
   configs/
     protocol.yaml              # Shared provisional split/evaluation settings
     experiments.yaml           # TODO model/search/metric/reranker/analysis plan
-    models/bpr.yaml             # First individual-model config; add the lecture set
+    models/*.yaml               # Task 1.1 lecture models (course defaults)
   examples/toy.json             # Tiny synthetic example, committed with the code
   recsys/
     __main__.py                # CLI: demo, train, task1, task2, task3
@@ -95,7 +99,7 @@ project/
     artifacts.py               # Small run-record helpers; extend only if needed
     baselines.py               # Random and training-popularity scoring examples
     demo.py                    # Small runnable example joining the shared pieces
-    recbole_adapter.py         # Real training/split export; full-score export TODO
+    recbole_adapter.py         # Training, split export, full-candidate score export
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
     metrics/

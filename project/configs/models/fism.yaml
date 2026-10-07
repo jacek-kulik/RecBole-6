@@ -1,9 +1,11 @@
-model: BPR
+model: FISM
 embedding_size: 64
+reg_weights: [0.0001, 0.0001]
+alpha: 0.0
 epochs: 20
-train_batch_size: 512
+train_batch_size: 2048
 learner: adam
-learning_rate: 0.0015
+learning_rate: 0.001
 eval_step: 10
 stopping_step: 20
 train_neg_sample_args:
