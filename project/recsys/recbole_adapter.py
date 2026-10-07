@@ -1,14 +1,24 @@
 """Caio and Gabriel: boundary between this project and the existing RecBole fork."""
-
+from __future__ import annotations
 import csv
 import hashlib
 import json
+from math import isfinite
 from pathlib import Path
+from os import PathLike
 import shutil
 import sys
+import tempfile
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Set, Tuple
 
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
-from .contracts import ScoreTable
+from .contracts import ScoreTable, Rankings
+
+if TYPE_CHECKING:
+    from recbole.config import Config
+    from recbole.data.dataset import Dataset
+    from recbole.data.dataloader.general_dataloader import FullSortEvalDataLoader, TrainDataLoader
+    from recbole.model.abstract_recommender import AbstractRecommender
 
 
 def _export_splits(dataset, loaders, output, config):
@@ -33,12 +43,89 @@ def _export_splits(dataset, loaders, output, config):
     return digest.hexdigest()
 
 
+def _load_validation_checkpoint(checkpoint: str | PathLike[str]
+    ) -> Tuple[Config, AbstractRecommender, Dataset, TrainDataLoader, FullSortEvalDataLoader, FullSortEvalDataLoader]:
+    """Restore a selected checkpoint on CPU, including checkpoints trained on GPU."""
+    import torch
+    from recbole.data import create_dataset, data_preparation
+    from recbole.utils import get_model, init_seed
+
+    saved = torch.load(str(checkpoint), map_location="cpu", weights_only=False)
+    config = saved["config"]
+    config["device"] = torch.device("cpu")
+    config["use_gpu"] = False
+    init_seed(config["seed"], config["reproducibility"])
+    dataset = create_dataset(config)
+    train_data, valid_data, test_data = data_preparation(config, dataset)
+    init_seed(config["seed"], config["reproducibility"])
+    model = get_model(config["model"])(config, train_data.dataset).to(config["device"])
+    model.load_state_dict(saved["state_dict"])
+    model.load_other_parameter(saved.get("other_parameter"))
+    return config, model, dataset, train_data, valid_data, test_data
+
+
+def validation_predictions(
+        checkpoint: str | PathLike[str],
+        source_splits: str | PathLike[str],
+        split_id: str,
+        k: int = 10,
+        batch_size: int = 128
+) -> Tuple[Config, Rankings, Dict[str, Set[str]]]:
+    """Load a selected checkpoint and rank its verified validation split.
+
+    All held-out validation interactions are positives as per the assignments.
+    Test interactions are checked for split identity but never scored."""
+    if type(k) is not int or k <= 0 or type(batch_size) is not int or batch_size <= 0:
+        raise ValueError("k and batch_size must be positive integers")
+    from recbole.utils.case_study import full_sort_topk
+
+    config, model, dataset, train_data, valid_data, test_data = _load_validation_checkpoint(checkpoint)
+
+    if config["eval_args"]["mode"]["valid"] != "full" or valid_data.is_sequential:
+        raise ValueError("Independent validation requires non-sequential full-sort evaluation")
+    if k >= dataset.item_num:
+        raise ValueError("k exceeds the catalogue size")
+
+    # Reproduce actual exported rows, including ratings and timestamps
+    with tempfile.TemporaryDirectory() as directory:
+        reconstructed = Path(directory) / "splits"
+        actual_id = _export_splits(dataset, (train_data, valid_data, test_data), reconstructed, config)
+        if actual_id != split_id or any(
+                (reconstructed / f"{name}.csv").read_bytes() != (Path(source_splits) / f"{name}.csv").read_bytes()
+                for name in ("train", "valid", "test")
+        ):
+            raise ValueError("Reconstructed splits do not match :(")
+
+    interactions = valid_data.dataset.inter_feat
+    internal_users = interactions[dataset.uid_field].cpu().tolist()
+    users = dataset.id2token(dataset.uid_field, interactions[dataset.uid_field].cpu().numpy())
+    items = dataset.id2token(dataset.iid_field, interactions[dataset.iid_field].cpu().numpy())
+    relevant: Dict[str, Set[str]] = {}
+    for user, item in zip(users, items):
+        relevant.setdefault(str(user), set()).add(str(item))
+
+    rankings: Rankings = {}
+    user_ids = sorted(set(internal_users))
+    for start in range(0, len(user_ids), batch_size):
+        batch = user_ids[start:start + batch_size]
+        scores, indices = full_sort_topk(batch, model, valid_data, k=k, device=config["device"])
+        if any(not isfinite(value) for row in scores.cpu().tolist() for value in row):
+                raise ValueError("Each user needs at least k finite scores")
+        external_users = dataset.id2token(dataset.uid_field, batch)
+        external_items = dataset.id2token(dataset.iid_field, indices.cpu().numpy())
+        for user, row in zip(external_users, external_items):
+            rankings[str(user)] = [str(item) for item in row]
+    return config, rankings, relevant
+
+
+
 def train(model_config, output):
     """Train one configured model and save validation diagnostics and exact splits.
 
     RecBole imports stay here so the demo and independent evaluation code need
     only Python. This entry point does not evaluate test data. Full project
-    evaluation still needs export_scores and the independent metrics below.
+    evaluation still needs full-candidate score export and beyond-accuracy
+    metrics. The evaluate command supplies the independent validation pilot.
     """
     model_config = Path(model_config).resolve()
     protocol = REPO_ROOT / "project/configs/protocol.yaml"
@@ -85,7 +172,7 @@ def train(model_config, output):
         # for the agreed evaluation partition. Do not export last-epoch weights
         # while labelling them as the best validation checkpoint.
         write_json(output / "validation.json", {
-            "source": "RecBole diagnostics; independent project evaluation is still TODO",
+            "source": "RecBole diagnostics; use the evaluate command for independent validation accuracy",
             "selection_metric": config["valid_metric"],
             "best_score": float(best_score),
             "metrics": {key: float(value) for key, value in best_metrics.items()},

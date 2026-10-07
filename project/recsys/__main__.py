@@ -6,7 +6,7 @@ import importlib
 from .artifacts import REPO_ROOT
 
 
-def main():
+def main() -> None: # :)
     parser = argparse.ArgumentParser(description="RecSys project starter commands")
     commands = parser.add_subparsers(dest="command", required=True)
     demo = commands.add_parser("demo", help="Run the synthetic baseline/evaluation example")
@@ -16,6 +16,11 @@ def main():
     train = commands.add_parser("train", help="Train a RecBole model; save validation and splits")
     train.add_argument("--model-config", default=str(REPO_ROOT / "project/configs/models/bpr.yaml"))
     train.add_argument("--output", required=True, help="New artifact directory (must not exist)")
+    evaluate = commands.add_parser("evaluate", help="Run independent validation metrics on a saved training run")
+    evaluate.add_argument("--run", required=True, help="Completed project training artifact directory")
+    evaluate.add_argument("--output", required=True, help="New evaluation artifact directory (must not exist)")
+    evaluate.add_argument("--k", type=int, default=10)
+    evaluate.add_argument("--batch-size", type=int, default=128, help="Batch size for the evaluation calculations. Too high may cause out of memory errors")
     for name in ("task1", "task2", "task3"):
         commands.add_parser(name, help="TODO: project experiment orchestration")
     args = parser.parse_args()
@@ -27,7 +32,11 @@ def main():
         elif args.command == "train":
             from .recbole_adapter import train
             output = train(args.model_config, args.output)
-            print(f"Training artifacts saved to {output}; independent project evaluation is still TODO.")
+            print(f"Training artifacts saved to {output}; use the evaluate command for independent evaluation.")
+        elif args.command == "evaluate":
+            from .evaluation import evaluate_training_run
+            output = evaluate_training_run(args.run, args.output, k=args.k, batch_size=args.batch_size)
+            print(f"Independent evaluation saved to {output}; see metrics.json, comparison.json, and example.json")
         else:
             importlib.import_module(f"project.recsys.experiments.{args.command}").run()
     except (NotImplementedError, ValueError, FileExistsError, FileNotFoundError) as error:

@@ -40,6 +40,8 @@ def evaluate_accuracy(
         recall = hits / len(positives)
         ideal_dcg = sum(1 / log2(rank + 1) for rank in range(1, min(k, len(positives)) + 1))
 
+        # Not sure about saving the information like Precision@number of just Precision@K. This makes it harder
+        # to actually retrieve them, but it is technically more informative
         per_user[user] = {
             f"Precision@{k}": precision,
             f"Recall@{k}": recall,
