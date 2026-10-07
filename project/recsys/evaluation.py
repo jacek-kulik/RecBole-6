@@ -20,7 +20,7 @@ def evaluate_training_run(
         run_dir: str | PathLike[str],
         output: str | PathLike[str],
         k: int = 10,
-        batch_size: int = 128) -> Path:
+        batch_size: int = 1024) -> Path:
     """Save rankings, accuracy, a worked example, and diagnostic comparisons.
     """
 

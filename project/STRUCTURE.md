@@ -22,7 +22,7 @@ python -m unittest discover -s project/tests -v
 ```
 
 The demo runs random and popularity baselines on a tiny synthetic fixture,
-filters training-seen items, ranks candidates, calculates independent Recall,
+filters training-seen items, ranks candidates, calculates all the independent accuracy evaluation metrics,
 and saves JSON scores, rankings, metrics, the split, and a run manifest. It is
 not a MovieLens experiment and does not complete any assignment subtask.
 Choose a new output directory for each run; existing directories are rejected.
@@ -50,6 +50,16 @@ external IDs, ratings, and timestamps. It saves the supplied YAMLs, resolved
 configuration, split hash, checkpoint path, and validation diagnostics. It does
 not yet export model scores or perform the complete independent evaluation.
 
+For a sample accuracy evaluation task you can use (and adapt) the following command:
+Make sure to change the input and output to what you actually want to do
+
+```sh
+python -m project.recsys evaluate \
+  --run project/artifacts/bpr-001 \
+  --output project/artifacts/bpr-valid-001 \
+  --k 10 --batch-size 1024
+```
+
 The `task1`, `task2`, and `task3` commands deliberately stop with a descriptive
 `NotImplementedError`. They are optional places to connect completed work, not
 three extra deliverables. The same applies to the unfinished algorithms; there
@@ -57,13 +67,13 @@ are no fabricated zero metrics or silent pass-through implementations.
 
 ## What the team needs first
 
-| Handoff | Owner | Consumer | Minimum shared result |
-| --- | --- | --- | --- |
-| Protocol and candidate policy | Caio with Jacek | Everyone | Agreed split, relevance rule, cutoff, external IDs, and candidate set; record decisions in `PROTOCOL.md`. |
-| Individual predictions | Gabriel with Caio | Bogdan and Jacek | Model/config/run ID and comparable `ScoreTable` values on the agreed development split. |
-| First weighted hybrid | Bogdan | Caio and Jacek | Fitting rule, component run IDs, coefficients, and predictions for the same candidates. |
-| Independent metric pilot | Jacek | Caio and Victor | Metric definition, known-answer example, and result on the first real model output. |
-| Reranker inputs | Jacek with Gabriel and Victor | Bogdan and Victor | Agreed `RerankContext`, method objective, strength, and ordered output. |
+| Handoff                       | Owner                         | Consumer          | Minimum shared result                                                                                     |
+|-------------------------------|-------------------------------|-------------------|-----------------------------------------------------------------------------------------------------------|
+| Protocol and candidate policy | Caio with Jacek               | Everyone          | Agreed split, relevance rule, cutoff, external IDs, and candidate set; record decisions in `PROTOCOL.md`. |
+| Individual predictions        | Gabriel with Caio             | Bogdan and Jacek  | Model/config/run ID and comparable `ScoreTable` values on the agreed development split.                   |
+| First weighted hybrid         | Bogdan                        | Caio and Jacek    | Fitting rule, component run IDs, coefficients, and predictions for the same candidates.                   |
+| Independent metric pilot      | Jacek                         | Caio and Victor   | Metric definition, known-answer example, and result on the first real model output.                       |
+| Reranker inputs               | Jacek with Gabriel and Victor | Bogdan and Victor | Agreed `RerankContext`, method objective, strength, and ordered output.                                   |
 
 The first four rows support the 6 October end-to-end checkpoint in
 `work_distribution.md`; the reranker interface follows for Task 3. The
@@ -88,6 +98,8 @@ project/
     experiments.yaml           # TODO model/search/metric/reranker/analysis plan
     models/bpr.yaml             # First individual-model config; add the lecture set
   examples/toy.json             # Tiny synthetic example, committed with the code
+  notebooks/
+    movielens_analysis.ipynb   # Dataset analysis for data cleanliness and split decision
   recsys/
     __main__.py                # CLI: demo, train, task1, task2, task3
     contracts.py               # ScoreTable, alignment checks, ranking, metadata types
@@ -99,8 +111,10 @@ project/
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
     metrics/
-      accuracy.py              # Recall reference and remaining accuracy metrics TODO
+      accuracy.py              # Computes Precision@k, Recall@k, F1@k, MRR@k, NDCG@k, MAP@k, saving in aggregate and per-user
+      types.py                 # Shared types used for the metrics computation
       beyond_accuracy.py       # Diversity, novelty, calibration, fairness, bias TODO
+      _validation.py           # Internal ID and ranking list validation for metric computation
     rerankers/
       diversification.py       # Gabriel
       calibration.py           # Jacek
@@ -114,7 +128,7 @@ project/
       task1.py                 # Optional Task 1 orchestration placeholder
       task2.py                 # Optional Task 2 orchestration placeholder
       task3.py                 # Required order interfaces; optional overall runner
-  tests/test_starter.py         # Focused checks for the working shared pieces
+  tests/                       # Contains the test files for all the modules
   scripts/                     # Existing batch/tuning-summary helpers
   artifacts/                   # Generated run directories; ignored by Git
 ```

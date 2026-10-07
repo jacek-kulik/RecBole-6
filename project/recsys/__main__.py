@@ -20,7 +20,7 @@ def main() -> None: # :)
     evaluate.add_argument("--run", required=True, help="Completed project training artifact directory")
     evaluate.add_argument("--output", required=True, help="New evaluation artifact directory (must not exist)")
     evaluate.add_argument("--k", type=int, default=10)
-    evaluate.add_argument("--batch-size", type=int, default=128, help="Batch size for the evaluation calculations. Too high may cause out of memory errors")
+    evaluate.add_argument("--batch-size", type=int, default=1024, help="Batch size for the evaluation calculations. Too high may cause out of memory errors, but will speed it up")
     for name in ("task1", "task2", "task3"):
         commands.add_parser(name, help="TODO: project experiment orchestration")
     args = parser.parse_args()
