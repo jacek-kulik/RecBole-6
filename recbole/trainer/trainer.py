@@ -32,6 +32,7 @@ import torch.cuda.amp as amp
 from recbole.data.interaction import Interaction
 from recbole.data.dataloader import FullSortEvalDataLoader
 from recbole.evaluator import Evaluator, Collector
+from recbole.model.general_recommender.bpr import BPR
 from recbole.utils import (
     ensure_dir,
     get_local_time,
@@ -232,7 +233,7 @@ class Trainer(AbstractTrainer):
         if not self.config["single_spec"] and train_data.shuffle:
             train_data.sampler.set_epoch(epoch_idx)
 
-        scaler = amp.GradScaler(enabled=self.enable_scaler)
+        scaler = torch.amp.GradScaler("cuda", enabled=self.enable_scaler)
         for batch_idx, interaction in enumerate(iter_data):
             interaction = interaction.to(self.device)
             self.optimizer.zero_grad()
@@ -310,7 +311,11 @@ class Trainer(AbstractTrainer):
         try:
             with torch.no_grad():
                 # Call model.forward() to get final aggregated embeddings
-                user_emb, item_emb = self.model.forward()
+                if isinstance(self.model, BPR):
+                    user_emb = self.model.user_embedding.weight
+                    item_emb = self.model.item_embedding.weight
+                else:
+                    user_emb, item_emb = self.model.forward()
                 
                 # Convert to CPU numpy arrays
                 user_emb_np = user_emb.cpu().float().numpy()
@@ -1495,7 +1500,7 @@ class NCLTrainer(Trainer):
             if show_progress
             else train_data
         )
-        scaler = amp.GradScaler(enabled=self.enable_scaler)
+        scaler = torch.amp.GradScaler("cuda", enabled=self.enable_scaler)
 
         if not self.config["single_spec"] and train_data.shuffle:
             train_data.sampler.set_epoch(epoch_idx)
