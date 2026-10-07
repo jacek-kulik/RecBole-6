@@ -50,17 +50,17 @@ external IDs, ratings, and timestamps. It saves the supplied YAMLs, resolved
 configuration, split hash, checkpoint path, and validation diagnostics. It does
 not yet export model scores or perform the complete independent evaluation.
 
-For a sample accuracy evaluation task you can use (and adapt) the following command:
+For an independent accuracy validation run, use (and adapt) the following command:
 Make sure to change the input and output to what you actually want to do
 
 ```sh
-python -m project.recsys evaluate \
+python -m project.recsys validate \
   --run project/artifacts/bpr-001 \
   --output project/artifacts/bpr-valid-001 \
   --k 10 --batch-size 1024
 ```
 
-This produces an independent evaluation on the validation set only loading it on the CPU for consistency.
+This computes independent validation metrics, loading the saved model on the CPU for consistency.
 Also compares the metrics to the ones produced by RecBole to see if we agree.
 Saves the rankings, relevance, aggregate and per-user metrics, comparisons, an example user,
 and a manifest storing run information.
@@ -106,7 +106,7 @@ project/
   notebooks/
     movielens_analysis.ipynb   # Dataset analysis for data cleanliness and split decision
   recsys/
-    __main__.py                # CLI: demo, train, task1, task2, task3
+    __main__.py                # CLI: demo, train, validate, task1, task2, task3
     contracts.py               # ScoreTable, alignment checks, ranking, metadata types
     data.py                    # Candidate helper and metadata-preparation placeholder
     artifacts.py               # Small run-record helpers; extend only if needed
@@ -115,7 +115,7 @@ project/
     recbole_adapter.py         # Real training/split export; full-score export TODO
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
-    evaluate.py                # Runner for the independent validation accuracy evaluation
+    validate.py                # Runner for independent validation accuracy
     metrics/
       _validation.py           # External ID and ranking list validation for metric computation
       accuracy.py              # Computes Precision@k, Recall@k, F1@k, MRR@k, NDCG@k, MAP@k, returning in aggregate and per-user

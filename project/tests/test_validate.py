@@ -10,16 +10,16 @@ import unittest
 from unittest.mock import patch
 
 from project.recsys.__main__ import main
-from project.recsys.evaluation import evaluate_training_run
+from project.recsys.validate import validate_training_run
 
 
-class EvaluationTests(unittest.TestCase):
+class ValidateTests(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.source = Path(self.directory.name) / "training"
         self.source.mkdir()
-        self.output = Path(self.directory.name) / "evaluation"
+        self.output = Path(self.directory.name) / "validation"
         self.manifest = {
             "kind": "recbole-training", "status": "complete", "checkpoint": "best.pth",
             "split_id": "split", "git_commit": "training-commit", "model": "BPR",
@@ -33,7 +33,7 @@ class EvaluationTests(unittest.TestCase):
         self.config = {"model": "BPR", "dataset": "fixture", "seed": 42, "metric_decimal_place": 4}
         self.rankings = {"miss": ["x", "y"], "late": ["x", "a"]}
         self.relevant = {"miss": {"b"}, "late": {"a"}}
-        self.predictions = patch("project.recsys.evaluation.validation_predictions",
+        self.predictions = patch("project.recsys.validate.validation_predictions",
                                  return_value=(self.config, self.rankings, self.relevant))
         self.loader = self.predictions.start()
         self.addCleanup(self.predictions.stop)
@@ -42,7 +42,7 @@ class EvaluationTests(unittest.TestCase):
         return json.loads((self.output / filename).read_text())
 
     def test_saves_metrics_comparison_worked_example_and_provenance(self):
-        self.assertEqual(evaluate_training_run(str(self.source), str(self.output), k=2, batch_size=1), self.output)
+        self.assertEqual(validate_training_run(str(self.source), str(self.output), k=2, batch_size=1), self.output)
         self.loader.assert_called_once_with(self.source / "best.pth", self.source / "splits", "split", 2, 1)
         self.assertEqual(self.read("rankings.json"), self.rankings)
         self.assertEqual(self.read("relevant.json"), {"miss": ["b"], "late": ["a"]})
@@ -69,13 +69,13 @@ class EvaluationTests(unittest.TestCase):
 
     def test_records_diagnostic_disagreement_instead_of_hiding_it(self):
         (self.source / "validation.json").write_text(json.dumps({"metrics": {"mrr@2": 0.75}}))
-        evaluate_training_run(self.source, self.output, k=2)
+        validate_training_run(self.source, self.output, k=2)
         row = self.read("comparison.json")["MRR@2"]
         self.assertFalse(row["matches_reported_precision"])
         self.assertEqual(row["difference"], -0.5)
 
     def test_other_cutoff_does_not_compare_different_metrics(self):
-        evaluate_training_run(self.source, self.output, k=1)
+        validate_training_run(self.source, self.output, k=1)
         self.assertEqual(self.read("comparison.json"), {})
         self.assertEqual(self.read("metrics.json")["MRR@1"], 0)
         self.assertEqual(self.read("example.json")["user"], "late")
@@ -85,7 +85,7 @@ class EvaluationTests(unittest.TestCase):
         evidence = self.output / "evidence"
         evidence.write_text("keep")
         with self.assertRaises(FileExistsError):
-            evaluate_training_run(self.source, self.output)
+            validate_training_run(self.source, self.output)
         self.loader.assert_not_called()
         self.assertEqual(evidence.read_text(), "keep")
 
@@ -94,19 +94,19 @@ class EvaluationTests(unittest.TestCase):
             self.manifest["status"] = status
             (self.source / "manifest.json").write_text(json.dumps(self.manifest))
             with self.subTest(status=status), self.assertRaises(ValueError):
-                evaluate_training_run(self.source, self.output)
+                validate_training_run(self.source, self.output)
         self.manifest["status"] = "complete"
         (self.source / "manifest.json").write_text(json.dumps(self.manifest))
         (self.source / "best.pth").unlink()
         with self.assertRaises(FileNotFoundError):
-            evaluate_training_run(self.source, self.output)
+            validate_training_run(self.source, self.output)
         self.assertFalse(self.output.exists())
         self.loader.assert_not_called()
 
     def test_records_failure_and_does_not_write_metrics(self):
         self.loader.side_effect = ValueError("Reconstructed splits do not match")
         with self.assertRaisesRegex(ValueError, "splits do not match"):
-            evaluate_training_run(self.source, self.output)
+            validate_training_run(self.source, self.output)
         self.assertEqual(self.read("manifest.json")["status"], "failed")
         self.assertIn("splits do not match", self.read("manifest.json")["error"])
         self.assertFalse((self.output / "metrics.json").exists())
@@ -114,18 +114,18 @@ class EvaluationTests(unittest.TestCase):
     def test_rejects_checkpoint_metadata_mismatch(self):
         self.config["seed"] = 7
         with self.assertRaisesRegex(ValueError, "metadata"):
-            evaluate_training_run(self.source, self.output)
+            validate_training_run(self.source, self.output)
         self.assertEqual(self.read("manifest.json")["status"], "failed")
 
     def test_invalid_limits_fail_before_creating_output(self):
         for kwargs in ({"k": 0}, {"k": True}, {"batch_size": -1}, {"batch_size": 1.5}):
             with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
-                evaluate_training_run(self.source, self.output, **kwargs)
+                validate_training_run(self.source, self.output, **kwargs)
         self.assertFalse(self.output.exists())
         self.loader.assert_not_called()
 
     def test_cli_routes_options_and_reports_errors(self):
-        args = ["recsys", "evaluate", "--run", str(self.source), "--output", str(self.output),
+        args = ["recsys", "validate", "--run", str(self.source), "--output", str(self.output),
                 "--k", "2", "--batch-size", "1"]
         with patch("sys.argv", args), patch("sys.stdout", new=io.StringIO()):
             main()

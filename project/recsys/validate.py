@@ -1,4 +1,4 @@
-"""Jacek's accuracy evaluation runner for a saved training run's data"""
+"""Jacek's accuracy validation runner for a saved training run's data"""
 
 import hashlib
 import json
@@ -16,7 +16,7 @@ class MetricComparison(TypedDict):
     difference: float
     matches_reported_precision: bool
 
-def evaluate_training_run(
+def validate_training_run(
         run_dir: str | PathLike[str],
         output: str | PathLike[str],
         k: int = 10,

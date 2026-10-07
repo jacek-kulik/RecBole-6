@@ -126,7 +126,7 @@ def train(model_config, output):
     RecBole imports stay here so the demo and independent evaluation code need
     only Python. This entry point does not evaluate test data. Full project
     evaluation still needs full-candidate score export and beyond-accuracy
-    metrics. The evaluate command supplies the independent validation pilot.
+    metrics. The validate command supplies the independent validation pilot.
     """
     model_config = Path(model_config).resolve()
     protocol = REPO_ROOT / "project/configs/protocol.yaml"
@@ -173,7 +173,7 @@ def train(model_config, output):
         # for the agreed evaluation partition. Do not export last-epoch weights
         # while labelling them as the best validation checkpoint.
         write_json(output / "validation.json", {
-            "source": "RecBole diagnostics; use the evaluate command for independent validation accuracy",
+            "source": "RecBole diagnostics; use the validate command for independent validation accuracy",
             "selection_metric": config["valid_metric"],
             "best_score": float(best_score),
             "metrics": {key: float(value) for key, value in best_metrics.items()},
