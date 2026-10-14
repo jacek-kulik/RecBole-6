@@ -7,8 +7,9 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
+import warnings
 
-from project.recsys.recbole_adapter import _export_splits, _load_validation_checkpoint, validation_predictions
+from project.recsys.recbole_adapter import _export_splits, _load_checkpoint, partition_predictions, validation_predictions
 from project.recsys.artifacts import REPO_ROOT
 
 
@@ -53,7 +54,7 @@ class ValidationPredictionTests(unittest.TestCase):
                        "eval_args": {"mode": {"valid": "full", "test": "full"}}}
         self.split_id = _export_splits(self.dataset, (self.train, self.valid, self.test), self.splits, self.config)
         self.model = object()
-        self.load_patch = patch("project.recsys.recbole_adapter._load_validation_checkpoint",
+        self.load_patch = patch("project.recsys.recbole_adapter._load_checkpoint",
                                 return_value=(self.config, self.model, self.dataset, self.train, self.valid, self.test))
         self.load = self.load_patch.start()
         self.addCleanup(self.load_patch.stop)
@@ -90,6 +91,12 @@ class ValidationPredictionTests(unittest.TestCase):
             self.assertIs(call.args[2], self.valid)
             self.assertEqual(call.kwargs, {"k": 2, "device": "cpu"})
         self.assertEqual([call.args[0] for call in self.topk.call_args_list], [[1], [2]])
+
+    def test_test_partition_uses_test_loader_and_held_out_labels(self) -> None:
+        result = partition_predictions("selected.pth", self.splits, self.split_id, k=2, partition="test")
+        self.assertEqual(result.relevant, {"user-b": {"a"}, "user-a": {"b"}})
+        self.assertEqual(result.catalogue, ("a", "b", "c", "d"))
+        self.assertIs(self.topk.call_args.args[2], self.test)
 
     def test_rejects_changed_saved_or_reconstructed_splits_before_scoring(self):
         for name in ("train", "valid", "test"):
@@ -165,7 +172,7 @@ class CheckpointLoadingTests(unittest.TestCase):
             "recbole.utils": SimpleNamespace(get_model=get_model, init_seed=seed),
         }
         with patch.dict(sys.modules, modules):
-            result = _load_validation_checkpoint(Path("best.pth"))
+            result = _load_checkpoint(Path("best.pth"))
         torch.load.assert_called_once_with("best.pth", map_location="cpu", weights_only=False)
         self.assertEqual(config["device"], "cpu")
         self.assertFalse(config["use_gpu"])
@@ -180,6 +187,43 @@ class CheckpointLoadingTests(unittest.TestCase):
             str(REPO_ROOT / "dataset" / "ml-100k"),
         )
 
+class HistoryMaskTests(unittest.TestCase):
+    def test_interaction_sort_preserves_order_without_numpy_warnings(self) -> None:
+        try:
+            import torch
+        except ImportError:
+            self.skipTest("The interaction sort check needs the RecBole environment")
+        from recbole.data.interaction import Interaction
+
+        rows = Interaction({"uid": torch.tensor([2, 1, 1, 2]),
+                            "time": torch.tensor([1, 3, 3, 2]), "row": torch.arange(4)})
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            rows.sort(by=["uid", "time"], ascending=[True, True])
+            self.assertEqual(rows["row"].tolist(), [1, 2, 0, 3])
+            rows.sort(by="time", ascending=False)
+        self.assertEqual(rows["row"].tolist(), [2, 1, 3, 0])
+
+    def test_test_mask_excludes_training_and_validation_items(self) -> None:
+        try:
+            import numpy as np
+            import torch
+        except ImportError:
+            self.skipTest("The real full-sort mask check needs the RecBole environment")
+        from recbole.utils.case_study import full_sort_topk
+
+        dataset = SimpleNamespace(uid_field="uid", item_num=5, join=lambda interaction: interaction)
+        model = SimpleNamespace(
+            eval=lambda: None,
+            full_sort_predict=lambda interaction: torch.tensor([[100., 90., 80., 70., 60.]]),
+        )
+        # Padding and training item 1 outrank validation item 2, then test item 3.
+        for history, expected in (([1], 2), ([1, 2], 3)):
+            histories = np.empty(2, dtype=object)
+            histories[1] = torch.tensor(history)
+            loader = SimpleNamespace(is_sequential=False, dataset=dataset, uid2history_item=histories)
+            _, indices = full_sort_topk([1], model, loader, k=1)
+            self.assertEqual(indices.tolist(), [[expected]])
 
 if __name__ == "__main__":
     unittest.main()
