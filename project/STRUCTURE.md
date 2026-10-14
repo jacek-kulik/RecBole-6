@@ -36,7 +36,7 @@ python -m venv .venv
 python -m pip install -e .
 python -m project.recsys train \
   --model-config project/configs/models/bpr.yaml \
-  --output project/artifacts/bpr-001
+  --output project/artifacts/bpr-60-001
 ```
 
 Use the PyTorch build appropriate for your machine when setting up that
@@ -56,8 +56,8 @@ directory. Adjust the paths to your actual run:
 
 ```sh
 python -m project.recsys validate \
-  --run project/artifacts/bpr-001 \
-  --output project/artifacts/bpr-valid-001 \
+  --run project/artifacts/bpr-60-001 \
+  --output project/artifacts/bpr-60-valid-001 \
   --k 10 --batch-size 1024
 ```
 
@@ -283,3 +283,46 @@ uses its existing root `log/` and `log_tensorboard/` locations. Keep source/conf
 in Git; save selected evidence and reproduction instructions for the final code
 ZIP. If a framework edit is necessary, name the changed `recbole/` files and the
 reason in the project documentation so reviewers can find it.
+
+
+## Verification on 14 October
+
+Implementation commit: `b492059a1`. The following checks were run in the task
+worktree with the repository's Python 3.11 environment:
+
+- All 59 project tests passed with warnings treated as errors, including the
+  real full-sort history mask and interaction sorting checks. The full RecBole
+  pytest suite was not run; pytest is not installed in this environment.
+- All nine notebook code cells ran with warnings treated as errors. Saved
+  outputs include both splits and the training-derived activity/movie groups.
+- `metrics-old-valid-002` evaluated the existing `bpr-001` checkpoint using its
+  original 80/10/10 split. The six accuracy artifact files match the previous
+  `bpr-valid-005` output exactly, including per-user results and rankings.
+- A new five-epoch BPR run, `bpr-60-001`, trained with a clean checkout of the
+  implementation commit. `bpr-60-valid-001` independently validated it with
+  batch size 128. Split counts were 60,734 / 19,633 / 19,633; activity boundaries
+  were 26 and 69, with 321 / 310 / 312 users. All three saved RecBole diagnostics
+  agreed at their reported precision. Validation MRR@10 was 0.29505336.
+
+The BPR run verifies the pipeline; it is not a tuned final comparison. Its
+training and validation manifests both record `test_evaluated: false`.
+Final test routing was checked on fixtures only. Generated checkpoints and
+metric JSON stay under the ignored `project/artifacts/` directory.
+
+After activating the repository environment, reproduce the checks from the
+repository root, choosing new output directories if these already exist:
+
+```sh
+python -W error -m unittest discover -s project/tests -q
+python -W error -m project.recsys train \
+  --model-config project/configs/models/bpr.yaml \
+  --output project/artifacts/bpr-60-002
+python -W error -m project.recsys validate \
+  --run project/artifacts/bpr-60-002 \
+  --output project/artifacts/bpr-60-valid-002 \
+  --k 10 --batch-size 128
+```
+
+Open the notebook with this same environment and run all cells. Its code checks
+that RecBole comes from the selected checkout. The source metadata files remain
+unchanged, including their original placeholders.
