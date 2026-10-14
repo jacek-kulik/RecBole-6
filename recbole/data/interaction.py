@@ -12,6 +12,8 @@ recbole.data.interaction
 ############################
 """
 
+from __future__ import annotations
+
 import numpy as np
 import pandas as pd
 import torch
@@ -303,7 +305,10 @@ class Interaction(object):
         index = torch.randperm(self.length)
         self._reindex(index)
 
-    def sort(self, by, ascending=True):
+    def sort(
+        self, by: str | list[str] | tuple[str, ...],
+        ascending: bool | list[bool] | tuple[bool, ...] = True,
+    ) -> None:
         """Sort the current interaction inplace.
 
         Args:
@@ -344,9 +349,9 @@ class Interaction(object):
                 key = self.interaction[b]
             else:
                 key = self.interaction[b][..., 0]
-            index = np.argsort(key, kind="stable")
+            index = np.argsort(key.cpu().numpy(), kind="stable")
             if not a:
-                index = torch.tensor(np.array(index)[::-1])
+                index = torch.tensor(index[::-1].copy())
             self._reindex(index)
 
     def add_prefix(self, prefix):

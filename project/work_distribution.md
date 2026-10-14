@@ -153,3 +153,23 @@ Hold short group check-ins at **17:00** on 2, 6, 9, 13, 16, 20, and 23 Oct.
 At each one, report the next handoff and any blocker. Use the same split,
 candidates, and separately implemented metrics for final comparisons. Choose
 settings on development data and reserve test data for final evaluation.
+
+## Implementation and protocol changes recorded on 14 October
+
+These notes describe changes since the original project plan. The assignment
+and review tables above keep their recorded dates; this is not a rescheduling.
+
+| Earlier plan or implementation | Current position |
+| --- | --- |
+| Five unnamed roles | Roles are assigned to Caio, Gabriel, Bogdan, Jacek and Victor. Caio's numbered-task review workload increased from three to seven. |
+| Broad shared reranker responsibility | Jacek integrates the four methods and owns calibration/item fairness; Gabriel contributes diversification and Victor contributes user fairness. These algorithms remain the next stage. |
+| Metric placeholders, initially only Recall | Six independent accuracy metrics and all eight agreed beyond-accuracy measurements are implemented. Caio's metric review remains necessary. |
+| Saved-run evaluation initially called `evaluate` | Development evaluation was renamed to `validate`. The new `evaluate` command now explicitly evaluates test; both preserve checkpoint/split identity. |
+| Provisional 80/10/10, followed by a 70/15/15 proposal | Jacek chose 60/20/20 on 14 October after exploring held-out label counts. New comparisons need new training runs; old checkpoints retain their original splits. |
+| User/group definitions unresolved | Activity terciles provide overall/low/medium/high reporting. Recorded F/M gender categories define user-group unfairness overall and within each activity cohort. |
+| Movie popularity groups unresolved | Head/middle/tail use 20/60/20 shares of training interactions, retaining complete count ties. The actual shares and sizes are reported. |
+| Group analysis owned by Victor | Jacek supplies reusable grouping and metric-report helpers. Victor retains interpretation and report ownership for Tasks 2.5 and 3.4. |
+
+The exact formulas, source metadata and output artifacts are in `PROTOCOL.md`
+and `STRUCTURE.md`. Jacek's implementation request sets these choices; it does
+not record course-feedback answers or completed peer reviews.

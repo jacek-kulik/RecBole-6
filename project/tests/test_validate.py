@@ -2,6 +2,7 @@
 
 from contextlib import redirect_stderr
 import hashlib
+import csv
 import io
 import json
 from pathlib import Path
@@ -11,12 +12,16 @@ from unittest.mock import patch
 
 from project.recsys.__main__ import main
 from project.recsys.validate import validate_training_run
+from project.recsys.recbole_adapter import PredictionResults
 
 
 class ValidateTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
+        stdout = patch("sys.stdout", new=io.StringIO())
+        stdout.start()
+        self.addCleanup(stdout.stop)
         self.source = Path(self.directory.name) / "training"
         self.source.mkdir()
         self.output = Path(self.directory.name) / "validation"
@@ -33,8 +38,21 @@ class ValidateTests(unittest.TestCase):
         self.config = {"model": "BPR", "dataset": "fixture", "seed": 42, "metric_decimal_place": 4}
         self.rankings = {"miss": ["x", "y"], "late": ["x", "a"]}
         self.relevant = {"miss": {"b"}, "late": {"a"}}
-        self.predictions = patch("project.recsys.validate.validation_predictions",
-                                 return_value=(self.config, self.rankings, self.relevant))
+        splits = self.source / "splits"
+        splits.mkdir()
+        with (splits / "train.csv").open("w", newline="") as stream:
+            writer = csv.writer(stream)
+            writer.writerow(["user_id", "item_id"])
+            writer.writerows([("miss", "b"), ("late", "b"), ("late", "b"), ("late", "b")])
+        data = Path(self.directory.name) / "dataset/fixture"
+        data.mkdir(parents=True)
+        (data / "fixture.item").write_text("item_id:token\tclass:token_seq\na\tComedy\nb\tDrama\nx\tDrama\ny\tComedy\n")
+        (data / "fixture.user").write_text("user_id:token\tgender:token\nmiss\tF\nlate\tM\n")
+        root_patch = patch("project.recsys.evaluation.REPO_ROOT", Path(self.directory.name))
+        root_patch.start()
+        self.addCleanup(root_patch.stop)
+        self.predictions = patch("project.recsys.evaluation.partition_predictions",
+                                 return_value=PredictionResults(self.config, self.rankings, self.relevant, ("a", "b", "x", "y")))
         self.loader = self.predictions.start()
         self.addCleanup(self.predictions.stop)
 
@@ -43,7 +61,7 @@ class ValidateTests(unittest.TestCase):
 
     def test_saves_metrics_comparison_worked_example_and_provenance(self):
         self.assertEqual(validate_training_run(str(self.source), str(self.output), k=2, batch_size=1), self.output)
-        self.loader.assert_called_once_with(self.source / "best.pth", self.source / "splits", "split", 2, 1)
+        self.loader.assert_called_once_with(self.source / "best.pth", self.source / "splits", "split", 2, 1, partition="valid")
         self.assertEqual(self.read("rankings.json"), self.rankings)
         self.assertEqual(self.read("relevant.json"), {"miss": ["b"], "late": ["a"]})
         self.assertEqual(self.read("metrics.json")["MRR@2"], 0.25)
@@ -66,6 +84,26 @@ class ValidateTests(unittest.TestCase):
         self.assertFalse(manifest["test_evaluated"])
         self.assertEqual(manifest["source_git_commit"], "training-commit")
         self.assertEqual(manifest["checkpoint_sha256"], hashlib.sha256(b"selected checkpoint").hexdigest())
+        reports = self.read("group_metrics.json")
+        self.assertEqual(reports["overall"]["beyond_accuracy"]["gender_fairness"]["counts"], {"F": 1, "M": 1, "unknown": 0})
+        self.assertEqual(reports["overall"]["beyond_accuracy"]["gender_fairness"]["gaps"]["MRR@2"]["absolute"], .5)
+        self.assertIsNone(reports["medium"]["accuracy"])
+        self.assertIsNone(reports["low"]["beyond_accuracy"]["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
+        boundaries = self.read("groups.json")["activity"]["boundaries"]
+        self.assertAlmostEqual(boundaries[0], 5 / 3)
+        self.assertAlmostEqual(boundaries[1], 7 / 3)
+
+    def test_final_evaluation_uses_test_and_has_no_validation_comparison(self) -> None:
+        (self.source / "validation.json").unlink()
+        args = ["recsys", "evaluate", "--run", str(self.source), "--output", str(self.output),
+                "--k", "2", "--batch-size", "1"]
+        with patch("sys.argv", args), patch("sys.stdout", new=io.StringIO()):
+            main()
+        self.loader.assert_called_once_with(self.source / "best.pth", self.source / "splits", "split", 2, 1, partition="test")
+        self.assertTrue(self.read("manifest.json")["test_evaluated"])
+        self.assertEqual(self.read("manifest.json")["partition"], "test")
+        self.assertFalse((self.output / "comparison.json").exists())
+        self.assertIn("training and validation", self.read("manifest.json")["candidate_policy"])
 
     def test_records_diagnostic_disagreement_instead_of_hiding_it(self):
         (self.source / "validation.json").write_text(json.dumps({"metrics": {"mrr@2": 0.75}}))

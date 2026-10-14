@@ -44,14 +44,15 @@ environment. The starter defaults to CPU. In a separate worktree you may invoke
 an existing repository environment's Python by absolute path while keeping the
 working directory at this worktree's root.
 
-Training runs the local RecBole implementation, selects a checkpoint using
-validation, and exports the actual train/validation/test interaction splits with
+Training runs the local RecBole implementation with the shared 60/20/20 protocol,
+selects a checkpoint using validation, and exports the actual splits with
 external IDs, ratings, and timestamps. It saves the supplied YAMLs, resolved
 configuration, split hash, checkpoint path, and validation diagnostics. It does
-not yet export model scores or perform the complete independent evaluation.
+not yet export full candidate scores for hybrids. Run independent evaluation
+separately on the selected checkpoint.
 
-For an independent accuracy validation run, use (and adapt) the following command:
-Make sure to change the input and output to what you actually want to do
+For independent development metrics, use the saved training run and a new output
+directory. Adjust the paths to your actual run:
 
 ```sh
 python -m project.recsys validate \
@@ -60,10 +61,45 @@ python -m project.recsys validate \
   --k 10 --batch-size 1024
 ```
 
-This computes independent validation metrics, loading the saved model on the CPU for consistency.
-Also compares the metrics to the ones produced by RecBole to see if we agree.
-Saves the rankings, relevance, aggregate and per-user metrics, comparisons, an example user,
-and a manifest storing run information.
+This loads the checkpoint on CPU and verifies its saved split before scoring.
+It preserves rankings, relevance, aggregate/per-user accuracy, comparisons and
+a worked example. It also saves all eight beyond-accuracy measurements and
+activity reports, with F/M gender fairness within each cohort.
+
+When model settings are frozen, final test evaluation uses the same arguments:
+
+```sh
+python -m project.recsys evaluate \
+  --run project/artifacts/bpr-60-001 \
+  --output project/artifacts/bpr-60-test-001 \
+  --k 10 --batch-size 128
+```
+
+`validate` scores validation only. `evaluate` scores test only and does not
+compare test metrics against validation diagnostics. The test loader masks both
+training and validation history. Older saved runs reconstruct their original
+splits; changing the shared YAML does not change their data.
+
+The output files are:
+
+| Artifact | Contents |
+| --- | --- |
+| `metrics.json`, `per_user_metrics.json` | Existing six accuracy metrics, preserving their format. |
+| `beyond_accuracy.json` | Per-user and aggregate measurements, availability counts/reasons, gender gaps, and movie-group exposure. |
+| `groups.json` | Training-derived activity/popularity memberships, tercile boundaries, achieved interaction shares, and recorded gender membership. |
+| `group_metrics.json` | Overall and low/medium/high reports; cohort exposure is recomputed and F/M unfairness is calculated inside each cohort. |
+| `rankings.json`, `relevant.json`, `example.json` | Ordered predictions, observed positives and a worked accuracy example. |
+| `comparison.json` | Matching RecBole diagnostics, on validation only. |
+| `manifest.json` | Checkpoint/split identity, partition, source metadata hashes, formulas, smoothing, group rules and run status. |
+
+Use `groups.json` to see the inclusion criteria and sample sizes. Activity groups
+serve reporting; gender supplies user-fairness groups. Missing measurements are
+`null` with reasons. The formula choices are in `PROTOCOL.md`.
+
+The reusable functions are `prepare_metadata`, `evaluate_accuracy`,
+`evaluate_beyond_accuracy` and `compare_groups`. They use external IDs and typed
+Python data structures. A teammate can feed aligned rankings and relevance to
+these functions without training another model.
 
 The `task1`, `task2`, and `task3` commands deliberately stop with a descriptive
 `NotImplementedError`. They are optional places to connect completed work, not
@@ -83,7 +119,7 @@ are no fabricated zero metrics or silent pass-through implementations.
 The first four rows support the 6 October end-to-end checkpoint in
 `work_distribution.md`; the reranker interface follows for Task 3. The
 synthetic demo only illustrates the interfaces. Real score export, hybrid
-fitting, metrics, and rerankers remain team work.
+fitting, and rerankers remain team work; independent metrics are implemented.
 
 The generic `experiments/task*.py` commands, `tuning.py`, and
 `configs/experiments.yaml` are optional coordination placeholders. Keep the
@@ -99,27 +135,29 @@ project/
   PROTOCOL.md                  # Decisions the team must settle before comparison
   work_distribution.md         # Ownership, reviewers, and schedule
   configs/
-    protocol.yaml              # Shared provisional split/evaluation settings
+    protocol.yaml              # Shared 60/20/20 split/evaluation settings
     experiments.yaml           # TODO model/search/metric/reranker/analysis plan
     models/bpr.yaml             # First individual-model config; add the lecture set
   examples/toy.json             # Tiny synthetic example, committed with the code
   notebooks/
     movielens_analysis.ipynb   # Dataset analysis for data cleanliness and split decision
   recsys/
-    __main__.py                # CLI: demo, train, validate, task1, task2, task3
+    __main__.py                # CLI: demo, train, validate, evaluate, task1, task2, task3
     contracts.py               # ScoreTable, alignment checks, ranking, metadata types
-    data.py                    # Candidate helper and metadata-preparation placeholder
+    data.py                    # Metadata, training profiles and separate activity/gender groups
     artifacts.py               # Small run-record helpers; extend only if needed
     baselines.py               # Random and training-popularity scoring examples
     demo.py                    # Small runnable example joining the shared pieces
     recbole_adapter.py         # Real training/split export; full-score export TODO
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
-    validate.py                # Runner for independent validation accuracy
+    validate.py                # Development validation entrypoint
+    evaluate.py                # Final test entrypoint
+    evaluation.py              # Shared saved-run metrics/artifact runner
     metrics/
       _validation.py           # External ID and ranking list validation for metric computation
       accuracy.py              # Computes Precision@k, Recall@k, F1@k, MRR@k, NDCG@k, MAP@k, returning in aggregate and per-user
-      beyond_accuracy.py       # Diversity, novelty, calibration, fairness, bias TODO
+      beyond_accuracy.py       # Eight independent beyond-accuracy measurements
       types.py                 # Shared types used for the metrics computation
     rerankers/
       diversification.py       # Gabriel
@@ -128,7 +166,7 @@ project/
       user_fairness.py          # Victor
     analysis/
       coefficients.py          # Contribution/ablation analysis: Bogdan
-      groups.py                # User/item comparisons: Victor
+      groups.py                # Cohort reports for Victor; Jacek supplies reusable helpers
       explanations.py          # Mechanisms and improvement evidence: Victor
     experiments/
       task1.py                 # Optional Task 1 orchestration placeholder
@@ -163,8 +201,8 @@ add the separately prepared Overleaf ZIP to the repository.
    `require_aligned` before combining scores. Save fitted normalization and
    regression coefficients with the component run IDs.
 5. Produce rankings, run the group's independent metrics, and save both detailed
-   and aggregate measurements. The accuracy.py file computes the accuracy metrics, the beyond accuracy
-   and rerankers are still TODO 
+   and aggregate measurements. Accuracy and beyond-accuracy metrics are implemented;
+   the reranker algorithms remain TODO.
 6. Apply the four rerankers and compare strengths. Task 3.3 needs both rerank then
    combine and combine then rerank. A reranker returns an ordered list; combining
    those lists requires an explicit fusion/rank-to-score and truncation policy.
@@ -214,16 +252,24 @@ reranker contribution reviews follow the separate table in the work plan.
   search. Start the diversification method once metadata is agreed.
 - Bogdan: choose coefficient-fitting and selection data, implement the
   regression hybrid, then add the other hybrids and both reranking orders.
-- Jacek: implement the agreed metrics with known-answer cases (DONE), then calibration
-  and item fairness. Review score masking before the larger experiment runs.
-- Victor: prepare training-derived groups/profiles with Caio, implement user
-  fairness, and draft the explanatory comparisons and report figures.
+- Jacek: metrics, activity reports and gender fairness are implemented. Next,
+  implement calibration and item fairness and integrate the other contributions.
+  Review score masking before the larger experiment runs.
+- Victor: use the shared activity/gender and movie-group reports, implement user
+  fairness reranking, and draft explanatory comparisons and report figures.
 
 Search for `TODO` and `NotImplementedError` under `project/recsys/` to find the
 remaining implementation points. Update the matching tests when adding actual
 behaviour, especially alignment, relevance, group aggregation, and leakage checks.
 
 ## Existing tools and framework changes
+
+The metrics/groups branch also changes `recbole/data/interaction.py`:
+`Interaction.sort` converts its Torch key to a CPU NumPy array before stable
+sorting, and copies reversed indices before creating a descending-sort tensor.
+The previous NumPy-on-Torch call emits a NumPy 2 deprecation warning
+when evaluation loaders sort users. This conversion preserves the sort order
+and lets saved-run evaluation work with warnings treated as errors.
 
 `run_recbole.py` and `run_hyper.py` remain available. The project wrapper is a
 starting point for shared configuration and artifacts; it does not replace every

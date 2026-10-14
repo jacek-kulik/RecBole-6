@@ -1,4 +1,4 @@
-# Caio and Jacek: PROVISIONAL example. Agree and record all choices in PROTOCOL.md.
+# Jacek: 60/20/20 adopted on 14 October; definitions recorded in PROTOCOL.md.
 # Shared settings are loaded AFTER the model YAML to keep comparisons consistent.
 dataset: ml-100k
 seed: 42
@@ -8,12 +8,13 @@ show_progress: false
 load_col:
   inter: [user_id, item_id, rating, timestamp]
 eval_args:
-  split: {RS: [0.8, 0.1, 0.1]}
+  split: {RS: [0.6, 0.2, 0.2]}
   group_by: user
   order: RO
   mode: full
-# This example treats all recorded interactions as implicit positive feedback.
-# TODO: agree relevance semantics and candidate/seen-item rules before experiments.
+# All recorded interactions are implicit positive feedback.
+# Validation masks training history; final test also masks validation history.
+# These RecBole metrics are training diagnostics; final reports use independent code.
 metrics: [Recall, MRR, NDCG]
 topk: [10]
 valid_metric: MRR@10
