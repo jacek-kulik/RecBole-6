@@ -1,13 +1,37 @@
 import unittest
+import tempfile
+from pathlib import Path
 import numpy as np
 
 from project.recsys.contracts import ScoreTable
 from project.recsys.hybrids import candidate_features, fit_oof_regression, predict_weighted_hybrid, fit_weighted_hybrid
 from project.recsys.oof_hybrid import user_folds, ndcg_at_k, tuned_parameters
 from project.recsys.artifacts import REPO_ROOT
+from project.recsys.component_cache import save_fold, load_fold, run_lock
 
 
 class OOFHybridTests(unittest.TestCase):
+    def test_verified_fold_cache_and_partial_stage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'fold.npz'
+            indices = np.array([1, 3])
+            self.assertIsNone(load_fold(path, indices))
+            save_fold(path, indices, np.array([0.2, 0.4]))
+            np.testing.assert_array_equal(load_fold(path, indices), [0.2, 0.4])
+            with self.assertRaises(ValueError):
+                load_fold(path, np.array([1, 4]))
+            path.write_bytes(b'interrupted/corrupted')
+            with self.assertRaises(ValueError):
+                load_fold(path, indices)
+
+    def test_only_one_cache_writer(self):
+        with tempfile.TemporaryDirectory() as directory:
+            with run_lock(directory):
+                with self.assertRaises(ValueError):
+                    with run_lock(directory):
+                        pass
+            self.assertFalse((Path(directory) / 'run.lock').exists())
+
     def test_pair_grouping_and_user_history_survives(self):
         users = ['u'] * 6 + ['v'] * 5
         items = ['a', 'a', 'b', 'c', 'd', 'e'] + list('abcde')

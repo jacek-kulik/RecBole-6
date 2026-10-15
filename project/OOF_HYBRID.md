@@ -15,9 +15,42 @@ From the repository root, with the existing project environment:
 ```
 
 The default run uses all six components, five folds, seed 42, and ridge alpha
-values 0.1, 1, 10, 100. Output must be a new directory. It performs 30 fold fits
-and six full-training fits. It does not resume interrupted training; partial
-artifacts remain for diagnosis. Keep the machine awake for the run.
+values 0.1, 1, 10, 100. New runs require a new output directory. Use `--resume`
+to reuse completed stages. An interrupted stage restarts its training; completed
+folds and full-training validation exports are reused. Keep the machine awake.
+
+## Agreed split and staged FISM handoff
+
+Bogdan confirmed the team's 60/20/20 split on October 15. The shared protocol
+now uses that split. Existing component hyperparameters tuned under 80/10/10
+are intentionally carried over for now; this assumption is recorded in each
+run manifest. No 80/10/10 prediction cache can be reused.
+
+Prepare the five unaffected models without fitting any regressor:
+
+```powershell
+.venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-60-20-20 --components itemknn userknn bpr slimelastic ease --prepare-only
+```
+
+Repeat that command with `--resume` after an interruption. Once FISM is fixed
+and its selected parameters are updated in the summary, add FISM and fit:
+
+```powershell
+.venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-60-20-20 --resume
+```
+
+The default six-component command reuses the other five caches and trains only
+FISM if their identities still match. `--tuned-summary` can point to a separate
+updated CSV. Component caches include the effective settings, split hash, fold
+assignment, and relevant source hashes. Changing FISM's source or settings does
+not invalidate other component caches. Changing common training code does.
+Fold payloads and validation scores have atomic completion markers and SHA256
+checksums. Incompatible versions get separate component cache directories;
+they never silently overwrite old evidence. `cache-<model>.json` identifies
+the currently used version. `run.lock` prevents concurrent writers; after a
+hard interruption, verify its recorded PID has stopped before removing it.
+The aggregate `oof-progress.npz` is diagnostic; individual verified caches are
+the resume authority. Alpha and NDCG cutoff changes require only recombination.
 
 The tuned component parameters come from
 `hyperparameters/results/best-run-summary.csv` (override with `--tuned-summary`).

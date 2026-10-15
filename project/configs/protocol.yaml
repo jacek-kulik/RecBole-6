@@ -1,4 +1,5 @@
-# Caio and Jacek: PROVISIONAL example. Agree and record all choices in PROTOCOL.md.
+# Split: 60/20/20, confirmed by Bogdan following the team meeting.
+# Other provisional choices remain documented in PROTOCOL.md.
 # Shared settings are loaded AFTER the model YAML to keep comparisons consistent.
 dataset: ml-100k
 seed: 42
@@ -8,7 +9,7 @@ show_progress: false
 load_col:
   inter: [user_id, item_id, rating, timestamp]
 eval_args:
-  split: {RS: [0.8, 0.1, 0.1]}
+  split: {RS: [0.6, 0.2, 0.2]}
   group_by: user
   order: RO
   mode: full

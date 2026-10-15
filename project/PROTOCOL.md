@@ -7,7 +7,7 @@ The starter YAML contains provisional values so training can run immediately.
 | Choice | Starter value / decision still needed |
 | --- | --- |
 | Dataset | MovieLens 100K from the repository's `dataset/` directory. Record filtering and metadata sources. |
-| Split | Provisional per-user random 80/10/10, seed 42. Approve it, or change `configs/protocol.yaml` before comparisons. Save the actual split files and their hash. |
+| Split | Per-user random 60/20/20, seed 42. Bogdan confirmed the team meeting agreement on 15 October 2026. Save the actual split files and their hash. Existing 80/10/10-tuned component hyperparameters are intentionally reused provisionally; prediction caches must be regenerated on 60/20/20. |
 | Relevance | The example uses all observed interactions as implicit positives. Decide whether/how ratings determine relevance and update preparation and independent evaluation together. |
 | Candidates | Provisional full-sort evaluation. Agree catalog scope, cold items, and train/validation history masking for each evaluation partition. |
 | Cutoffs and selection | Provisional K=10 and validation MRR@10. Agree metrics, direction, seed count, and uncertainty reporting. |

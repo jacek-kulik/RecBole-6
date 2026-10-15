@@ -10,6 +10,7 @@ import csv
 import json
 import re
 import sys
+import tempfile
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -17,7 +18,8 @@ import numpy as np
 
 from .artifacts import REPO_ROOT, fingerprint, new_run, provenance, write_json
 from .hybrids import candidate_features, fit_oof_regression, predict_weighted_hybrid
-from .recbole_adapter import _export_splits, export_scores, _write_scores
+from .recbole_adapter import _export_splits, export_scores, _write_scores, load_scores
+from .component_cache import file_hash, atomic_json, save_fold, load_fold, run_lock
 
 COMPONENTS = ("itemknn", "userknn", "bpr", "slimelastic", "ease", "fism")
 
@@ -79,7 +81,7 @@ def train_and_score(config, dataset, training, evaluation, directory, split_id, 
     from recbole.data.utils import create_samplers, get_dataloader
     from recbole.utils import get_model, get_trainer, init_seed
 
-    directory.mkdir(parents=True)
+    directory.mkdir(parents=True, exist_ok=True)
     config["checkpoint_dir"] = str(directory)
     # Third partition is deliberately empty. Neither sampling nor training sees
     # outer validation/test interactions when producing OOF features.
@@ -100,6 +102,17 @@ def train_and_score(config, dataset, training, evaluation, directory, split_id, 
 
 
 def run(args):
+    output = Path(args.output).resolve()
+    if args.resume:
+        if not (output / 'cache-run.json').is_file():
+            raise ValueError('Resume requires a run created by the resumable runner')
+    else:
+        new_run(output)
+    with run_lock(output):
+        return _run(args, output)
+
+
+def _run(args, output):
     from recbole.config import Config
     from recbole.data import create_dataset
     from recbole.utils import init_seed
@@ -110,16 +123,23 @@ def run(args):
     params = tuned_parameters(args.tuned_summary)
     if any(name not in params for name in names):
         raise ValueError("Tuning summary is missing a requested component")
-    output = new_run(args.output)
+    protocol = REPO_ROOT / "project/configs/protocol.yaml"
+    run_identity = {'cache_version': 1, 'protocol': file_hash(protocol),
+                    'folds': args.folds, 'seed': args.seed,
+                    'dataset': {p.name: file_hash(p) for p in sorted((REPO_ROOT / 'dataset/ml-100k').glob('*.inter'))}}
+    identity_path = output / 'cache-run.json'
+    if identity_path.exists() and json.loads(identity_path.read_text()) != run_identity:
+        raise ValueError('Split, dataset, seed, or folds changed: use a new output directory')
+    atomic_json(identity_path, run_identity)
     manifest = {**provenance(), "status": "running", "components": names,
                 "folds": args.folds, "test_evaluated": False,
                 "component_selection_source": str(Path(args.tuned_summary).resolve()),
                 "component_parameters": {n: params[n] for n in names},
                 "selection_metric": f"NDCG@{args.k}", "fixed_epochs": True,
-                "smoke_only": args.smoke_epochs is not None}
+                "smoke_only": args.smoke_epochs is not None, "prepare_only": args.prepare_only,
+                "parameter_transfer": "Existing 80/10/10 tuning settings accepted for 60/20/20 by user"}
     write_json(output / "manifest.json", manifest)
     config_files = [REPO_ROOT / f"project/configs/models/{name}.yaml" for name in names]
-    protocol = REPO_ROOT / "project/configs/protocol.yaml"
     (output / "protocol.yaml").write_bytes(protocol.read_bytes())
     (output / "tuned-summary.csv").write_bytes(Path(args.tuned_summary).read_bytes())
     try:
@@ -151,29 +171,86 @@ def run(args):
                 targets = training.inter_feat[config["RATING_FIELD"]].cpu().numpy()
                 assignment = user_folds([p[0] for p in pairs], [p[1] for p in pairs], args.folds, args.seed)
                 oof = np.full((len(pairs), len(names)), np.nan)
-                split_id = _export_splits(dataset, [SimpleNamespace(dataset=d) for d in (training, validation, test)], output / "splits", config)
+                with tempfile.TemporaryDirectory() as temporary:
+                    generated = Path(temporary) / 'splits'
+                    split_id = _export_splits(dataset, [SimpleNamespace(dataset=d) for d in (training, validation, test)], generated, config)
+                    stored = output / 'splits'
+                    stored.mkdir(exist_ok=True)
+                    for source in generated.iterdir():
+                        target = stored / source.name
+                        if target.exists() and target.read_bytes() != source.read_bytes():
+                            raise ValueError('Cached outer split differs from reconstructed split')
+                        target.write_bytes(source.read_bytes())
                 write_json(output / "folds.json", [{"user": u, "item": i, "fold": int(f)} for (u, i), f in zip(pairs, assignment)])
                 relevant = {}
                 for user, item in valid_pairs:
                     relevant.setdefault(user, set()).add(item)
             elif identity != signature or pairs != base_pairs:
                 raise ValueError("Component outer splits differ")
+            # Hash only this component's model source, so fixing FISM does not
+            # invalidate the five unaffected models. Common training/scoring
+            # code and effective configuration invalidate caches when changed.
+            effective = json.loads(json.dumps(config.final_config_dict, default=str))
+            for ignored in ('checkpoint_dir', 'model_save_file', 'log_wandb'):
+                effective.pop(ignored, None)
+            sources = [Path(__file__), REPO_ROOT / 'project/recsys/hybrids.py',
+                       REPO_ROOT / 'project/recsys/recbole_adapter.py',
+                       REPO_ROOT / 'recbole/model/general_recommender' / (config['model'].lower() + '.py'),
+                       REPO_ROOT / 'recbole/model/abstract_recommender.py',
+                       REPO_ROOT / 'recbole/trainer/trainer.py',
+                       REPO_ROOT / 'recbole/data/dataset/dataset.py',
+                       REPO_ROOT / 'recbole/data/utils.py',
+                       REPO_ROOT / 'recbole/utils/case_study.py']
+            cache_spec = {'config': effective, 'split_id': split_id,
+                          'fold_assignment': fingerprint(assignment.tolist()),
+                          'sources': {str(p.relative_to(REPO_ROOT)): file_hash(p) for p in sources}}
+            cache_key = fingerprint(cache_spec)
+            component_dir = output / 'components' / name / cache_key
+            component_dir.mkdir(parents=True, exist_ok=True)
+            atomic_json(component_dir / 'identity.json', cache_spec)
+            atomic_json(output / f'cache-{name}.json', {'key': cache_key, 'path': str(component_dir)})
             for fold in range(args.folds):
                 held = np.flatnonzero(assignment == fold)
                 fit = np.flatnonzero(assignment != fold)
+                fold_path = component_dir / f'fold-{fold}.npz'
+                cached = load_fold(fold_path, held)
+                if cached is not None:
+                    print(f'{name}: reuse fold {fold + 1}/{args.folds}', flush=True)
+                    oof[held, column] = cached
+                    continue
                 print(f"{name}: fold {fold + 1}/{args.folds}", flush=True)
                 table = train_and_score(config, dataset, training.copy(training.inter_feat[fit]),
                                         training.copy(training.inter_feat[held]),
-                                        output / name / f"fold-{fold}", f"{split_id}:fold-{fold}", name)
+                                        component_dir / f"fold-{fold}-training", f"{split_id}:fold-{fold}", name)
                 keys, values = candidate_features([table])
                 lookup = {pair: value[0] for pair, value in zip(keys, values)}
                 oof[held, column] = [lookup[pairs[index]] for index in held]
+                save_fold(fold_path, held, oof[held, column])
                 np.savez_compressed(output / "oof-progress.npz", features=oof, targets=targets, folds=assignment)
-            print(f"{name}: refit on full training partition", flush=True)
-            table = train_and_score(config, dataset, training, validation,
-                                    output / name / "full", split_id, name)
+            full_path = component_dir / 'scores-valid.json.gz'
+            marker = component_dir / 'full.complete.json'
+            if marker.exists():
+                if not full_path.exists() or file_hash(full_path) != json.loads(marker.read_text())['sha256']:
+                    raise ValueError(f'Corrupt completed validation cache: {full_path}')
+                table = load_scores(full_path)
+                if (table.model, table.split_id, table.partition) != (name, split_id, 'valid'):
+                    raise ValueError('Cached validation metadata differs')
+                print(f'{name}: reuse full-training validation scores', flush=True)
+            else:
+                print(f"{name}: refit on full training partition", flush=True)
+                table = train_and_score(config, dataset, training, validation,
+                                        component_dir / "full-training", split_id, name)
+                temporary = component_dir / 'scores-valid.tmp.gz'
+                _write_scores(table, temporary)
+                temporary.replace(full_path)
+                atomic_json(marker, {'sha256': file_hash(full_path)})
             _write_scores(table, output / f"scores-valid-{name}.json.gz")
             final_tables.append(table)
+            np.savez_compressed(output / 'oof-progress.npz', features=oof, targets=targets, folds=assignment)
+            print(f'{name}: cached all folds and validation scores', flush=True)
+        if args.prepare_only:
+            manifest.update(status='prepared', split_id=split_id, regressor_fitted=False)
+            return output
         trials = []
         for alpha in args.alphas:
             fitted = fit_oof_regression(oof, targets, names, alpha)
@@ -199,6 +276,8 @@ def run(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--resume", action="store_true", help="Reuse matching completed stages in an existing run")
+    parser.add_argument("--prepare-only", action="store_true", help="Cache component predictions without fitting the regressor")
     parser.add_argument("--components", nargs="+", choices=COMPONENTS, default=list(COMPONENTS))
     parser.add_argument("--tuned-summary", default=str(REPO_ROOT / "hyperparameters/results/best-run-summary.csv"))
     parser.add_argument("--folds", type=int, default=5)
