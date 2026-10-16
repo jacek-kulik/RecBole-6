@@ -38,8 +38,6 @@ class ValidateTests(unittest.TestCase):
         self.config = {"model": "BPR", "dataset": "fixture", "seed": 42, "metric_decimal_place": 4}
         self.rankings = {"miss": ["x", "y"], "late": ["x", "a"]}
         self.relevant = {"miss": {"b"}, "late": {"a"}}
-        self.predictions = patch("project.recsys.validate.validation_predictions",
-                                 return_value=(self.config, self.rankings, self.relevant))
         splits = self.source / "splits"
         splits.mkdir()
         with (splits / "train.csv").open("w", newline="") as stream:
@@ -88,11 +86,13 @@ class ValidateTests(unittest.TestCase):
         self.assertEqual(manifest["source_git_commit"], "training-commit")
         self.assertEqual(manifest["checkpoint_sha256"], hashlib.sha256(b"selected checkpoint").hexdigest())
         reports = self.read("group_metrics.json")
-        self.assertEqual(reports["overall"]["beyond_accuracy"]["gender_fairness"]["counts"],
-                         {"F": 1, "M": 1, "unknown": 0})
-        self.assertEqual(reports["overall"]["beyond_accuracy"]["gender_fairness"]["gaps"]["MRR@2"]["absolute"], .5)
-        self.assertIsNone(reports["medium"]["accuracy"])
-        self.assertIsNone(reports["low"]["beyond_accuracy"]["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
+        self.assertEqual((reports["status"], reports["owner"]), ("pending", "Victor"))
+        beyond = self.read("beyond_accuracy.json")
+        self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 0, "M": 0, "unknown": 2})
+        self.assertIsNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
+        self.assertIn("Caio/Victor", beyond["gender_fairness"]["reason"])
+        self.assertIn("metadata", manifest["pending_work"])
+        self.assertFalse(manifest["project_evaluation_complete"])
         boundaries = self.read("groups.json")["activity"]["boundaries"]
         self.assertAlmostEqual(boundaries[0], 5 / 3)
         self.assertAlmostEqual(boundaries[1], 7 / 3)

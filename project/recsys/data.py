@@ -2,7 +2,7 @@
 
 from collections import Counter
 import csv
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import groupby
 from os import PathLike
 from pathlib import Path
@@ -47,6 +47,7 @@ class TrainingStatistics:
     activity_groups: dict[str, str]
     gender_groups: dict[str, str]
     item_groups: dict[str, str]
+    pending: dict[str, str] = field(default_factory=dict)
 
     @property
     def n_interactions(self) -> int:
@@ -64,8 +65,8 @@ def read_training_interactions(path: str | PathLike[str]) -> list[Interaction]:
 
 def activity_terciles(counts: Mapping[str, int]
 ) -> tuple[tuple[float, float], dict[str, str]]:
-    """Linear count quantiles, with equal countrs kept in the same group."""
-    ordered = sorted(counts.values)
+    """Linear count quantiles, with equal counts kept in the same group."""
+    ordered = sorted(counts.values())
 
     def quantile(fraction: float) -> float:
         position = (len(ordered) - 1) * fraction
@@ -124,11 +125,33 @@ def popularity_distribution(
         if items else {}
 
 
-def prepare_metadata(train_rows, item_file, user_file=None):
-    """TODO Caio and Victor: load genre/features and training-derived profiles/groups.
+def prepare_metadata(
+        train_rows: Iterable[Interaction],
+        item_file: str | PathLike[str],
+        user_file: str | PathLike[str] | None = None,
+        catalogue: Iterable[str] | None = None,
+) -> TrainingStatistics:
+    """Runnable placeholder for Caio and Victor's metadata preparation.
 
-    Preserve original IDs. Define relevance, cold-item policy, and available
-    attributes in PROTOCOL.md. Do not infer demographic groups from model scores.
-    Keep ratings/timestamps when reading the exported split CSVs.
+    Supply only real training-derived inputs using Jacek's existing helpers.
+    TODO Caio/Victor: read item_file/user_file, prepare genres and recorded
+    gender, and populate genre profiles. Empty mappings mean unavailable data.
+    Pass the checkpoint catalogue to retain cold items during evaluation.
     """
-    raise NotImplementedError("Caio and Victor: implement approved metadata preparation.")
+    rows = list(train_rows)
+    items = tuple(sorted(set(catalogue) if catalogue is not None else {row.item for row in rows}))
+    histories: dict[str, list[str]] = {}
+    counts = dict.fromkeys(items, 0)
+    for row in rows:
+        histories.setdefault(row.user, []).append(row.item)
+        counts[row.item] += 1
+    boundaries, activity = activity_terciles({user: len(history) for user, history in histories.items()})
+    item_groups = item_popularity_groups(counts)
+    return TrainingStatistics(
+        catalogue=items, histories=histories, item_counts=counts,
+        item_features={}, genre_profiles={}, gender_groups={},
+        popularity_profiles={user: popularity_distribution(history, item_groups)
+                             for user, history in histories.items()},
+        activity_boundaries=boundaries, activity_groups=activity, item_groups=item_groups,
+        pending={"metadata": "Caio/Victor: metadata preparation is not implemented; genres, genre profiles and recorded gender are unavailable"},
+    )

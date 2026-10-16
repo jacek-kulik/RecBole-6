@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 from project.recsys.analysis.groups import compare_groups, group_definitions
-from project.recsys.data import Interaction, activity_terciles, item_popularity_groups, prepare_metadata
+from project.recsys.data import Interaction, activity_terciles, genre_distribution, item_popularity_groups, prepare_metadata
 from project.recsys.metrics.accuracy import evaluate_accuracy
 from project.recsys.metrics.beyond_accuracy import evaluate_beyond_accuracy, exposure_gini, jensen_shannon
 
@@ -21,8 +21,17 @@ class BeyondAccuracyTests(unittest.TestCase):
         item_file, user_file = root / "movies.item", root / "users.user"
         item_file.write_text("item_id:token\tclass:token_seq\na\tAction Comedy\nb\tDrama\nc\tComedy\nd\tunknown\n")
         user_file.write_text("user_id:token\tgender:token\nf\tF\nm\tM\nmissing\t?\ncold\tF\n")
-        self.statistics = prepare_metadata(
+        self.partial_statistics = prepare_metadata(
             [Interaction("f", "a"), Interaction("m", "b"), Interaction("missing", "a")], item_file, user_file,
+            catalogue=("a", "b", "c", "d"),
+        )
+        # Prepared inputs supplied explicitly: metadata loading belongs to Caio/Victor.
+        features = {"a": ("Action", "Comedy"), "b": ("Drama",), "c": ("Comedy",), "d": ("unknown",)}
+        self.statistics = replace(
+            self.partial_statistics, item_features=features,
+            genre_profiles={user: genre_distribution(history, features)
+                            for user, history in self.partial_statistics.histories.items()},
+            gender_groups={"f": "F", "m": "M", "cold": "F"}, pending={},
         )
         self.rankings = {"f": ["a", "b"], "m": ["b", "c"], "missing": ["c", "d"]}
         self.relevant = {"f": {"a", "b"}, "m": {"c"}, "missing": {"a"}}
@@ -58,16 +67,19 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertEqual(self.statistics.item_counts["d"], 0)
         self.assertEqual(self.statistics.item_features["d"], ("unknown",))
 
-    def test_activity_cohorts_use_gender_fairness_and_recompute_coverage(self) -> None:
-        statistics = replace(self.statistics, activity_groups={"f": "low", "m": "low", "missing": "high"})
-        reports = compare_groups(self.rankings, self.relevant, statistics, 2)
-        self.assertEqual(reports["low"]["n_users"], 2)
-        self.assertEqual(reports["low"]["beyond_accuracy"]["gender_fairness"]["gaps"]["MRR@2"]["absolute"], .5)
-        self.assertEqual(reports["low"]["beyond_accuracy"]["aggregate"]["CatalogueCoverage@2"], .75)
-        self.assertEqual(reports["overall"]["beyond_accuracy"]["aggregate"]["CatalogueCoverage@2"], 1)
-        self.assertIsNone(reports["high"]["beyond_accuracy"]["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
-        self.assertIsNone(reports["medium"]["beyond_accuracy"]["aggregate"]["CatalogueCoverage@2"])
-        self.assertEqual(reports["medium"]["n_users"], 0)
+    def test_teammate_placeholders_run_without_fabricating_metadata_or_reports(self) -> None:
+        accuracy = evaluate_accuracy(self.rankings, self.relevant, 2)
+        result = evaluate_beyond_accuracy(self.rankings, self.partial_statistics, accuracy["per_user"], 2)
+        self.assertEqual(self.partial_statistics.item_features, {})
+        self.assertEqual(self.partial_statistics.gender_groups, {})
+        self.assertIsNone(result["aggregate"]["ILD@2"])
+        self.assertIsNone(result["aggregate"]["GenreMiscalibration@2"])
+        self.assertIsNone(result["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
+        self.assertEqual(result["aggregate"]["CatalogueCoverage@2"], 1)
+        self.assertIsNotNone(result["aggregate"]["UPD@2"])
+        report = compare_groups(accuracy["per_user"], result, self.partial_statistics)
+        self.assertEqual((report["status"], report["owner"]), ("pending", "Victor"))
+        self.assertNotIn("overall", report)
 
     def test_unavailable_profiles_and_single_item_diversity(self) -> None:
         rankings = {"cold": ["d"]}
@@ -80,7 +92,7 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertAlmostEqual(result["aggregate"]["MeanSelfInformation@1"], math.log2(7))
         definitions = group_definitions(self.statistics, rankings)
         self.assertEqual(definitions["activity"]["members"]["cold"], "low")
-        self.assertEqual(definitions["activity"]["training_counts"]["cold"], 0)
+        self.assertEqual(definitions["status"], "pending")
 
 
 if __name__ == "__main__":

@@ -153,3 +153,14 @@ Hold short group check-ins at **17:00** on 2, 6, 9, 13, 16, 20, and 23 Oct.
 At each one, report the next handoff and any blocker. Use the same split,
 candidates, and separately implemented metrics for final comparisons. Choose
 settings on development data and reserve test data for final evaluation.
+
+
+## Scope correction on 16 October
+
+Jacek retains Task 2.1's independent metric implementations, his committed
+training/distribution helpers, and independent validation/test scoring.
+Caio and Victor retain metadata preparation; Victor retains group comparisons
+and interpretation for Tasks 2.5 and 3.4. Those interfaces have runnable
+placeholders that report pending work. Missing prepared metadata produces
+unavailable metrics, and group reports do not claim to be finished.
+The ownership and review dates above are unchanged.
