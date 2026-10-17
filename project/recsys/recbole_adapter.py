@@ -3,13 +3,14 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+from dataclasses import dataclass
 from math import isfinite
 from pathlib import Path
 from os import PathLike
 import shutil
 import sys
 import tempfile
-from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Set, Tuple
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Set, Tuple, Literal
 
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
 from .contracts import ScoreTable, Rankings
@@ -21,7 +22,12 @@ if TYPE_CHECKING:
     from recbole.model.abstract_recommender import AbstractRecommender
 
 
-def _export_splits(dataset, loaders, output, config):
+def _export_splits(
+        dataset: Dataset,
+        loaders: Sequence[TrainDataLoader | FullSortEvalDataLoader],
+        output: Path,
+        config: Config
+) -> str:
     """Export the actual in-memory splits from this training run, using raw IDs."""
     output.mkdir()
     digest = hashlib.sha256()
@@ -43,7 +49,7 @@ def _export_splits(dataset, loaders, output, config):
     return digest.hexdigest()
 
 
-def _load_validation_checkpoint(checkpoint: str | PathLike[str]
+def _load_checkpoint(checkpoint: str | PathLike[str]
     ) -> Tuple[Config, AbstractRecommender, Dataset, TrainDataLoader, FullSortEvalDataLoader, FullSortEvalDataLoader]:
     """Restore a selected checkpoint on CPU, including checkpoints trained on GPU."""
     import torch
@@ -65,24 +71,37 @@ def _load_validation_checkpoint(checkpoint: str | PathLike[str]
     return config, model, dataset, train_data, valid_data, test_data
 
 
-def validation_predictions(
+@dataclass
+class PredictionResults:
+    config: Config
+    rankings: Rankings
+    relevant: Dict[str, Set[str]]
+    catalogue: tuple[str, ...]
+
+
+def partition_predictions(
         checkpoint: str | PathLike[str],
         source_splits: str | PathLike[str],
         split_id: str,
         k: int = 10,
-        batch_size: int = 128
-) -> Tuple[Config, Rankings, Dict[str, Set[str]]]:
-    """Load a selected checkpoint and rank its verified validation split.
+        batch_size: int = 128,
+        partition: Literal["valid", "test"] = "valid"
+) -> PredictionResults:
+    """Rank one verified partition using its own RecBole history mask.
 
-    All held-out validation interactions are positives as per the assignments.
-    Test interactions are checked for split identity but never scored."""
+    Validation excludes training history. Test excludes training and validation
+    history. All held-out interactions in the selected partition are positives.
+    The checkpoint configuration, not today's protocol YAML, reconstructs splits."""
     if type(k) is not int or k <= 0 or type(batch_size) is not int or batch_size <= 0:
         raise ValueError("k and batch_size must be positive integers")
+    if partition not in ("valid", "test"):
+        raise ValueError("Evaluation partition must be valid or test")
     from recbole.utils.case_study import full_sort_topk
 
-    config, model, dataset, train_data, valid_data, test_data = _load_validation_checkpoint(checkpoint)
+    config, model, dataset, train_data, valid_data, test_data = _load_checkpoint(checkpoint)
+    evaluation_data = valid_data if partition == "valid" else test_data
 
-    if config["eval_args"]["mode"]["valid"] != "full" or valid_data.is_sequential:
+    if config["eval_args"]["mode"][partition] != "full" or evaluation_data.is_sequential:
         raise ValueError("Independent validation requires non-sequential full-sort evaluation")
     if k >= dataset.item_num:
         raise ValueError("k exceeds the catalogue size")
@@ -97,7 +116,7 @@ def validation_predictions(
         ):
             raise ValueError("Reconstructed splits do not match :(")
 
-    interactions = valid_data.dataset.inter_feat
+    interactions = evaluation_data.dataset.inter_feat
     internal_users = interactions[dataset.uid_field].cpu().tolist()
     users = dataset.id2token(dataset.uid_field, interactions[dataset.uid_field].cpu().numpy())
     items = dataset.id2token(dataset.iid_field, interactions[dataset.iid_field].cpu().numpy())
@@ -109,15 +128,27 @@ def validation_predictions(
     user_ids = sorted(set(internal_users))
     for start in range(0, len(user_ids), batch_size):
         batch = user_ids[start:start + batch_size]
-        scores, indices = full_sort_topk(batch, model, valid_data, k=k, device=config["device"])
+        scores, indices = full_sort_topk(batch, model, evaluation_data, k=k, device=config["device"])
         if any(not isfinite(value) for row in scores.cpu().tolist() for value in row):
                 raise ValueError("Each user needs at least k finite scores")
         external_users = dataset.id2token(dataset.uid_field, batch)
         external_items = dataset.id2token(dataset.iid_field, indices.cpu().numpy())
         for user, row in zip(external_users, external_items):
             rankings[str(user)] = [str(item) for item in row]
-    return config, rankings, relevant
+    catalogue = tuple(str(item) for item in dataset.id2token(dataset.iid_field, list(range(1, dataset.item_num))))
+    return PredictionResults(config, rankings, relevant, catalogue)
 
+
+def validation_predictions(
+        checkpoint: str | PathLike[str],
+        source_splits: str | PathLike[str],
+        split_id: str,
+        k: int = 10,
+        batch_size: int = 1024
+) -> Tuple[Config, Rankings, Dict[str, Set[str]]]:
+    """Retain the existing validation-only prediction interface."""
+    result = partition_predictions(checkpoint, source_splits, split_id, k, batch_size, partition="valid")
+    return result.config, result.rankings, result.relevant
 
 
 def train(model_config, output):

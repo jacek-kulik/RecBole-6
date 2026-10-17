@@ -34,7 +34,7 @@ def main() -> None: # :)
             output = train(args.model_config, args.output)
             print(f"Training artifacts saved to {output}; use the validate command for independent validation.")
         elif args.command == "validate":
-            from .validate import validate_training_run
+            from .evaluation import validate_training_run
             output = validate_training_run(args.run, args.output, k=args.k, batch_size=args.batch_size)
             print(f"Independent validation saved to {output}; see metrics.json, comparison.json, and example.json")
         else:

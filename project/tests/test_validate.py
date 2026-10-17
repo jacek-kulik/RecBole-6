@@ -11,7 +11,7 @@ import unittest
 from unittest.mock import patch
 
 from project.recsys.__main__ import main
-from project.recsys.validate import validate_training_run
+from project.recsys.evaluation import validate_training_run
 from project.recsys.recbole_adapter import PredictionResults
 
 
