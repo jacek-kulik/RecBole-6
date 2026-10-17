@@ -66,7 +66,7 @@ def read_training_interactions(path: str | PathLike[str]) -> list[Interaction]:
 def activity_terciles(counts: Mapping[str, int]
 ) -> tuple[tuple[float, float], dict[str, str]]:
     """Linear count quantiles, with equal countrs kept in the same group."""
-    ordered = sorted(counts.values)
+    ordered = sorted(counts.values())
 
     def quantile(fraction: float) -> float:
         position = (len(ordered) - 1) * fraction
