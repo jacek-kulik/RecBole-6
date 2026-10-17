@@ -12,6 +12,14 @@ required experiment needs them.
 
 ## Start here
 
+
+### Ruff checks and tests
+
+```shell
+python -W error -m unittest discover -s project/tests -v
+ruff check project/recsys project/tests
+```
+
 Run commands from the repository root with Python 3.10 or newer. The demo and
 starter tests use only the standard library:
 
@@ -65,6 +73,25 @@ Also compares the metrics to the ones produced by RecBole to see if we agree.
 Saves the rankings, relevance, aggregate and per-user metrics, comparisons, an example user,
 and a manifest storing run information.
 
+The independent beyond-accuracy metric implementations also belong to Jacek
+(Task 2.1). `beyond_accuracy.json` contains values for the inputs currently
+available. Caio/Victor's `prepare_metadata` is a runnable placeholder: it uses
+Jacek's committed training/count/distribution helpers, but does not load genres
+or recorded gender. ILD, genre miscalibration and gender unfairness remain
+`null` with explicit reasons until those inputs are prepared.
+ 
+Victor's Task 2.5/3.4 reporting remains unfinished. `group_metrics.json` returns
+`status: pending` and names Victor; `groups.json` exposes the existing activity
+and popularity memberships while identifying the unfinished reporting.
+The manifest records `pending_work` and `project_evaluation_complete: false`.
+The existing `metrics.json` and per-user accuracy format remain unchanged.
+ 
+For final test scoring, `python -m project.recsys evaluate` accepts the same
+arguments as `validate`. Choose model settings on validation first. Final
+scoring also identifies the pending teammate inputs/reports; it does not
+complete their tasks. The saved split is verified for both partitions, and
+test masking excludes both training and validation history.
+
 The `task1`, `task2`, and `task3` commands deliberately stop with a descriptive
 `NotImplementedError`. They are optional places to connect completed work, not
 three extra deliverables. The same applies to the unfinished algorithms; there
@@ -115,11 +142,13 @@ project/
     recbole_adapter.py         # Real training/split export; full-score export TODO
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
-    validate.py                # Runner for independent validation accuracy
+    validate.py                # Independent validation entrypoint
+    evaluate.py                # Independent final-test entrypoint
+    evaluation.py              # Jacek metric runner; teammate reports remain pending
     metrics/
       _validation.py           # External ID and ranking list validation for metric computation
       accuracy.py              # Computes Precision@k, Recall@k, F1@k, MRR@k, NDCG@k, MAP@k, returning in aggregate and per-user
-      beyond_accuracy.py       # Diversity, novelty, calibration, fairness, bias TODO
+      beyond_accuracy.py       # Jacek metric formulas; metadata supplied by Caio/Victor
       types.py                 # Shared types used for the metrics computation
     rerankers/
       diversification.py       # Gabriel
@@ -160,11 +189,11 @@ add the separately prepared Overleaf ZIP to the repository.
    using original user/item tokens as strings. Export all eligible candidates
    per user so a hybrid can align scores across models.
 4. Fit and tune models/hybrids on their assigned development data. Call
-   `require_aligned` before combining scores. Save fitted normalization and
+   `require_aligned` before combining scores. Save fitted normalisation and
    regression coefficients with the component run IDs.
 5. Produce rankings, run the group's independent metrics, and save both detailed
-   and aggregate measurements. The accuracy.py file computes the accuracy metrics, the beyond accuracy
-   and rerankers are still TODO 
+   and aggregate measurements. Accuracy and beyond-accuracy formulas are available;
+   metadata preparation, group reporting and rerankers remain unfinished.
 6. Apply the four rerankers and compare strengths. Task 3.3 needs both rerank then
    combine and combine then rerank. A reranker returns an ordered list; combining
    those lists requires an explicit fusion/rank-to-score and truncation policy.

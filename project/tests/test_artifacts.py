@@ -2,11 +2,11 @@
 
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from project.recsys.artifacts import fingerprint, new_run, provenance, write_json

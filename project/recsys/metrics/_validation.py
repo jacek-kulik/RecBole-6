@@ -1,7 +1,7 @@
 """Shared input checks for metric evaluation"""
 
-from typing import AbstractSet, Optional
 from collections.abc import Mapping, Sequence
+from collections.abc import Set as AbstractSet
 
 from ..contracts import Rankings
 from .types import RankingInput
@@ -13,7 +13,7 @@ def external_id(value: object) -> bool:
 def validate_rankings(
         rankings: RankingInput,
         k: int,
-        catalogue: Optional[AbstractSet[str]] = None
+        catalogue: AbstractSet[str] | None = None
 ) -> Rankings:
     if type(k) is not int or k <= 0:
         raise ValueError("k must be a positive integer")

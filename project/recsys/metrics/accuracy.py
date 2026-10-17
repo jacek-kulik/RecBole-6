@@ -2,10 +2,10 @@
 
 from collections.abc import Mapping
 from math import log2
-from typing import Dict
 
-from .types import RankingInput, RelevanceInput, AccuracyResults
 from ._validation import external_id, validate_rankings
+from .types import AccuracyResults, RankingInput, RelevanceInput
+
 
 def evaluate_accuracy(
         rankings: RankingInput, relevant: RelevanceInput, k: int=10) -> AccuracyResults:
@@ -14,7 +14,7 @@ def evaluate_accuracy(
     rows = validate_rankings(rankings, k)
     if not isinstance(relevant, Mapping) or rows.keys() != relevant.keys():
         raise ValueError("Relevance data does not have the evaluation users")
-    per_user: Dict[str, Dict[str, float]] = {}
+    per_user: dict[str, dict[str, float]] = {}
 
     for user, items in rows.items():
         positives = relevant[user]
@@ -65,11 +65,11 @@ def recall_at_k(rankings: RankingInput, relevant: RelevanceInput, k: int) -> flo
     """
     return evaluate_accuracy(rankings, relevant, k)["aggregate"][f"Recall@{k}"]
 
-def get_per_user_accuracy_metrics(rankings: RankingInput, relevant: RelevanceInput, k: int) -> Dict[str, Dict[str, float]]:
+def get_per_user_accuracy_metrics(rankings: RankingInput, relevant: RelevanceInput, k: int) -> dict[str, dict[str, float]]:
     return evaluate_accuracy(rankings, relevant, k)["per_user"]
 
 def get_aggregate_mrr(rankings: RankingInput, relevant: RelevanceInput, k: int) -> float:
     return evaluate_accuracy(rankings, relevant, k)["aggregate"][f"MRR@{k}"]
 
-def get_aggregate_accuracy_metrics(rankings: RankingInput, relevant: RelevanceInput, k: int) -> Dict[str, float]:
+def get_aggregate_accuracy_metrics(rankings: RankingInput, relevant: RelevanceInput, k: int) -> dict[str, float]:
     return evaluate_accuracy(rankings, relevant, k)["aggregate"]
