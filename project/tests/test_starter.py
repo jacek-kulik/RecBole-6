@@ -1,9 +1,9 @@
 """Checks for shared behaviour that could silently invalidate model comparisons."""
 
 import json
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 
 from project.recsys.baselines import popularity, random_scores
 from project.recsys.contracts import ScoreTable, require_aligned
@@ -37,15 +37,16 @@ class StarterTests(unittest.TestCase):
     def test_alignment_rejects_split_and_partition_mismatch(self):
         a = ScoreTable("a", "split", "valid", {"u": {"x": 1.0}})
         for split, partition in (("other", "valid"), ("split", "test")):
-            with self.subTest(split=split, partition=partition):
-                with self.assertRaisesRegex(ValueError, "same split"):
-                    require_aligned([a, ScoreTable("b", split, partition, a.scores)])
+            with (
+                self.subTest(split=split, partition=partition),
+                self.assertRaisesRegex(ValueError, "same split"),
+            ):
+                require_aligned([a, ScoreTable("b", split, partition, a.scores)])
 
     def test_nonfinite_scores_cannot_be_ranked(self):
         for value in (float("nan"), float("inf"), float("-inf")):
-            with self.subTest(value=value):
-                with self.assertRaises(ValueError):
-                    ScoreTable("a", "split", "valid", {"u": {"x": value}}).top_k(1)
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                ScoreTable("a", "split", "valid", {"u": {"x": value}}).top_k(1)
 
     def test_ranking_breaks_ties_and_rejects_short_lists(self):
         table = ScoreTable("a", "split", "valid", {"u": {"b": 1.0, "a": 1.0}})

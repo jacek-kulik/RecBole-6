@@ -6,15 +6,15 @@ import hashlib
 import json
 from os import PathLike
 from pathlib import Path
-from typing import Any, Dict, TypedDict, Literal
+from typing import Any, Literal, TypedDict
 
-from .data import prepare_metadata, read_training_interactions
 from .analysis.groups import PendingGroupAnalysis, compare_groups, group_definitions
-from .artifacts import new_run, provenance, write_json, REPO_ROOT
+from .artifacts import REPO_ROOT, new_run, provenance, write_json
+from .data import prepare_metadata, read_training_interactions
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import partition_predictions
-from .metrics.types import AccuracyResults, BeyondAccuracyResults
 from .metrics.beyond_accuracy import METRIC_DEFINITIONS, evaluate_beyond_accuracy
+from .metrics.types import AccuracyResults, BeyondAccuracyResults
+from .recbole_adapter import partition_predictions
 
 
 class MetricComparison(TypedDict):

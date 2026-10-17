@@ -1,15 +1,16 @@
 """Input aliases and data structures with JSON-compatibility for metric usage"""
 
-from typing import Dict, FrozenSet, List, Mapping, Sequence, Set, Tuple, TypedDict, Union
+from collections.abc import Mapping, Sequence
+from typing import TypedDict
 
 RankingInput = Mapping[str, Sequence[str]]
-RelevantItems = Union[Set[str], FrozenSet[str], List[str], Tuple[str, ...]]
+RelevantItems = set[str] | frozenset[str] | list[str] | tuple[str, ...]
 RelevanceInput = Mapping[str, RelevantItems]
 
 
 class AccuracyResults(TypedDict):
-    per_user: Dict[str, Dict[str, float]]
-    aggregate: Dict[str, float]
+    per_user: dict[str, dict[str, float]]
+    aggregate: dict[str, float]
 
 
 class MetricAvailability(TypedDict):
@@ -23,9 +24,9 @@ class QualityGap(TypedDict):
 
 
 class GenderFairnessResults(TypedDict):
-    counts: Dict[str, int]
-    means: Dict[str, Dict[str, float] | None]
-    gaps: Dict[str, QualityGap]
+    counts: dict[str, int]
+    means: dict[str, dict[str, float] | None]
+    gaps: dict[str, QualityGap]
     n_users: int
     reason: str | None
 
@@ -39,8 +40,8 @@ class ItemGroupExposure(TypedDict):
 
 
 class BeyondAccuracyResults(TypedDict):
-    per_user: Dict[str, Dict[str, float | None]]
-    aggregate: Dict[str, float | None]
-    availability: Dict[str, MetricAvailability]
+    per_user: dict[str, dict[str, float | None]]
+    aggregate: dict[str, float | None]
+    availability: dict[str, MetricAvailability]
     gender_fairness: GenderFairnessResults
-    item_group_exposure: Dict[str, ItemGroupExposure]
+    item_group_exposure: dict[str, ItemGroupExposure]

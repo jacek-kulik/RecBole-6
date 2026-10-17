@@ -1,16 +1,21 @@
 """Checkpoint, split identity, and external-ID boundaries using small fake loaders."""
 
 import csv
-from pathlib import Path
 import sys
 import tempfile
-from types import SimpleNamespace
 import unittest
-from unittest.mock import Mock, patch
 import warnings
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
 
-from project.recsys.recbole_adapter import _export_splits, _load_checkpoint, partition_predictions, validation_predictions
 from project.recsys.artifacts import REPO_ROOT
+from project.recsys.recbole_adapter import (
+    _export_splits,
+    _load_checkpoint,
+    partition_predictions,
+    validation_predictions,
+)
 
 
 class Values:

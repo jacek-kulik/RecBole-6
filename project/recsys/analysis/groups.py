@@ -1,6 +1,7 @@
 """Placeholders for Victor's Tasks 2.5 and 3.4, reviewed by Caio."""
 
-from typing import Iterable, TypedDict
+from collections.abc import Iterable
+from typing import TypedDict
 
 from ..data import TrainingStatistics
 from ..metrics.types import BeyondAccuracyResults

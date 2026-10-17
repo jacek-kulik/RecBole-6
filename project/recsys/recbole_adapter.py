@@ -1,24 +1,29 @@
 """Caio and Gabriel: boundary between this project and the existing RecBole fork."""
 from __future__ import annotations
+
 import csv
 import hashlib
 import json
-from dataclasses import dataclass
-from math import isfinite
-from pathlib import Path
-from os import PathLike
 import shutil
 import sys
 import tempfile
-from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Set, Tuple, Literal
+from collections.abc import Sequence
+from dataclasses import dataclass
+from math import isfinite
+from os import PathLike
+from pathlib import Path
+from typing import TYPE_CHECKING, Literal
 
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
-from .contracts import ScoreTable, Rankings
+from .contracts import Rankings, ScoreTable
 
 if TYPE_CHECKING:
     from recbole.config import Config
+    from recbole.data.dataloader.general_dataloader import (
+        FullSortEvalDataLoader,
+        TrainDataLoader,
+    )
     from recbole.data.dataset import Dataset
-    from recbole.data.dataloader.general_dataloader import FullSortEvalDataLoader, TrainDataLoader
     from recbole.model.abstract_recommender import AbstractRecommender
 
 
@@ -50,9 +55,10 @@ def _export_splits(
 
 
 def _load_checkpoint(checkpoint: str | PathLike[str]
-    ) -> Tuple[Config, AbstractRecommender, Dataset, TrainDataLoader, FullSortEvalDataLoader, FullSortEvalDataLoader]:
+    ) -> tuple[Config, AbstractRecommender, Dataset, TrainDataLoader, FullSortEvalDataLoader, FullSortEvalDataLoader]:
     """Restore a selected checkpoint on CPU, including checkpoints trained on GPU."""
     import torch
+
     from recbole.data import create_dataset, data_preparation
     from recbole.utils import get_model, init_seed
 
@@ -75,7 +81,7 @@ def _load_checkpoint(checkpoint: str | PathLike[str]
 class PredictionResults:
     config: Config
     rankings: Rankings
-    relevant: Dict[str, Set[str]]
+    relevant: dict[str, set[str]]
     catalogue: tuple[str, ...]
 
 
@@ -120,7 +126,7 @@ def partition_predictions(
     internal_users = interactions[dataset.uid_field].cpu().tolist()
     users = dataset.id2token(dataset.uid_field, interactions[dataset.uid_field].cpu().numpy())
     items = dataset.id2token(dataset.iid_field, interactions[dataset.iid_field].cpu().numpy())
-    relevant: Dict[str, Set[str]] = {}
+    relevant: dict[str, set[str]] = {}
     for user, item in zip(users, items):
         relevant.setdefault(str(user), set()).add(str(item))
 
@@ -145,7 +151,7 @@ def validation_predictions(
         split_id: str,
         k: int = 10,
         batch_size: int = 1024
-) -> Tuple[Config, Rankings, Dict[str, Set[str]]]:
+) -> tuple[Config, Rankings, dict[str, set[str]]]:
     """Retain the existing validation-only prediction interface."""
     result = partition_predictions(checkpoint, source_splits, split_id, k, batch_size, partition="valid")
     return result.config, result.rankings, result.relevant

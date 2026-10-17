@@ -12,6 +12,14 @@ required experiment needs them.
 
 ## Start here
 
+
+### Ruff checks and tests
+
+```shell
+python -W error -m unittest discover -s project/tests -v
+ruff check project/recsys project/tests
+```
+
 Run commands from the repository root with Python 3.10 or newer. The demo and
 starter tests use only the standard library:
 

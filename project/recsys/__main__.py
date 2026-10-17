@@ -16,11 +16,12 @@ def main() -> None: # :)
     train = commands.add_parser("train", help="Train a RecBole model; save validation and splits")
     train.add_argument("--model-config", default=str(REPO_ROOT / "project/configs/models/bpr.yaml"))
     train.add_argument("--output", required=True, help="New artifact directory (must not exist)")
-    validate = commands.add_parser("validate", help="Run independent validation metrics on a saved training run")
-    validate.add_argument("--run", required=True, help="Completed project training artifact directory")
-    validate.add_argument("--output", required=True, help="New validation artifact directory (must not exist)")
-    validate.add_argument("--k", type=int, default=10)
-    validate.add_argument("--batch-size", type=int, default=1024, help="Batch size for the validation calculations. Too high may cause out of memory errors, but will speed it up")
+    for name, partition in (("validate", "validation"), ("evaluate", "final test")):
+        evaluation = commands.add_parser(name, help=f"Run independent {partition} metrics on a saved training run")
+        evaluation.add_argument("--run", required=True, help="Completed project training artifact directory")
+        evaluation.add_argument("--output", required=True, help="New validation artifact directory (must not exist)")
+        evaluation.add_argument("--k", type=int, default=10)
+        evaluation.add_argument("--batch-size", type=int, default=1024, help="Batch size for the validation calculations. Too high may cause out of memory errors, but will speed it up")
     for name in ("task1", "task2", "task3"):
         commands.add_parser(name, help="TODO: project experiment orchestration")
     args = parser.parse_args()
@@ -34,9 +35,13 @@ def main() -> None: # :)
             output = train(args.model_config, args.output)
             print(f"Training artifacts saved to {output}; use the validate command for independent validation.")
         elif args.command == "validate":
-            from .evaluation import validate_training_run
+            from .validate import validate_training_run
             output = validate_training_run(args.run, args.output, k=args.k, batch_size=args.batch_size)
-            print(f"Independent validation saved to {output}; see metrics.json, comparison.json, and example.json")
+            print(f"Independent validation saved to {output}; see metrics.json, beyond_accuracy.json, and group_metrics.json")
+        elif args.command == "evaluate":
+            from .evaluate import evaluate_training_run
+            output = evaluate_training_run(args.run, args.output, k=args.k, batch_size=args.batch_size)
+            print(f"Final test evaluation saved to {output}; see metrics.json, beyond_accuracy.json, and group_metrics.json")
         else:
             importlib.import_module(f"project.recsys.experiments.{args.command}").run()
     except (NotImplementedError, ValueError, FileExistsError, FileNotFoundError) as error:

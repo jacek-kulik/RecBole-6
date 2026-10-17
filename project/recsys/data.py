@@ -1,12 +1,12 @@
 """Shared metadata and training statistics for evaluation and later rerankers."""
 
-from collections import Counter
 import csv
+from collections import Counter
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from itertools import groupby
 from os import PathLike
 from pathlib import Path
-from typing import Iterable, Mapping, Sequence
 
 ACTIVITY_GROUPS = ("low", "medium", "high")
 POPULARITY_GROUPS = ("head", "middle", "tail")
