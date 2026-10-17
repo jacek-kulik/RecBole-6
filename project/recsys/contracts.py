@@ -1,10 +1,10 @@
 """Caio and Bogdan: shared external-ID contract for models, hybrids, and rerankers."""
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from math import isfinite
-from typing import Dict, List, Mapping, Sequence
 
-Rankings = Dict[str, List[str]]
+Rankings = dict[str, list[str]]
 
 
 @dataclass
@@ -19,7 +19,7 @@ class ScoreTable:
     model: str
     split_id: str
     partition: str
-    scores: Dict[str, Dict[str, float]]
+    scores: dict[str, dict[str, float]]
 
     def validate(self):
         if not self.model or not self.split_id or self.partition not in {"valid", "test"}:

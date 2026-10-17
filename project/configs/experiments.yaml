@@ -23,8 +23,8 @@ other_hybrids: []
 # Jacek: fill with implemented independent metric names and exact definitions.
 # Caio reviews the metric implementation, evidence, and report claims (2.1).
 # RecBole's protocol.yaml metrics are only training/validation diagnostics.
-project_accuracy_metrics: []
-project_beyond_accuracy_metrics: []
+project_accuracy_metrics: [Precision, Recall, F1, MRR, NDCG, MAP]
+project_beyond_accuracy_metrics: [ILD, MeanSelfInformation, GenreMiscalibration, GRU, CatalogueCoverage, ExposureGini, UPD, ItemGroupExposure]
 
 # Gabriel, Jacek and Victor: choose development-set strength grids for all four methods.
 rerankers:
@@ -37,8 +37,11 @@ rerankers:
 pipeline_orders: [rerank_then_combine, combine_then_rerank]
 reranked_list_fusion_rule: null
 
-# Victor: define groups from training information, before test evaluation.
+# Jacek supplies definitions;
+# Victor: owns analysis and interpretation
 # Caio reviews group comparisons (2.5) and reranker group effects (3.4).
-user_group_definition: null
-item_group_definition: null
+user_group_definition:
+  reporting: training-count terciles, with equal counts together
+  fairness: recorded F/M gender metadata
+item_group_definition: training interaction shares 20/60/20, with equal counts together
 explanatory_hypothesis: null

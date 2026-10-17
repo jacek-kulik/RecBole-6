@@ -6,8 +6,11 @@ import math
 import unittest
 
 from project.recsys.metrics.accuracy import (
-    evaluate_accuracy, get_aggregate_accuracy_metrics, get_aggregate_mrr,
-    get_per_user_accuracy_metrics, recall_at_k,
+    evaluate_accuracy,
+    get_aggregate_accuracy_metrics,
+    get_aggregate_mrr,
+    get_per_user_accuracy_metrics,
+    recall_at_k,
 )
 
 
@@ -91,9 +94,11 @@ class AccuracyTests(unittest.TestCase):
         )
         cases.extend(({"u": ["a"]}, {"u": {"a"}}, k) for k in (0, -1, 1.5, True))
         for rankings, relevant, k in cases:
-            with self.subTest(rankings=rankings, relevant=relevant, k=k):
-                with self.assertRaises(ValueError):
-                    evaluate_accuracy(rankings, relevant, k)
+            with (
+                self.subTest(rankings=rankings, relevant=relevant, k=k),
+                self.assertRaises(ValueError),
+            ):
+                evaluate_accuracy(rankings, relevant, k)
 
 
 if __name__ == "__main__":

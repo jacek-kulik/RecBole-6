@@ -23,7 +23,8 @@ install_requires = [
     "texttable>=0.9.0",
     "psutil>=5.9.0",
     # "ray>=1.13.0, <=2.6.3",
-    "ray>=2.31.0", 
+    "ray>=2.31.0",
+    "ruff>=0.17.1"
 ]
 
 setup_requires = []

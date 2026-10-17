@@ -1,10 +1,9 @@
 """Executable example joining shared data, baselines, metrics, and artifacts."""
 
-from dataclasses import asdict
 import json
+from dataclasses import asdict
 from os import PathLike
 from pathlib import Path
-from typing import Union
 
 from .artifacts import REPO_ROOT, fingerprint, new_run, provenance, write_json
 from .baselines import popularity, random_scores
@@ -14,7 +13,7 @@ from .metrics.accuracy import evaluate_accuracy
 
 
 def run(
-        output: Union[str, PathLike[str]],
+        output: str | PathLike[str],
         seed: int = 42, k: int = 2) -> Path:
     fixture = json.loads((REPO_ROOT / "project/examples/toy.json").read_text())
     train = [Interaction(*row) for row in fixture["train"]]
