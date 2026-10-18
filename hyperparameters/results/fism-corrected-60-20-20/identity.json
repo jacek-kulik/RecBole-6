@@ -1,0 +1,19 @@
+{
+  "sha256": {
+    "recbole/config/FISM/ml-100k.yaml": "ee2926e4d25c781c6af35892bd08ee1449b1cc3ea804dec1492808ecc16879ba",
+    "project/configs/protocol.yaml": "9b823a33e8040ce9ae501722f6abea1f065167b0943574e13d01aec623af1d41",
+    "hyperparameters/hyper-FISM.test": "819d387a32ff0881bd82ddccbb66e1251e219a49f99b25b983c708a511b5c7ce",
+    "hyperparameters/results/hyper-FISM.result": "3d4192973d6be9153171377652668d5be09ecd1e2f7bd21888e7eb3122152fc2",
+    "project/scripts/retune_fism.py": "2b3a39bfafb597c894ec87f6216478a2dd6b6cd791af1cf3ef81a2cff2389138",
+    "recbole/model/general_recommender/fism.py": "852e96cee9265c545505e1441ce4bb07ccd08cec0d17da8c10c9e59a34c1faac",
+    "recbole/trainer/trainer.py": "8cc095ecd6ae615cafd453a4d7b5e36de4bb887c849ffed5258c3a4e444cbc0a",
+    "recbole/data/dataset/dataset.py": "815f751feecdedd872ab2b44c4bd79ab8f3ec5483dbdf6b8091e379d354be7ba",
+    "recbole/data/interaction.py": "b840141790f66849918501e71cf545bf49b76450f2b6103ab35eb3da74b7ef71",
+    "recbole/properties/overall.yaml": "d82f7ace4ee4a2548d801b268f339d6e355ff63fa3fe9fb6fd25f41b380e87bc",
+    "recbole/properties/model/FISM.yaml": "09847e0b854b686b7cf6fd835ee6d056e915c4c439b6122d8a90758818ab6533",
+    "dataset\\ml-100k\\ml-100k.inter": "4edb74e2a81178c2ba9ff381495f754f996c4aea351b1272ca36b43da0935eff"
+  },
+  "torch": "2.5.1+cpu",
+  "python": "3.11.9",
+  "threads": 2
+}

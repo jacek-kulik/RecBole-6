@@ -1,0 +1,20 @@
+{
+  "parameters": {
+    "embedding_size": 128,
+    "reg_weights": [
+      0.001,
+      0.001
+    ],
+    "alpha": 0.0
+  },
+  "validation_mrr": 0.4992,
+  "validation": {
+    "recall@10": 0.1663,
+    "mrr@10": 0.4992,
+    "ndcg@10": 0.2679,
+    "hit@10": 0.8632,
+    "precision@10": 0.2223
+  },
+  "checkpoint": "saved\\fism-corrected-60-20-20\\trial-30\\ml-100k-FISM-Oct-18-2026_14-28-40.pth",
+  "seconds": 81.55
+}
