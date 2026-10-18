@@ -216,17 +216,15 @@ def prepare_metadata(
     if item_path.is_file():
         genres = load_item_genres(item_path)
         missing_items = []
-        missing = 0
-        
+
         for item in items:
             if item in genres:
                 item_features[item] = genres[item]
             else:
-                missing = missing + 1
                 missing_items.append(item)
 
-        if missing > 0:
-            pending["item_genres"] = (f"{missing} catalogue items (Items {missing_items}) have no genres in {item_path.name}")
+        if missing_items:
+            pending["item_genres"] = (f"{len(missing_items)} catalogue items (Items {missing_items}) have no genres in {item_path.name}")
     else:
         pending["metadata"] = f"Item file not found: {item_path}"
 
