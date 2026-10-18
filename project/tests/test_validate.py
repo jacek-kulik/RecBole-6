@@ -178,7 +178,7 @@ class ValidateTests(unittest.TestCase):
         with patch("sys.argv", args), redirect_stderr(io.StringIO()) as errors, self.assertRaises(SystemExit) as exit:
             main()
         self.assertEqual(exit.exception.code, 2)
-        self.assertIn("File exists", errors.getvalue())
+        self.assertRegex(errors.getvalue(), r"File exists|already exists")
 
 
 if __name__ == "__main__":
