@@ -1,0 +1,4 @@
+# Load after recbole/config/FISM/ml-100k.yaml and project/configs/protocol.yaml.
+embedding_size: 128
+reg_weights: [0.001, 0.001]
+alpha: 0.0
