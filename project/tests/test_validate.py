@@ -89,10 +89,10 @@ class ValidateTests(unittest.TestCase):
         reports = self.read("group_metrics.json")
         self.assertEqual((reports["status"], reports["owner"]), ("pending", "Victor"))
         beyond = self.read("beyond_accuracy.json")
-        self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 0, "M": 0, "unknown": 2})
-        self.assertIsNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
-        self.assertIn("Caio/Victor", beyond["gender_fairness"]["reason"])
-        self.assertIn("metadata", manifest["pending_work"])
+        self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 1, "M": 1, "unknown": 0})
+        self.assertIsNotNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
+        self.assertNotIn("metadata", manifest["pending_work"])
+        self.assertIn("group_analysis", manifest["pending_work"])
         self.assertFalse(manifest["project_evaluation_complete"])
 
         boundaries = self.read("groups.json")["activity"]["boundaries"]
