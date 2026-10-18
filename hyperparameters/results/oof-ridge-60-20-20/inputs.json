@@ -1,0 +1,18 @@
+{
+  "component_retraining": false,
+  "component_score_sha256": {
+    "bpr": "6083dab110e3194ace5da8cf7465f4968517defd9749de109d0c6848c1eb9d50",
+    "ease": "1ea760b50cdb6b7ca2df89ea7aa71a30fea5c006ee62e06fd955b5648dbe9e2b",
+    "fism": "2ec20001f229be85dfc65a72a242bb3415495bc1c52a017a8e49031ec1bb583a",
+    "itemknn": "b45e0d019b784dec81acf2bdbfa8eb9f26f225f23702119f7f55e1b24c0b48b1",
+    "slimelastic": "1fd7829f3afed6e57f291e86a1d6ca89bccb1e3357b320c5c6bb62fa94e99cfd",
+    "userknn": "e102d4e10b2f45d203fb46a456fe377b4fcddc57a2c4f967befd29e206c08fa8"
+  },
+  "search_source_sha256": "5d202c6c46158a6a32bb2794803e2e0adb8f07af751c7bb8946e2e58b5a22b03",
+  "source_hybrid_sha256": "94a16452f9a40c23136e6ad69a66c6be12b6237f9c10210df7abddde59629fdc",
+  "source_oof_sha256": "1fd60f9f9f6e48ccfff30f5e088043a331a49ef87348ba44bb31347185ecc404",
+  "source_validation_sha256": "9807a28a1357a46feae59c18c2a7712fadc3992f9d7f5524c1b406ca411b9e4d",
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "test_evaluated": false,
+  "validation_pairs_sha256": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b"
+}

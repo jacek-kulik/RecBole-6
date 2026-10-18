@@ -1,0 +1,82 @@
+{
+  "baseline": {
+    "alpha": 100.0,
+    "fitted": {
+      "alpha": 100.0,
+      "coefficients": [
+        0.09729670102403787,
+        -0.020913299063906824,
+        0.02795406860705446,
+        0.020164516013394237,
+        0.013546666573061025,
+        0.06313308156994286
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.1834134302095247,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17286856528906638,
+      "MAP@10": 0.0910146295359194,
+      "MRR@10": 0.49680309380733484,
+      "NDCG@10": 0.2867567907354827,
+      "Precision@10": 0.24273594909862076,
+      "Recall@10": 0.17998824141847342
+    }
+  },
+  "best": {
+    "alpha": 100000.0,
+    "fitted": {
+      "alpha": 100000.0,
+      "coefficients": [
+        0.03179964391646854,
+        0.018342981399013178,
+        0.015101702286697159,
+        0.027939433835537382,
+        0.025279474479929967,
+        0.01928776976308366
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.274236262523801,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17948720504537255,
+      "MAP@10": 0.0962518350879976,
+      "MRR@10": 0.5151748893265322,
+      "NDCG@10": 0.2986306964715998,
+      "Precision@10": 0.2513255567338277,
+      "Recall@10": 0.1871320956399401
+    }
+  },
+  "component_validation_ndcg": {
+    "bpr": 0.2692919841678778,
+    "ease": 0.2978659115193066,
+    "fism": 0.2626354264019244,
+    "itemknn": 0.2728911850004585,
+    "slimelastic": 0.30015391443877576,
+    "userknn": 0.2748411204855959
+  },
+  "metric": "validation NDCG@10",
+  "provisional_fism": true,
+  "selected_highest_penalty": false,
+  "test_evaluated": false
+}

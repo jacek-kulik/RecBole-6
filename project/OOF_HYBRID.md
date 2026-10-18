@@ -11,7 +11,7 @@ selection; it does not claim completion of all Task 1.5 experiments.
 From the repository root, with the existing project environment:
 
 ```powershell
-.venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-1.3
+.venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-1.3 --tuned-summary hyperparameters/results/oof-component-selection.csv
 ```
 
 The default run uses all six components, five folds, seed 42, and ridge alpha
@@ -32,11 +32,13 @@ Prepare the five unaffected models without fitting any regressor:
 .venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-60-20-20 --components itemknn userknn bpr slimelastic ease --prepare-only
 ```
 
-Repeat that command with `--resume` after an interruption. Once FISM is fixed
-and its selected parameters are updated in the summary, add FISM and fit:
+Repeat that command with `--resume` after an interruption. FISM's logits fix and
+60/20/20 retuning are now available. The updated selection CSV keeps the other
+five configurations unchanged and selects FISM embedding size 128, alpha 0,
+and regularization weights [0.001, 0.001]. Add FISM and fit:
 
 ```powershell
-.venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-60-20-20 --resume
+.venv/Scripts/python.exe -m project.recsys.oof_hybrid --output project/artifacts/hybrid-60-20-20 --tuned-summary hyperparameters/results/oof-component-selection.csv --resume
 ```
 
 The default six-component command reuses the other five caches and trains only
@@ -110,7 +112,74 @@ candidates. Compressed full-candidate score tables support downstream reranking.
 
 Coefficient magnitude is not causal model importance: components are correlated,
 and candidate-relative scaling affects interpretation. Rating MSE is a surrogate
-for ranking, not a guarantee of NDCG improvement. The inherited FISM sigmoid /
-BCEWithLogitsLoss concern from PR #14 is unchanged and must be resolved before
-interpreting its full experiment. This implementation does not silently patch
-individual models.
+for ranking, not a guarantee of NDCG improvement. FISM's sigmoid/BCEWithLogitsLoss
+bug is fixed on this branch, with regression tests for training logits,
+probability prediction, and scoring/gradient equivalence.
+
+## Raw target correction and final seven-model comparison
+
+After the validation-only OOF stage completes, run:
+
+```powershell
+.venv/Scripts/python.exe -m project.recsys.hybrid_report --output project/artifacts/hybrid-60-20-20
+```
+
+The MovieLens loader normalizes all float fields by default, including ratings.
+The original runner therefore fits normalized 0-1 targets despite labeling them
+raw ratings. The reporting stage restores the original 1-5 ratings by matching
+external user/item pairs, verifies every OOF row, and refits Ridge at the already
+selected alpha. This is an affine unit correction: coefficients multiply by four
+and the intercept becomes four times its previous value plus one. Validation
+top-K rankings are checked unchanged; no component is retrained and alpha is
+not selected again. Normalized-target artifacts are preserved as backups.
+
+The comparison uses the existing independent accuracy metrics from master.
+`evaluation/comparison.md` and `evaluation/metrics-{valid,test}.csv` contain all
+six components with the regressor last, at K=10. `evaluation/metrics.json` also
+contains per-user metrics. Precision, Recall, F1, MRR, NDCG, and MAP are macro
+averages; MAP divides by the full relevant-item count, as in that implementation.
+
+Test scores use exactly the frozen component weights and training histories.
+For these six models, the raw score is independent of the evaluation partition,
+so saved validation scores can be filtered to remove validation interactions.
+The report verifies complete, identical eligible catalogues and disjoint outer
+partitions. The hybrid applies its saved coefficients and recomputes the same
+candidate-relative normalization over test candidates. Test outcomes do not
+change alpha, parameters, or coefficients. The manifest records final evaluation.
+
+The reported components are fixed-budget full-training refits, not the earlier
+tuning run's validation-selected checkpoints. Neural metrics can therefore differ
+from tuning diagnostics. Existing 80/10/10-tuned parameters for the other five
+models remain the previously approved transfer; all actual predictions and
+evaluation here use the agreed 60/20/20 split.
+
+## Extending the Ridge penalty search
+
+After restoring raw targets with the reporting command, search higher penalties
+using only the cached OOF features and validation scores:
+
+```powershell
+.venv/Scripts/python.exe -m project.recsys.ridge_search --run project/artifacts/hybrid-60-20-20 --output project/artifacts/hybrid-60-20-20/ridge-extended
+```
+
+Use a new output directory for another search. The default grid covers 100 through
+1e12. This command does not retrain components or read/evaluate test outcomes.
+It saves the newly selected model in the new directory and preserves the original
+`hybrid.json` and its previously reported test results. The current extension
+selects alpha 100000 by validation NDCG@10; all FISM-dependent results remain
+provisional until the candidate self-contribution defect is corrected.
+
+Evaluate that frozen validation-selected fit and preserve the original report:
+
+```powershell
+.venv/Scripts/python.exe -m project.recsys.ridge_selected_report --run project/artifacts/hybrid-60-20-20 --selected project/artifacts/hybrid-60-20-20/ridge-extended
+```
+
+The updated validation/test tables and coefficients are recorded in
+`project/reports/task-1.3-ridge-100k-comparison.md`. Compact machine-readable
+results are in `hyperparameters/results/oof-ridge-60-20-20/`; large checkpoints,
+OOF caches, and candidate score exports remain local experiment artifacts.
+The alpha-100000 hybrid leads all six reported test metrics, including
+NDCG@10 0.408580 versus SLIMElastic 0.401882. Validation NDCG@10 is 0.298631
+versus SLIMElastic 0.300154. This is a single-seed provisional comparison:
+FISM still includes the target item in its own positive training history.

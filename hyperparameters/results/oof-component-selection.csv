@@ -1,0 +1,9 @@
+model,hyperparameters
+ItemKNN,"k:100, shrink:100.0"
+UserKNN,"k:50, shrink:0.0"
+BPR,"embedding_size:64, learning_rate:0.0015, train_batch_size:512"
+SLIMElastic,"alpha:0.2, l1_ratio:0.01"
+EASE,reg_weight:250.0
+FISM,"embedding_size:128, reg_weights:[0.001, 0.001], alpha:0.0"
+Pop,seed:2020
+Random,seed:2020
