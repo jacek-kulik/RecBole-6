@@ -72,7 +72,8 @@ def run_evaluation(
         "smoothing": {"novelty_pseudocount": 1, "genre_profile_mixture": .01},
         "group_construction": {
             "activity": "Linear training-count terciles; ties stay together; zero-history users join low",
-            "gender": "Recorded F/M user metadata; preparation pending with Caio/Victor",
+            "gender": "Recorded F/M from the dataset user file; any other value counts as unknown",
+            "genres": "class column of the item file",
             "item_popularity": "Training interaction shares 20/60/20, with complete count buckets",
         },
         "profile_weights": "Equal interactions; each movie contributes equal total genre mass",
