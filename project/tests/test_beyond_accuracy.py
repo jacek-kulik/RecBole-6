@@ -31,18 +31,9 @@ class BeyondAccuracyTests(unittest.TestCase):
         item_file, user_file = root / "movies.item", root / "users.user"
         item_file.write_text("item_id:token\tclass:token_seq\na\tAction Comedy\nb\tDrama\nc\tComedy\nd\tunknown\n")
         user_file.write_text("user_id:token\tgender:token\nf\tF\nm\tM\nmissing\t?\ncold\tF\n")
-        self.partial_statistics = prepare_metadata(
-            [Interaction("f", "a"), Interaction("m", "b"), Interaction("missing", "a")], item_file, user_file,
-            catalogue=("a", "b", "c", "d"),
-        )
-        # Prepared inputs supplied explicitly: metadata loading belongs to Caio/Victor.
-        features = {"a": ("Action", "Comedy"), "b": ("Drama",), "c": ("Comedy",), "d": ("unknown",)}
-        self.statistics = replace(
-            self.partial_statistics, item_features=features,
-            genre_profiles={user: genre_distribution(history, features)
-                            for user, history in self.partial_statistics.histories.items()},
-            gender_groups={"f": "F", "m": "M", "cold": "F"}, pending={},
-        )
+        rows = [Interaction("f", "a"), Interaction("m", "b"), Interaction("missing", "a")]
+        self.statistics = prepare_metadata(rows, item_file, user_file, catalogue=("a", "b", "c", "d"))
+        self.partial_statistics = prepare_metadata(rows, root / "absent.item", root / "absent.user", catalogue=("a", "b", "c", "d"))
         self.rankings = {"f": ["a", "b"], "m": ["b", "c"], "missing": ["c", "d"]}
         self.relevant = {"f": {"a", "b"}, "m": {"c"}, "missing": {"a"}}
 
@@ -77,7 +68,7 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertEqual(self.statistics.item_counts["d"], 0)
         self.assertEqual(self.statistics.item_features["d"], ("unknown",))
 
-    def test_teammate_placeholders_run_without_fabricating_metadata_or_reports(self) -> None:
+    def test_missing_metadata_files_run_without_fabricating_metadata_or_reports(self) -> None:
         accuracy = evaluate_accuracy(self.rankings, self.relevant, 2)
         result = evaluate_beyond_accuracy(self.rankings, self.partial_statistics, accuracy["per_user"], 2)
         self.assertEqual(self.partial_statistics.item_features, {})
@@ -104,6 +95,26 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertEqual(definitions["activity"]["members"]["cold"], "low")
         self.assertEqual(definitions["status"], "pending")
 
+    def test_metadata_loaded_from_atomic_files(self) -> None:
+        features = {"a": ("Action", "Comedy"), "b": ("Drama",), "c": ("Comedy",), "d": ("unknown",)}
+        self.assertEqual(self.statistics.item_features, features)
+        self.assertEqual(self.statistics.genre_profiles,
+                         {user: genre_distribution(history, features)
+                          for user, history in self.statistics.histories.items()})
+        self.assertEqual(self.statistics.gender_groups, {"f": "F", "m": "M", "cold": "F"})
+        self.assertEqual(self.statistics.pending, {})
+
+    def test_missing_items_get_no_genres(self) -> None:
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        item_file = Path(directory.name) / "few.item"
+        item_file.write_text("item_id:token\tmovie_title:token_seq\tclass:token_seq\na\tA Film\tDrama Drama\n")
+        statistics = prepare_metadata([Interaction("u", "a"), Interaction("v", "b")], item_file, None, catalogue=("a", "b"))
+        self.assertEqual(statistics.item_features, {"a": ("Drama",)})
+        self.assertEqual(set(statistics.genre_profiles), {"u"})
+        self.assertIn("item_genres", statistics.pending)
+        self.assertIn("genre_profiles", statistics.pending)
+        self.assertIn("metadata", statistics.pending) 
 
 if __name__ == "__main__":
     unittest.main()
