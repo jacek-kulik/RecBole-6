@@ -1,0 +1,20 @@
+{
+  "checkpoint": "project\\artifacts\\individual-retuning-ndcg\\models\\EASE\\trial-08.pth",
+  "checkpoint_sha256": "95845a12a8156615ed864ea3ecdd20635d6398476b7c2aa13f2e5c1f4720d20a",
+  "convergence_warnings": 0,
+  "parameters": {
+    "reg_weight": 2000.0
+  },
+  "scores": "project\\artifacts\\individual-retuning-ndcg\\models\\EASE\\trial-08.npz",
+  "scores_sha256": "45238c0f532813342b6c6bedb3f61c4bbd78b435cc0a685739b0c9965de2fc46",
+  "seconds": 1.11,
+  "status": "complete",
+  "validation": {
+    "F1@10": 0.17424391432685354,
+    "MAP@10": 0.09415429889792883,
+    "MRR@10": 0.5095368546853161,
+    "NDCG@10": 0.29202787955435167,
+    "Precision@10": 0.24453870625662674,
+    "Recall@10": 0.18233962136266307
+  }
+}

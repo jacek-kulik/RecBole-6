@@ -54,14 +54,14 @@ class SLIMElastic(GeneralRecommender):
             copy_X=False,
             precompute=True,
             selection="random",
-            max_iter=100,
+            max_iter=config["slim_max_iter"] or 100,
             tol=1e-4,
         )
         item_coeffs = []
 
-        # ignore ConvergenceWarnings
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", category=ConvergenceWarning)
+        # Retuning can inspect convergence without printing one warning per item.
+        with warnings.catch_warnings(record=True) as fit_warnings:
+            warnings.simplefilter("always", category=ConvergenceWarning)
 
             for j in range(X.shape[1]):
                 # target column
@@ -83,6 +83,9 @@ class SLIMElastic(GeneralRecommender):
                     # reattach column if removed
                     X[:, j] = r
 
+        self.convergence_warnings = sum(
+            issubclass(w.category, ConvergenceWarning) for w in fit_warnings
+        )
         self.item_similarity = sp.vstack(item_coeffs).T
         self.other_parameter_name = ["interaction_matrix", "item_similarity"]
 

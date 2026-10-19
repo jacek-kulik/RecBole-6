@@ -17,7 +17,8 @@ eval_args:
 # These RecBole metrics are training diagnostics; final reports use independent code.
 metrics: [Recall, MRR, NDCG]
 topk: [10]
-valid_metric: MRR@10
+# Primary selection metric shared with the alternate-hybrid comparisons.
+valid_metric: NDCG@10
 valid_metric_bigger: true
 save_dataset: false
 save_dataloaders: false
