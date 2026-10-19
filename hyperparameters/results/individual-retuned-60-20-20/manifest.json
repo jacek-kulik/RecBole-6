@@ -1,0 +1,27 @@
+{
+  "artifacts": "project\\artifacts\\individual-retuned-60-20-20",
+  "candidates": "catalogue minus training history; no padding",
+  "completed_models": [
+    "EASE",
+    "SLIMElastic"
+  ],
+  "identity_sha256": "7f16b2529379327e6f6dfd1766613c0614c1f2c59c1b929f316cd01e1c573fed",
+  "items": 1682,
+  "relevance": "all held-out interactions",
+  "seed": 42,
+  "selection_metric": "validation MRR@10",
+  "slim_max_iter": 1000,
+  "split": [
+    0.6,
+    0.2,
+    0.2
+  ],
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "test_access": "membership only for split identity; no scores or metrics",
+  "test_evaluated": false,
+  "tie_break": "external item token for scores; first declared grid trial for selection",
+  "training_pairs": 60734,
+  "users": 943,
+  "validation_pairs": 19633
+}

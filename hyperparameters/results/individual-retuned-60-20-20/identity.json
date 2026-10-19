@@ -1,0 +1,30 @@
+{
+  "numpy": "1.26.4",
+  "python": "3.11.9",
+  "scipy": "1.17.1",
+  "seed": 42,
+  "selection_metric": "validation MRR@10",
+  "sha256": {
+    "dataset/ml-100k/ml-100k.inter": "4edb74e2a81178c2ba9ff381495f754f996c4aea351b1272ca36b43da0935eff",
+    "hyperparameters/hyper-EASE.test": "ab3531b15b669900526b41b0f4472a6c89fbc3761766cfd7dca9fd9c7352eccc",
+    "hyperparameters/hyper-SLIMElastic.test": "5d687bb1683e86f582abffe9fd0f6dd4a73fa73628e6d7a830a3b4d907225269",
+    "project/configs/protocol.yaml": "9b823a33e8040ce9ae501722f6abea1f065167b0943574e13d01aec623af1d41",
+    "project/recsys/contracts.py": "ae3e523b8a7901f42b4bcbd5005d4fd4f1ef153eff998a15e2c980783008e792",
+    "project/recsys/metrics/_validation.py": "1f5d208c1fd9df959dd91b5b79ef4d9d8fe791429bfea4d487f6fa6ab464c2f0",
+    "project/recsys/metrics/accuracy.py": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+    "project/recsys/metrics/types.py": "ce8af5a24f221af87bc05f51807a9e4d807741b35d9921268fdff86aa0c47654",
+    "project/scripts/retune_ease_slim.py": "13a34dea46386fbc317f1188d97e46a04da531016d9ecf114ac69876496ed790",
+    "recbole/data/dataset/dataset.py": "815f751feecdedd872ab2b44c4bd79ab8f3ec5483dbdf6b8091e379d354be7ba",
+    "recbole/data/interaction.py": "b840141790f66849918501e71cf545bf49b76450f2b6103ab35eb3da74b7ef71",
+    "recbole/model/abstract_recommender.py": "f7d0b66b4b2952a321aafd67f713da4ea81bbaa4c148eccbc824784ad30999d2",
+    "recbole/model/general_recommender/ease.py": "208a9577467a97f1b4aa1f218c8ae56a470a5fce11d5b3c68fb330d08673c312",
+    "recbole/model/general_recommender/slimelastic.py": "04bb0e4e648e5d2a6fb1c3b8409fded6fea796bccef4e61d06f232d956aeffb0",
+    "recbole/properties/model/EASE.yaml": "553b2db2576edfd844717ad79a28ec900efacb78f0c22a7ca5d36b0cb5b80013",
+    "recbole/properties/model/SLIMElastic.yaml": "c8360625a59d0b656feada6f704b401e2239ca9b11fafdfb474699dafb04e387",
+    "recbole/properties/overall.yaml": "d82f7ace4ee4a2548d801b268f339d6e355ff63fa3fe9fb6fd25f41b380e87bc"
+  },
+  "sklearn": "1.9.1",
+  "slim_max_iter": 1000,
+  "threads": 2,
+  "torch": "2.5.1+cpu"
+}

@@ -1,0 +1,20 @@
+{
+  "checkpoint": "project\\artifacts\\individual-retuned-60-20-20\\EASE\\trial-07.pth",
+  "checkpoint_sha256": "f8417ab1b185fcaac1e1b3e8788e0c80beef5234cb658f9f56c5a3bde28255b9",
+  "convergence_warnings": 0,
+  "parameters": {
+    "reg_weight": 1000.0
+  },
+  "scores": "project\\artifacts\\individual-retuned-60-20-20\\EASE\\trial-07.npz",
+  "scores_sha256": "6711a2b92278ea47f55f847d8ffd7769698e5b094015c2239d490e36ce6ad1fd",
+  "seconds": 0.562,
+  "status": "complete",
+  "validation": {
+    "F1@10": 0.17939341812297177,
+    "MAP@10": 0.09620526652218497,
+    "MRR@10": 0.5157964281506158,
+    "NDCG@10": 0.2979413596452513,
+    "Precision@10": 0.25005302226935255,
+    "Recall@10": 0.18827371011202818
+  }
+}

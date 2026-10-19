@@ -1,0 +1,21 @@
+{
+  "checkpoint": "project\\artifacts\\individual-retuned-60-20-20\\SLIMElastic\\trial-01.pth",
+  "checkpoint_sha256": "957e5854304a5d0dd1e224820ddbf533b4ef1a2528f854df386e644cd7e5da14",
+  "convergence_warnings": 0,
+  "parameters": {
+    "alpha": 0.005,
+    "l1_ratio": 0.01
+  },
+  "scores": "project\\artifacts\\individual-retuned-60-20-20\\SLIMElastic\\trial-01.npz",
+  "scores_sha256": "a917f2bc87eff15233ceb6dcfe8e7d13f2dab3bec8a754c954e17f89203f8105",
+  "seconds": 8.125,
+  "status": "complete",
+  "validation": {
+    "F1@10": 0.16010465527515638,
+    "MAP@10": 0.08120415800287022,
+    "MRR@10": 0.47686966621218946,
+    "NDCG@10": 0.26894848554995154,
+    "Precision@10": 0.22788971367974484,
+    "Recall@10": 0.16554238355083936
+  }
+}

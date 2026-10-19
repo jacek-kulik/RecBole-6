@@ -1,0 +1,3 @@
+# Selected by validation MRR@10 on seed-42 60/20/20; load shared protocol after this.
+model: EASE
+reg_weight: 250.0
