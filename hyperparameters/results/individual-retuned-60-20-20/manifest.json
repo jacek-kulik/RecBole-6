@@ -1,15 +1,15 @@
 {
-  "artifacts": "project\\artifacts\\individual-retuned-60-20-20",
+  "artifacts": "project\\artifacts\\individual-retuning-ndcg\\models",
   "candidates": "catalogue minus training history; no padding",
   "completed_models": [
     "EASE",
     "SLIMElastic"
   ],
-  "identity_sha256": "7f16b2529379327e6f6dfd1766613c0614c1f2c59c1b929f316cd01e1c573fed",
+  "identity_sha256": "429c3ce4feba1c418b092b6025a18aa5b69a1cae09d6fe177b1cd03232c56bff",
   "items": 1682,
   "relevance": "all held-out interactions",
   "seed": 42,
-  "selection_metric": "validation MRR@10",
+  "selection_metric": "validation NDCG@10",
   "slim_max_iter": 1000,
   "split": [
     0.6,

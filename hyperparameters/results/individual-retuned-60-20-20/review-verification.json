@@ -13,10 +13,11 @@
   "original_fits_verified": 34,
   "original_manifest_sha256": "d7b447c9557d11f68097c3eebce68be3413c8d6668630bdff85129936f36ea41",
   "original_runner_hash_verified_against_commit": "c27ab257411ee32ed4f822d10209e640de69d0c3",
+  "original_selection_metric": "validation MRR@10",
   "per_user_split_verified": true,
-  "reproduced_manifest_sha256": "5b4addb4ff3bd957e515280d0642825e3046ec840851c2d9c80eebd1c9d73efd",
+  "reproduced_manifest_sha256": "0e19653f224d8f3d4ff1e978070adc81f45f9600ca4c2c7033237ff1db17dc65",
   "seed": 42,
-  "selection_metric": "validation MRR@10",
+  "selection_metric": "validation NDCG@10",
   "split": [
     0.6,
     0.2,
@@ -33,5 +34,5 @@
   "test_predictions_computed": false,
   "train_validation_test_disjoint": true,
   "users": 943,
-  "verifier_sha256": "4e721883547001340f11663e9ec5aedd83c8f50189b8fc852f79b706700192ca"
+  "verifier_sha256": "5b3c0a149853c39ab5b79d436fefcea03bcb4cef9e77b96ad9b0e43c777377e1"
 }

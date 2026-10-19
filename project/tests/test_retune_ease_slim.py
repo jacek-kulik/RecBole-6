@@ -27,12 +27,12 @@ class RetuningTests(unittest.TestCase):
             self.assertNotIn(b'\r', path.read_bytes())
             self.assertTrue(path.read_bytes().endswith(b'\n'))
 
-    def test_selection_uses_validation_mrr_and_rejects_nonconverged(self):
+    def test_selection_uses_validation_ndcg_and_rejects_nonconverged(self):
         def trial(mrr, ndcg, converged=True):
             return {'status': 'complete', 'convergence_warnings': int(not converged),
                     'validation': {'MRR@10': mrr, 'NDCG@10': ndcg}}
         trials = [trial(.3, .9), trial(.4, .1), trial(.99, .99, False)]
-        self.assertIs(choose(trials), trials[1])
+        self.assertIs(choose(trials), trials[0])
         self.assertIs(choose([trials[1], trials[1].copy()]), trials[1])
 
     def test_rankings_exclude_training_and_break_ties_by_external_token(self):

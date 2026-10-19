@@ -1,4 +1,4 @@
-# Selected by validation MRR@10 on seed-42 60/20/20; load shared protocol after this.
+# Selected by validation NDCG@10 on seed-42 60/20/20; load shared protocol after this.
 model: SLIMElastic
 alpha: 0.2
 l1_ratio: 0.005

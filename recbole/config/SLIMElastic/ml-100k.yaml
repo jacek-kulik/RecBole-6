@@ -24,7 +24,7 @@ stopping_step: 20
 # The weight of L1-norm used in ElasticNet is equal to alpha * l1_ratio. 
 # The weight of L2-norm used in ElasticNet is 1/2 * alpha * (1 - l1_ratio).
 alpha: 0.2
-# Selected by validation MRR@10 on seed-42 60/20/20.
+# Selected by validation NDCG@10 on seed-42 60/20/20.
 l1_ratio: 0.005
 slim_max_iter: 1000
 positive_only: True             # (bool) Whether to add the non-negativity constraint. 
@@ -40,4 +40,4 @@ eval_args:
   mode: full
 metrics: [Recall, MRR, NDCG, Hit, Precision]
 topk: [10]
-valid_metric: MRR@10
+valid_metric: NDCG@10

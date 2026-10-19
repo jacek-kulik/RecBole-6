@@ -62,6 +62,7 @@ def verify(original, reproduced, output):
         manifest = json.loads((directory / 'manifest.json').read_text())
         if manifest['status'] != 'complete' or manifest['split_id'] != actual_split or manifest['test_evaluated']:
             raise ValueError('Incomplete/wrong-partition run')
+        selection_metric = manifest['selection_metric'].split()[-1]
         fits = {}
         for name, expected_count in [('EASE', 9), ('SLIMElastic', 25)]:
             trials = []
@@ -78,7 +79,7 @@ def verify(original, reproduced, output):
                 cfg = checkpoint['config']
                 if cfg['seed'] != 42 or cfg['eval_args']['split'] != {'RS': [.6, .2, .2]} or cfg['eval_args']['group_by'] != 'user':
                     raise ValueError('Checkpoint used wrong protocol')
-                if cfg['valid_metric'] != 'MRR@10' or any(cfg[k] != v for k, v in trial['parameters'].items()):
+                if cfg['valid_metric'] != selection_metric or any(cfg[k] != v for k, v in trial['parameters'].items()):
                     raise ValueError('Checkpoint parameters/selection metric differ')
                 other = checkpoint['other_parameter']
                 fitted_history = csr_matrix(other['interaction_matrix'])
@@ -102,15 +103,15 @@ def verify(original, reproduced, output):
                 if any(abs(v - trial['validation'][m]) > 1e-12 for m, v in independent.items()):
                     raise ValueError('Independent validation metrics differ')
                 trials.append(trial)
-            best = max(trials, key=lambda t: t['validation']['MRR@10'])
+            best = max(trials, key=lambda t: t['validation'][selection_metric])
             selection = json.loads((directory / name / 'selection.json').read_text())
             if best['parameters'] != selection['best']['parameters'] or best['validation'] != selection['best']['validation']:
-                raise ValueError('Selection is not validation-MRR optimum')
+                raise ValueError('Selection is not the declared validation-metric optimum')
             fits[name] = {json.dumps(t['parameters'], sort_keys=True): t['validation'] for t in trials}
             for file in (f'recbole/config/{name}/ml-100k.yaml',
                          f'project/configs/models/{"ease" if name=="EASE" else "slimelastic"}.yaml'):
                 cfg_yaml = yaml.safe_load(Path(file).read_text(encoding='utf-8'))
-                if any(cfg_yaml[k] != v for k, v in selection['parameters'].items()):
+                if label == 'reproduced' and any(cfg_yaml[k] != v for k, v in selection['parameters'].items()):
                     raise ValueError('Published parameters do not match selection')
             print(f'{label}: verified {expected_count} {name} training matrices, masks, checkpoints and independent metrics', flush=True)
         results[label] = fits
@@ -145,7 +146,8 @@ def verify(original, reproduced, output):
              'all_four_published_config_splits_verified': True,
              'every_checkpoint_contains_training_interactions_only': True,
              'every_validation_mask_verified': True, 'independent_metrics': ['MRR@10', 'Recall@10', 'NDCG@10'],
-             'all_trial_metrics_reproduced_exactly': True, 'selection_metric': 'validation MRR@10',
+             'all_trial_metrics_reproduced_exactly': True, 'selection_metric': 'validation NDCG@10',
+             'original_selection_metric': json.loads((Path(original) / 'manifest.json').read_text())['selection_metric'],
              'test_predictions_computed': False, 'test_metrics_computed': False,
              'original_manifest_sha256': digest(Path(original) / 'manifest.json'),
              'reproduced_manifest_sha256': digest(Path(reproduced) / 'manifest.json'),
@@ -157,8 +159,8 @@ def verify(original, reproduced, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--original', default='hyperparameters/results/individual-retuned-60-20-20')
-    parser.add_argument('--reproduced', default='project/artifacts/individual-retuning/results')
-    parser.add_argument('--output', default='project/artifacts/pr21-review-verification')
+    parser.add_argument('--reproduced', default='project/artifacts/individual-retuning-ndcg/results')
+    parser.add_argument('--output', default='project/artifacts/pr21-ndcg-review-verification')
     args = parser.parse_args()
     torch.set_num_threads(2)
     with threadpool_limits(limits=2):

@@ -98,7 +98,7 @@ def choose(trials):
     if not successful:
         raise ValueError('No converged trial available')
     # max returns the first trial on a tie; grid order is declared and persisted.
-    return max(successful, key=lambda t: t['validation']['MRR@10'])
+    return max(successful, key=lambda t: t['validation']['NDCG@10'])
 
 
 def config_for(name, params):
@@ -133,7 +133,7 @@ def run(args):
     identity = {'sha256': {p: digest(p) for p in sources}, 'python': platform.python_version(),
                 'numpy': np.__version__, 'scipy': scipy.__version__, 'sklearn': sklearn.__version__,
                 'torch': torch.__version__, 'threads': args.threads, 'seed': 42,
-                'slim_max_iter': 1000, 'selection_metric': 'validation MRR@10'}
+                'slim_max_iter': 1000, 'selection_metric': 'validation NDCG@10'}
     identity_path = output / 'identity.json'
     if identity_path.exists() and json.loads(identity_path.read_text()) != identity:
         raise ValueError('Inputs changed; use new output and artifact directories')
@@ -160,7 +160,7 @@ def run(args):
         raise ValueError('Training/validation overlap')
     manifest = {'status': 'running', 'split_id': split_id, 'split': [0.6, 0.2, 0.2], 'seed': 42,
                 'users': len(users), 'items': len(items), 'training_pairs': parts[0].inter_num,
-                'validation_pairs': parts[1].inter_num, 'selection_metric': 'validation MRR@10',
+                'validation_pairs': parts[1].inter_num, 'selection_metric': 'validation NDCG@10',
                 'relevance': 'all held-out interactions', 'candidates': 'catalogue minus training history; no padding',
                 'test_evaluated': False, 'test_access': 'membership only for split identity; no scores or metrics',
                 'tie_break': 'external item token for scores; first declared grid trial for selection',
@@ -214,7 +214,7 @@ def run(args):
         if name == 'SLIMElastic':
             selected_params.update(slim_max_iter=1000, positive_only=True, hide_item=True)
         selection = {'model': name, 'split_id': split_id, 'trials': len(trials),
-                     'selection_metric': 'validation MRR@10', 'best': best, 'baseline_same_solver': baseline,
+                     'selection_metric': 'validation NDCG@10', 'best': best, 'baseline_same_solver': baseline,
                      'parameters': selected_params}
         write_json(model_output / 'selection.json', selection)
         (model_output / 'best-params.yaml').write_text(yaml.safe_dump(
@@ -238,8 +238,8 @@ def run(args):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', default='project/artifacts/individual-retuning/results')
-    parser.add_argument('--artifacts', default='project/artifacts/individual-retuning/models')
+    parser.add_argument('--output', default='project/artifacts/individual-retuning-ndcg/results')
+    parser.add_argument('--artifacts', default='project/artifacts/individual-retuning-ndcg/models')
     parser.add_argument('--models', nargs='+', choices=list(MODELS), default=list(MODELS))
     parser.add_argument('--threads', type=int, default=2)
     return parser.parse_args(argv)

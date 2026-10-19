@@ -1,15 +1,15 @@
 {
   "baseline_same_solver": {
-    "checkpoint": "project\\artifacts\\individual-retuned-60-20-20\\SLIMElastic\\trial-16.pth",
-    "checkpoint_sha256": "14ea6f3c234ae7cd7e3b63c0929a10ede4b51d7c79bfdcdf4ce127d77f7f1775",
+    "checkpoint": "project\\artifacts\\individual-retuning-ndcg\\models\\SLIMElastic\\trial-16.pth",
+    "checkpoint_sha256": "358ad1e2d55781b5969c220e373d900b791631afac2d7d08242564b1cfe3dab0",
     "convergence_warnings": 0,
     "parameters": {
       "alpha": 0.2,
       "l1_ratio": 0.01
     },
-    "scores": "project\\artifacts\\individual-retuned-60-20-20\\SLIMElastic\\trial-16.npz",
+    "scores": "project\\artifacts\\individual-retuning-ndcg\\models\\SLIMElastic\\trial-16.npz",
     "scores_sha256": "26e6630b0c7b437c872ce9b8b9bd2d96b1d70650f2a616ad6c011ace019f817b",
-    "seconds": 7.234,
+    "seconds": 6.203,
     "status": "complete",
     "validation": {
       "F1@10": 0.1787718572364252,
@@ -21,16 +21,16 @@
     }
   },
   "best": {
-    "checkpoint": "project\\artifacts\\individual-retuned-60-20-20\\SLIMElastic\\trial-15.pth",
-    "checkpoint_sha256": "14b9dd9db72af08a8bbe5fa604f3dc0a9ce617dd4ce9c3f7dcece748ae75df7d",
+    "checkpoint": "project\\artifacts\\individual-retuning-ndcg\\models\\SLIMElastic\\trial-15.pth",
+    "checkpoint_sha256": "e13b7ec54b074b37ccd53d7d647cad555bbafd529e01ee8d541ab9b553e54834",
     "convergence_warnings": 0,
     "parameters": {
       "alpha": 0.2,
       "l1_ratio": 0.005
     },
-    "scores": "project\\artifacts\\individual-retuned-60-20-20\\SLIMElastic\\trial-15.npz",
+    "scores": "project\\artifacts\\individual-retuning-ndcg\\models\\SLIMElastic\\trial-15.npz",
     "scores_sha256": "2586afe38f4ee87abab3d82309c7d7ce1805ccba5b169bfd160bd20137e7a218",
-    "seconds": 6.688,
+    "seconds": 6.484,
     "status": "complete",
     "validation": {
       "F1@10": 0.1783172796034511,
@@ -49,7 +49,7 @@
     "positive_only": true,
     "slim_max_iter": 1000
   },
-  "selection_metric": "validation MRR@10",
+  "selection_metric": "validation NDCG@10",
   "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
   "trials": 25
 }
