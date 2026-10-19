@@ -2,9 +2,9 @@
 
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -27,7 +27,10 @@ def new_run(path):
 def provenance():
     def git(*args):
         result = subprocess.run(
-            ["git", "-C", str(REPO_ROOT), *args], capture_output=True, text=True
+            ["git", "-C", str(REPO_ROOT), *args],
+            capture_output=True,
+            text=True,
+            check=False
         )
         return result.stdout.strip() if result.returncode == 0 else None
 

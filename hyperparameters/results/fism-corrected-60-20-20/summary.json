@@ -1,0 +1,82 @@
+{
+  "selection_metric": "validation MRR@10",
+  "trials": 48,
+  "historical_80_10_10": {
+    "parameters": {
+      "alpha": 0.0,
+      "embedding_size": 64,
+      "reg_weights": [
+        0.0001,
+        0.0001
+      ]
+    },
+    "validation": {
+      "recall@10": 0.1686,
+      "mrr@10": 0.3002,
+      "ndcg@10": 0.1778,
+      "hit@10": 0.6649,
+      "precision@10": 0.1298
+    },
+    "test": {
+      "recall@10": 0.2033,
+      "mrr@10": 0.3838,
+      "ndcg@10": 0.2262,
+      "hit@10": 0.7338,
+      "precision@10": 0.1632
+    }
+  },
+  "corrected_old_parameters_60_20_20": {
+    "parameters": {
+      "embedding_size": 64,
+      "reg_weights": [
+        0.0001,
+        0.0001
+      ],
+      "alpha": 0.0
+    },
+    "validation_mrr": 0.4889,
+    "validation": {
+      "recall@10": 0.1649,
+      "mrr@10": 0.4889,
+      "ndcg@10": 0.2649,
+      "hit@10": 0.8653,
+      "precision@10": 0.222
+    },
+    "checkpoint": "saved\\fism-corrected-60-20-20\\trial-15\\ml-100k-FISM-Oct-18-2026_14-12-36.pth",
+    "seconds": 53.62,
+    "test": {
+      "recall@10": 0.1926,
+      "mrr@10": 0.5804,
+      "ndcg@10": 0.347,
+      "hit@10": 0.8929,
+      "precision@10": 0.2919
+    }
+  },
+  "corrected_retuned_60_20_20": {
+    "parameters": {
+      "embedding_size": 128,
+      "reg_weights": [
+        0.001,
+        0.001
+      ],
+      "alpha": 0.0
+    },
+    "validation_mrr": 0.4992,
+    "validation": {
+      "recall@10": 0.1663,
+      "mrr@10": 0.4992,
+      "ndcg@10": 0.2679,
+      "hit@10": 0.8632,
+      "precision@10": 0.2223
+    },
+    "checkpoint": "saved\\fism-corrected-60-20-20\\trial-30\\ml-100k-FISM-Oct-18-2026_14-28-40.pth",
+    "seconds": 81.55,
+    "test": {
+      "recall@10": 0.1972,
+      "mrr@10": 0.5908,
+      "ndcg@10": 0.3501,
+      "hit@10": 0.8961,
+      "precision@10": 0.2936
+    }
+  }
+}
