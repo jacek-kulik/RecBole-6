@@ -8,11 +8,25 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from sklearn.exceptions import ConvergenceWarning
 
-from project.scripts.retune_ease_slim import choose, grid, rankings
+from project.scripts.retune_ease_slim import choose, grid, parse_args, rankings, write_json
 from recbole.model.general_recommender.slimelastic import SLIMElastic
 
 
 class RetuningTests(unittest.TestCase):
+    def test_default_run_does_not_resume_committed_records_without_checkpoints(self):
+        args = parse_args([])
+        for directory in (args.output, args.artifacts):
+            self.assertTrue(Path(directory).is_relative_to('project/artifacts'))
+            self.assertFalse(Path(directory).is_relative_to('hyperparameters/results'))
+        self.assertNotEqual(args.output, args.artifacts)
+
+    def test_json_evidence_uses_stable_lf_bytes(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'result.json'
+            write_json(path, {'validation': {'MRR@10': .5}})
+            self.assertNotIn(b'\r', path.read_bytes())
+            self.assertTrue(path.read_bytes().endswith(b'\n'))
+
     def test_selection_uses_validation_mrr_and_rejects_nonconverged(self):
         def trial(mrr, ndcg, converged=True):
             return {'status': 'complete', 'convergence_warnings': int(not converged),

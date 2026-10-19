@@ -58,8 +58,12 @@ From the repository root, using the existing environment:
 ```
 
 Completed trials resume only when source/config/data identity, checkpoint hashes
-and dense-score hashes match. Use new `--output` and `--artifacts` directories
-when changing inputs. Result JSON includes all 34 trials, the selected parameters,
+and dense-score hashes match. The default command creates local results under
+`project/artifacts/individual-retuning/results` and fitted models under
+`project/artifacts/individual-retuning/models`; it does not attempt to resume
+the committed historical JSON records, whose large checkpoints are not in Git.
+Use new `--output` and `--artifacts` directories when changing inputs.
+The original committed result JSON includes all 34 trials, the selected parameters,
 and the old configurations evaluated on the same split:
 [retuning results](../../hyperparameters/results/individual-retuned-60-20-20/).
 
@@ -72,7 +76,7 @@ validation score tables and split exports remain local under
 Selected per-user metrics are regenerated under each model's result directory
 and excluded from Git; aggregate metrics are present in the committed JSON.
 
-Four focused retuning tests and ten independent accuracy tests pass. A post-run
+Six focused retuning tests, ten independent accuracy tests and five artifact tests pass. A post-run
 check verified all 34 checkpoint/score hashes, unchanged input hashes, selected
 checkpoint scores, exported candidate masks, exact per-user metrics and matching
 parameters in both config formats. The EASE baseline reproduces the original
@@ -80,3 +84,36 @@ cached scores exactly. A resume check reused all 34 completed fits.
 
 Existing hybrid caches still refer to their original configurations. Their
 manifests are not rewritten to imply that these new parameters were used.
+
+## PR review and fresh reproduction
+
+The review found and fixed a reproduction issue: the default runner previously
+tried to resume the committed result JSON even though its checkpoints were
+excluded from Git. Defaults now create local run directories, and JSON evidence
+uses stable LF line endings. The mathematical fitting and selection are unchanged.
+
+After the fix, all 34 configurations were fitted again from scratch. Every
+trial reproduced its original validation metrics exactly. The independent audit
+in `project/scripts/verify_ease_slim_retuning.py` checked both sets of 34 fits:
+
+- Each user's validation/test count is floor(0.2 times their history length),
+  with rounding remainder assigned to training: totals 60,734 / 19,633 / 19,633.
+- All train/validation/test user-item pairs are disjoint.
+- Every saved model's interaction matrix equals the training partition exactly.
+- Checkpoint parameters, zero coefficient diagonals, SLIM constraints, score
+  arrays, external-ID ordering and training-history masks are consistent.
+- Independently computed validation MRR@10, Recall@10 and NDCG@10 match all
+  trials; selected configurations maximize validation MRR@10.
+- Both individual YAMLs alone and both project model YAMLs with the shared
+  protocol reproduce the same user/item split membership.
+
+The original run's script hash was checked against commit `c27ab257`, preserving
+its provenance after the CLI-only fix. No test predictions or test metrics were
+computed in this review. Compact evidence is committed as
+`hyperparameters/results/individual-retuned-60-20-20/review-verification.json`.
+The audit can be repeated when the original and freshly reproduced local
+checkpoints are available:
+
+```powershell
+.\.venv\Scripts\python.exe -m project.scripts.verify_ease_slim_retuning
+```

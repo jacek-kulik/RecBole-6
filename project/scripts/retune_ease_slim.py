@@ -3,6 +3,8 @@
 Native RecBole constructors fit these non-iterative recommenders once. No dummy
 training epochs are needed. Test membership is reconstructed for split identity;
 test scores and metrics are never computed. Large checkpoints/scores stay local.
+Defaults create a new local run under project/artifacts; committed result records
+are evidence from the original run, not a cache containing downloadable models.
 """
 
 import argparse
@@ -46,7 +48,7 @@ def write_json(path, value):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temp = path.with_suffix(path.suffix + '.tmp')
-    temp.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + '\n', encoding='utf-8')
+    temp.write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + '\n', encoding='utf-8', newline='\n')
     temp.replace(path)
 
 
@@ -216,7 +218,7 @@ def run(args):
                      'parameters': selected_params}
         write_json(model_output / 'selection.json', selection)
         (model_output / 'best-params.yaml').write_text(yaml.safe_dump(
-            {'model': name, **selected_params}, sort_keys=False), encoding='utf-8')
+            {'model': name, **selected_params}, sort_keys=False), encoding='utf-8', newline='\n')
         with np.load(best['scores'], allow_pickle=False) as saved:
             selected_scores = saved['scores'].copy()
         table = ScoreTable(name, split_id, 'valid', {
@@ -234,13 +236,17 @@ def run(args):
     write_json(output / 'manifest.json', manifest)
 
 
-if __name__ == '__main__':
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', default='hyperparameters/results/individual-retuned-60-20-20')
-    parser.add_argument('--artifacts', default='project/artifacts/individual-retuned-60-20-20')
+    parser.add_argument('--output', default='project/artifacts/individual-retuning/results')
+    parser.add_argument('--artifacts', default='project/artifacts/individual-retuning/models')
     parser.add_argument('--models', nargs='+', choices=list(MODELS), default=list(MODELS))
     parser.add_argument('--threads', type=int, default=2)
-    args = parser.parse_args()
+    return parser.parse_args(argv)
+
+
+if __name__ == '__main__':
+    args = parse_args()
     logging.basicConfig(level=logging.ERROR)
     torch.set_num_threads(args.threads)
     with threadpool_limits(limits=args.threads):
