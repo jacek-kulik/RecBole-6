@@ -15,6 +15,7 @@ SHARED = {
     "split_id": "split-A", "dataset": "fixture", "relevance": "all held-out test interactions",
     "candidate_policy": "full catalogue minus history", "metric_definitions": {"MRR": "v1"},
     "aggregation": "user mean", "smoothing": {}, "group_construction": {},
+    "n_catalogue_items": 4, "n_training_interactions": 10,
 }
 
 
@@ -94,6 +95,12 @@ class ComparisonTests(unittest.TestCase):
             compare_runs(self.folders("nowhere"), self.root / "out", k=2)
         with self.assertRaises(ValueError):
             compare_runs([], self.root / "out", k=2)
+
+    def test_rejects_different_catalogue(self) -> None:
+        write_evaluation(self.root / "bigger", "BPR", {"u1": 0.5, "u2": 0.5}, n_catalogue_items=5)
+        with self.assertRaisesRegex(ValueError, "n_catalogue_items. differs"):
+            compare_runs(self.folders("pop", "Bigger=bigger"), self.root / "out", k=2)
+        self.assertFalse((self.root / "out").exists()) 
 
 if __name__ == "__main__":
     unittest.main()

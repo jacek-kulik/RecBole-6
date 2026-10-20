@@ -35,6 +35,7 @@ KIND_ORDER = ("baseline", "individual", "hybrid")
 SHARED_FIELDS = (
     "split_id", "dataset", "partition", "k", "relevance", "candidate_policy",
     "metric_definitions", "aggregation", "smoothing", "group_construction",
+    "n_catalogue_items", "n_training_interactions",
 )
 
 def read_json(path: Path) -> Any:
