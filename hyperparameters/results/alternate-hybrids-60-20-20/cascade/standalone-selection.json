@@ -1,0 +1,12 @@
+{
+  "bpr": {
+    "embedding_size": 128,
+    "epochs": 50,
+    "learning_rate": 0.0005,
+    "train_batch_size": 512
+  },
+  "itemknn": {
+    "k": 200,
+    "shrink": 100.0
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "bundle_hashes_verified": true,
+  "items": 1682,
+  "maximum_metric_error": 0.0,
+  "model_evaluations": 47,
+  "retraining_performed": false,
+  "sha256": {
+    "evaluation_source": "89dc84ed64753ffb3164759eb1b46cf306d0e93e0e91b56b658e1e9a72e0016e",
+    "inference_source": "011e0513950d76c7ca930318b6c444d3874421f5460a1f65d92d399c7b5fa386",
+    "metrics": "e7290fcf63e53c3fb12c574c13e5020289c16506b60192215790814da235958d"
+  },
+  "source_metric_comparisons": 47,
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "test_scope": "Only hybrids with previously reported test results; frozen baseline choices",
+  "test_selection_performed": false,
+  "training_pairs": 60734,
+  "users": 943,
+  "warm_items": 1615
+}

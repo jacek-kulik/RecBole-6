@@ -1,0 +1,55 @@
+{
+  "architecture": "concat -> Linear(h) -> ReLU -> Linear(h/2) -> ReLU -> Linear(1)",
+  "baseline_cache_max_abs_error": 0.0,
+  "baseline_checkpoint_epoch": 49,
+  "baseline_checkpoint_seed": 42,
+  "candidate_alignment_verified": true,
+  "checkpoint": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\bpr\\2e3521eb09c22dd58b9f8f0842a107255d1249bc9ea8e3362d593f4eb2b53110\\full-training\\bpr.pth",
+  "dataset_access": "create_dataset for original checkpoint token mapping; no build/split or fitting on its interactions",
+  "elapsed_seconds": 77.9530000000002,
+  "evaluate_every": 5,
+  "frozen_embeddings": true,
+  "items": 1682,
+  "loss": "pairwise softplus(negative score - positive score)",
+  "max_epochs": 40,
+  "negative_sampling": "one uniform catalogue item per positive per epoch, reject training positives only; paired across variants",
+  "optimizer": {
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "name": "Adam",
+    "weight_decay": 0.0001
+  },
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "selected_widths": {
+    "mlp": 64,
+    "mlp-content": 64
+  },
+  "selection": "best epoch per trial; width selected by mean validation NDCG across seeds; ties prefer earlier epoch/smaller width",
+  "selection_metric": "validation NDCG@10",
+  "sha256": {
+    "accuracy": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+    "checkpoint": "19d0378cf4f973919caa62452bae88df9fb4fcd6133d142037e0818d44e246fb",
+    "metadata": "51d7cdf777ce5c0f5b32c1d947a4a81fe07d75e78abbe761e0cd4d0756064532",
+    "raw_catalogue_mapping_source": "4edb74e2a81178c2ba9ff381495f754f996c4aea351b1272ca36b43da0935eff",
+    "reference": "38153d8cdd3b3e5d3f641467da86edc11bbdb4ea7ad14a95fc82e6e77ac5b659",
+    "source": "50104123300226a0077f4465826e0a633f7ab9909629e71a768c695efd94364c",
+    "train": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c",
+    "valid": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b"
+  },
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "test_evaluated": false,
+  "test_split_read": false,
+  "threads": 4,
+  "torch_version": "2.5.1+cpu",
+  "training_pairs": 60734,
+  "users": 943,
+  "widths": [
+    64,
+    128
+  ]
+}

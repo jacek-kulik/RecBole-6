@@ -2,13 +2,14 @@
 from __future__ import annotations
 
 import csv
+import gzip
 import hashlib
 import json
 import shutil
 import sys
 import tempfile
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from math import isfinite
 from os import PathLike
 from pathlib import Path
@@ -231,14 +232,43 @@ def train(model_config, output):
     return output
 
 
-def export_scores(model, dataset, loader, split_id, partition) -> ScoreTable:
-    """TODO Caio and Gabriel: connect a selected RecBole model to the score contract.
+def _scores_to_table(label, split_id, partition, user_tokens, item_tokens, rows, eligible):
+    scores = {str(user): {str(item_tokens[i]): float(row[i]) for i in indices}
+              for user, row, indices in zip(user_tokens, rows, eligible)}
+    table = ScoreTable(label, split_id, partition, scores)
+    table.validate()
+    return table
 
-    Use recbole.utils.case_study.full_sort_scores in user batches. Translate BOTH
-    axes using dataset.id2token; exclude padding and agreed seen/history items.
-    Retain every eligible candidate score, not just top-K items. Reject unexpected
-    NaNs/infinities rather than silently dropping different items for each model.
-    Record and compare the actual candidate sets using require_aligned.
-    The provided loader must belong to the same exported split as split_id.
-    """
-    raise NotImplementedError("Caio and Gabriel: implement aligned full-candidate score export.")
+
+def export_scores(model, dataset, loader, split_id, partition, label=None, batch_size=256) -> ScoreTable:
+    """Export all eligible candidates in original IDs using the loader's mask."""
+    import torch
+    from recbole.utils.case_study import full_sort_scores
+
+    items = dataset.id2token(dataset.iid_field, list(range(dataset.item_num)))
+    uids = loader.uid_list.tolist()
+    users, rows, eligible = [], [], []
+    for start in range(0, len(uids), batch_size):
+        batch = uids[start:start + batch_size]
+        with torch.no_grad():
+            values = full_sort_scores(batch, model, loader).cpu().numpy()
+        for uid, row in zip(batch, values):
+            masked = set(loader.uid2history_item[uid].tolist()) | {0}
+            users.append(dataset.id2token(dataset.uid_field, uid))
+            rows.append(row)
+            eligible.append([i for i in range(1, dataset.item_num) if i not in masked])
+    return _scores_to_table(label or model.__class__.__name__, split_id, partition,
+                            users, items, rows, eligible)
+
+
+def _write_scores(table, path):
+    table.validate()
+    with gzip.open(path, 'wt', encoding='utf-8') as stream:
+        json.dump(asdict(table), stream, sort_keys=True, allow_nan=False)
+
+
+def load_scores(path):
+    with gzip.open(path, 'rt', encoding='utf-8') as stream:
+        table = ScoreTable(**json.load(stream))
+    table.validate()
+    return table
