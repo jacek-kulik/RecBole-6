@@ -272,6 +272,7 @@ def export_scores(model, dataset, loader, split_id, partition, label=None, batch
     The loader must belong to the same exported split as split_id.
     """
     import torch
+
     from recbole.utils.case_study import full_sort_scores
 
     item_tokens = dataset.id2token(dataset.iid_field, list(range(dataset.item_num)))
@@ -280,7 +281,7 @@ def export_scores(model, dataset, loader, split_id, partition, label=None, batch
     for start in range(0, len(uids), batch_size):
         batch = uids[start:start + batch_size]
         with torch.no_grad():
-            batch_scores = full_sort_scores(batch, model, loader).cpu().numpy()
+            batch_scores = full_sort_scores(batch, model, loader, device=model.device).cpu().numpy()
         for uid, row in zip(batch, batch_scores):
             masked = set(loader.uid2history_item[uid].tolist()) | {0}
             users.append(dataset.id2token(dataset.uid_field, uid))
