@@ -159,7 +159,7 @@ def run(source, output, ks=(10, 20, 40, 50, 80, 160, 320)):
              'All validation interactions are relevant under the existing protocol. Test split is not read or evaluated.', '',
              '| Model | Selected k | Recall@10 | MRR@10 | NDCG@10 |', '|---|---:|---:|---:|---:|']
     for name, result in metrics.items():
-        k = selected[name]['k'] if name in selected else ('50' if name == 'userknn' else '-')
+        k = selected[name]['k'] if name in selected else (manifest['component_parameters']['userknn']['k'] if name == 'userknn' else '-')
         lines.append(f'| {name} | {k} | ' + ' | '.join(f'{result["aggregate"][m+"@10"]:.6f}' for m in ('Recall', 'MRR', 'NDCG')) + ' |')
     lines += ['', 'The interaction-cosine control uses the identical scorer, tie handling and k grid; '
               'only the user representation changes. Cached UserKNN uses its original RecBole implementation. '

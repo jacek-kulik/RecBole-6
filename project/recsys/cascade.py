@@ -354,7 +354,7 @@ def _run(source, output):
               "Single seed; no significance claim. Candidate fraction estimates BPR scoring volume only: "
               "the experiment caches full scores to reuse fits and does not measure production latency. "
               "All catalogue items remain eligible, including items without training evidence. "
-              "NDCG@10 follows earlier hybrid experiments; shared YAML's provisional MRR@10 is also reported.", "",
+              "Validation selection uses NDCG@10; MRR@10 is also reported.", "",
               "Reproduce: `.venv/Scripts/python.exe -m project.recsys.cascade "
               "--output project/artifacts/cascade-itemknn-bpr --resume`."]
     (output / "comparison.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

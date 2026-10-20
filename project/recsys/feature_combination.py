@@ -237,7 +237,7 @@ def run(source, output, seeds=(42, 43, 44), widths=(64, 128), epochs=40):
     results["paired_content_minus_mlp"] = paired
     write_json(output / "results.json", results)
     lines = ["# Feature combination: validation comparison", "",
-             "Frozen 64-dimensional BPR user/item embeddings. Content adds 18 multi-hot genres and one training-standardized release year. No explicit content user profile.", "",
+             f"Frozen {p.shape[1]}-dimensional BPR user/item embeddings. Content adds {len(vocabulary)} multi-hot genres and one training-standardized release year. No explicit content user profile.", "",
              "Same 60/20/20 split and full-catalogue validation masks; all held-out interactions relevant; external token ties. Test split not opened or evaluated.", "",
              "MLPs use two ReLU hidden layers, BPR pairwise loss, Adam lr=0.001, weight decay=0.0001, batch size 2048. Uniform negatives exclude training positives only. Training order/negatives are paired across variants.", "",
              f"Widths {list(widths)}, seeds {list(seeds)}, up to {epochs} epochs, validation every five epochs. Select epoch per trial, then width by mean validation NDCG@10. Report mean and sample standard deviation across MLP seeds. The MF baseline is one shared pretrained checkpoint.", "",
