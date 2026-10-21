@@ -10,7 +10,8 @@ from typing import Any, Literal, TypedDict
 
 from .analysis.groups import PendingGroupAnalysis, compare_groups, group_definitions
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
-from .data import prepare_metadata, read_training_interactions
+from .contracts import Rankings
+from .data import TrainingStatistics, prepare_metadata, read_training_interactions
 from .metrics.accuracy import evaluate_accuracy
 from .metrics.beyond_accuracy import METRIC_DEFINITIONS, evaluate_beyond_accuracy
 from .metrics.types import AccuracyResults, BeyondAccuracyResults
@@ -37,26 +38,10 @@ def print_summary(
     print(f"Group analysis {group_report['status']} ({group_report['owner']}): {group_report['reason']}")
 
 
-def run_evaluation(
-        run_dir: str | PathLike[str],
-        output: str | PathLike[str],
-        partition: Literal["valid", "test"],
-        k: int = 10,
-        batch_size: int = 1024) -> Path:
-    """Run Jacek's metrics; identify unfinished teammate inputs and reports."""
-    if type(k) is not int or k <= 0 or type(batch_size) is not int or batch_size <= 0:
-        raise ValueError("k and batch_size must be positive integers")
-    if partition not in {"valid", "test"}:
-        raise ValueError("Evaluation partition must be valid or test")
-    run_dir = Path(run_dir).resolve()
-    source: dict[str, Any] = json.loads((run_dir / "manifest.json").read_text())
-    if source.get("kind") != "recbole-training" or source.get("status") != "complete":
-        raise ValueError("Source must be a completed RecBole training run")
+def evaluation_manifest(source: dict[str, Any], run_dir: Path, partition: str,
+                        k: int, batch_size: int) -> dict[str, Any]:
+    """Common provenance and metric definitions for original and reranked lists."""
     checkpoint = run_dir / source["checkpoint"]
-    if not checkpoint.is_file():
-        raise FileNotFoundError(checkpoint)
-    diagnostics = json.loads((run_dir / "validation.json").read_text()) if partition == "valid" else None
-    output = new_run(output)
     history = "training history" if partition == "valid" else "training and validation history"
     manifest: dict[str, Any] = {
         **provenance(), "status": "running",
@@ -78,6 +63,57 @@ def run_evaluation(
         },
         "profile_weights": "Equal interactions; each movie contributes equal total genre mass",
     }
+    return manifest
+
+
+def write_ranking_results(output: Path, rankings: Rankings, relevant: dict[str, set[str]],
+                          statistics: TrainingStatistics, k: int
+                          ) -> tuple[AccuracyResults, BeyondAccuracyResults, PendingGroupAnalysis]:
+    """Evaluate supplied lists using the existing independent metric definitions."""
+    accuracy = evaluate_accuracy(rankings, relevant, k)
+    beyond = evaluate_beyond_accuracy(rankings, statistics, accuracy["per_user"], k)
+    group_report = compare_groups(accuracy["per_user"], beyond, statistics)
+    user = next((user for user in sorted(rankings) if accuracy["per_user"][user][f"Recall@{k}"] > 0), min(rankings))
+    example = {
+        "user": user, "relevant": sorted(relevant[user]), "k": k,
+        "ranking": [{"rank": rank, "item": item, "hit": item in relevant[user]}
+                    for rank, item in enumerate(rankings[user][:k], 1)],
+        "metrics": accuracy["per_user"][user],
+        "n_hits": sum(item in relevant[user] for item in rankings[user][:k]),
+        "n_relevant": len(relevant[user]),
+    }
+    write_json(output / "rankings.json", rankings)
+    write_json(output / "relevant.json", {user: sorted(items) for user, items in relevant.items()})
+    write_json(output / "metrics.json", accuracy["aggregate"])
+    write_json(output / "per_user_metrics.json", accuracy["per_user"])
+    write_json(output / "example.json", example)
+    write_json(output / "beyond_accuracy.json", beyond)
+    write_json(output / "groups.json", group_definitions(statistics, rankings))
+    write_json(output / "group_metrics.json", group_report)
+    return accuracy, beyond, group_report
+
+
+def run_evaluation(
+        run_dir: str | PathLike[str],
+        output: str | PathLike[str],
+        partition: Literal["valid", "test"],
+        k: int = 10,
+        batch_size: int = 1024) -> Path:
+    """Run Jacek's metrics; identify unfinished teammate inputs and reports."""
+    if type(k) is not int or k <= 0 or type(batch_size) is not int or batch_size <= 0:
+        raise ValueError("k and batch_size must be positive integers")
+    if partition not in {"valid", "test"}:
+        raise ValueError("Evaluation partition must be valid or test")
+    run_dir = Path(run_dir).resolve()
+    source: dict[str, Any] = json.loads((run_dir / "manifest.json").read_text())
+    if source.get("kind") != "recbole-training" or source.get("status") != "complete":
+        raise ValueError("Source must be a completed RecBole training run")
+    checkpoint = run_dir / source["checkpoint"]
+    if not checkpoint.is_file():
+        raise FileNotFoundError(checkpoint)
+    diagnostics = json.loads((run_dir / "validation.json").read_text()) if partition == "valid" else None
+    output = new_run(output)
+    manifest = evaluation_manifest(source, run_dir, partition, k, batch_size)
     write_json(output / "manifest.json", manifest)
     try:
         predictions = partition_predictions(checkpoint, run_dir / "splits", source["split_id"],
@@ -94,9 +130,7 @@ def run_evaluation(
         }
         statistics = prepare_metadata(read_training_interactions(run_dir / "splits/train.csv"),
                                       item_file, user_file, predictions.catalogue)
-        accuracy = evaluate_accuracy(rankings, relevant, k)
-        beyond = evaluate_beyond_accuracy(rankings, statistics, accuracy["per_user"], k)
-        group_report = compare_groups(accuracy["per_user"], beyond, statistics)
+        accuracy, beyond, group_report = write_ranking_results(output, rankings, relevant, statistics, k)
         comparison: dict[str, MetricComparison] = {}
         if diagnostics is not None:
             reference = {name.lower(): value for name, value in diagnostics["metrics"].items()}
@@ -107,25 +141,8 @@ def run_evaluation(
                         "independent": value, "recbole": baseline, "difference": value - baseline,
                         "matches_reported_precision": round(value, config["metric_decimal_place"]) == baseline,
                     }
-        user = next((user for user in sorted(rankings) if accuracy["per_user"][user][f"Recall@{k}"] > 0), min(rankings))
-        example = {
-            "user": user, "relevant": sorted(relevant[user]), "k": k,
-            "ranking": [{"rank": rank, "item": item, "hit": item in relevant[user]}
-                        for rank, item in enumerate(rankings[user][:k], 1)],
-            "metrics": accuracy["per_user"][user],
-            "n_hits": sum(item in relevant[user] for item in rankings[user][:k]),
-            "n_relevant": len(relevant[user]),
-        }
-        write_json(output / "rankings.json", rankings)
-        write_json(output / "relevant.json", {user: sorted(items) for user, items in relevant.items()})
-        write_json(output / "metrics.json", accuracy["aggregate"])
-        write_json(output / "per_user_metrics.json", accuracy["per_user"])
         if partition == "valid":
             write_json(output / "comparison.json", comparison)
-        write_json(output / "example.json", example)
-        write_json(output / "beyond_accuracy.json", beyond)
-        write_json(output / "groups.json", group_definitions(statistics, rankings))
-        write_json(output / "group_metrics.json", group_report)
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
                         activity_boundaries=list(statistics.activity_boundaries),
                         n_training_interactions=statistics.n_interactions,

@@ -66,7 +66,7 @@ def jensen_shannon(
 ) -> float:
     """Base-2 divergence (not its square root); zero probability terms vanish."""
     result = 0.0
-    for category in p.keys() | q.keys():
+    for category in sorted(p.keys() | q.keys()):
         left, right = p.get(category, 0.0), q.get(category, 0.0)
         middle = (left + right) / 2
         if left:
@@ -79,7 +79,7 @@ def jensen_shannon(
 def smoothed_kl(p: Mapping[str, float], q: Mapping[str, float]) -> float:
     """KL(p || 0.99*q + 0.01*p), using natural logs as in the lecture."""
     return sum(probability * log(probability / (.99 * q.get(category, 0) + .01 * probability))
-               for category, probability in p.items() if probability)
+               for category, probability in sorted(p.items()) if probability)
 
 
 def exposure_gini(
