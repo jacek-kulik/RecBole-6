@@ -1,0 +1,5758 @@
+{
+  "aggregate": {
+    "CatalogueCoverage@10": 0.18761609907120744,
+    "ExposureGini@10": 0.9641407315539506,
+    "GenreMiscalibration@10": null,
+    "ILD@10": null,
+    "MeanSelfInformation@10": 8.257180522672622,
+    "UPD@10": 0.3264628518256114
+  },
+  "availability": {
+    "CatalogueCoverage@10": {
+      "n_users": 943,
+      "reason": null
+    },
+    "ExposureGini@10": {
+      "n_users": 943,
+      "reason": null
+    },
+    "GenreMiscalibration@10": {
+      "n_users": 0,
+      "reason": "Caio/Victor: metadata preparation is not implemented; genres, genre profiles and recorded gender are unavailable"
+    },
+    "ILD@10": {
+      "n_users": 0,
+      "reason": "Caio/Victor: metadata preparation is not implemented; genres, genre profiles and recorded gender are unavailable"
+    },
+    "MeanSelfInformation@10": {
+      "n_users": 943,
+      "reason": null
+    },
+    "UPD@10": {
+      "n_users": 943,
+      "reason": null
+    }
+  },
+  "gender_fairness": {
+    "counts": {
+      "F": 0,
+      "M": 0,
+      "unknown": 943
+    },
+    "gaps": {
+      "F1@10": {
+        "absolute": null,
+        "signed_f_minus_m": null
+      },
+      "MAP@10": {
+        "absolute": null,
+        "signed_f_minus_m": null
+      },
+      "MRR@10": {
+        "absolute": null,
+        "signed_f_minus_m": null
+      },
+      "NDCG@10": {
+        "absolute": null,
+        "signed_f_minus_m": null
+      },
+      "Precision@10": {
+        "absolute": null,
+        "signed_f_minus_m": null
+      },
+      "Recall@10": {
+        "absolute": null,
+        "signed_f_minus_m": null
+      }
+    },
+    "means": {
+      "F": null,
+      "M": null
+    },
+    "n_users": 0,
+    "reason": "Caio/Victor: metadata preparation is not implemented; genres, genre profiles and recorded gender are unavailable"
+  },
+  "item_group_exposure": {
+    "head": {
+      "n_items": 60,
+      "per_item": 59.30447959025047,
+      "reason": null,
+      "share": 0.8304832022740198,
+      "total": 3558.2687754150284
+    },
+    "middle": {
+      "n_items": 485,
+      "per_item": 1.4694051906573364,
+      "reason": null,
+      "share": 0.16633184745745513,
+      "total": 712.6615174688081
+    },
+    "tail": {
+      "n_items": 1070,
+      "per_item": 0.01275342330230828,
+      "reason": null,
+      "share": 0.003184950268524681,
+      "total": 13.64616293346986
+    }
+  },
+  "per_user": {
+    "1": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.22031475631981,
+      "UPD@10": 0.7316343936183355
+    },
+    "10": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.160082512953384,
+      "UPD@10": 0.6506962536806865
+    },
+    "100": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.328679040243609,
+      "UPD@10": 0.46517032671740666
+    },
+    "101": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.806106605745624,
+      "UPD@10": 0.2449094250384182
+    },
+    "102": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.39479741121553,
+      "UPD@10": 0.26886186276642415
+    },
+    "103": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.945044691409845,
+      "UPD@10": 0.1793773445069033
+    },
+    "104": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.244981423082063,
+      "UPD@10": 0.1623228379060122
+    },
+    "105": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.369312379646718,
+      "UPD@10": 0.10508882101157241
+    },
+    "106": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.447947979061725,
+      "UPD@10": 0.13401771148370661
+    },
+    "107": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.188956920833107,
+      "UPD@10": 0.3642637364570302
+    },
+    "108": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.027436602239307,
+      "UPD@10": 0.4132670718965328
+    },
+    "109": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.30172637362204,
+      "UPD@10": 0.30140983239089136
+    },
+    "11": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.125155158053587,
+      "UPD@10": 0.4358026547935138
+    },
+    "110": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.104911074991715,
+      "UPD@10": 0.20818954489614222
+    },
+    "111": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.228778271270883,
+      "UPD@10": 0.30947718663509005
+    },
+    "112": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.846278376795976,
+      "UPD@10": 0.07625161705635773
+    },
+    "113": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.4737967243627,
+      "UPD@10": 0.0946484316184879
+    },
+    "114": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.078377112819492,
+      "UPD@10": 0.49342260576014463
+    },
+    "115": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.200050087548602,
+      "UPD@10": 0.23017224356238736
+    },
+    "116": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.751988766343867,
+      "UPD@10": 0.24060513552399088
+    },
+    "117": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.08276113066736,
+      "UPD@10": 0.17094956364605188
+    },
+    "118": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.300129686738911,
+      "UPD@10": 0.5220745624983039
+    },
+    "119": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.407201463200384,
+      "UPD@10": 0.20346413733520138
+    },
+    "12": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.009761198202844,
+      "UPD@10": 0.4380080914563784
+    },
+    "120": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.137688118834431,
+      "UPD@10": 0.03632957660021872
+    },
+    "121": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.090871102252516,
+      "UPD@10": 0.2592969957812345
+    },
+    "122": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.127306978436383,
+      "UPD@10": 0.6612184470325386
+    },
+    "123": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.194967894105162,
+      "UPD@10": 0.260179671287144
+    },
+    "124": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.053263092371282,
+      "UPD@10": 0.3627987332841229
+    },
+    "125": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.289651497562364,
+      "UPD@10": 0.43215830019985635
+    },
+    "126": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.33082353011427,
+      "UPD@10": 0.4333376578353178
+    },
+    "127": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.304207301935822,
+      "UPD@10": 0.05475157262334834
+    },
+    "128": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.481640290123014,
+      "UPD@10": 0.21122074506215466
+    },
+    "129": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.669258907492672,
+      "UPD@10": 0.08880563947945648
+    },
+    "13": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.323133888360669,
+      "UPD@10": 0.4064552625927288
+    },
+    "130": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.392227546319901,
+      "UPD@10": 0.39885995081242576
+    },
+    "131": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.893223305329384,
+      "UPD@10": 0.5173990419746428
+    },
+    "132": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.97076627292783,
+      "UPD@10": 0.2738820377083453
+    },
+    "133": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.505622405133161,
+      "UPD@10": 0.07957440157273923
+    },
+    "134": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.498714719693327,
+      "UPD@10": 0.07109708947671083
+    },
+    "135": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.977067095739625,
+      "UPD@10": 0.6340014304170941
+    },
+    "136": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.867266176830263,
+      "UPD@10": 0.37050650054950524
+    },
+    "137": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9429375137049165,
+      "UPD@10": 0.32508678129854895
+    },
+    "138": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.040295318106756,
+      "UPD@10": 0.3110562974896076
+    },
+    "139": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.987175218329064,
+      "UPD@10": 0.6263832733354795
+    },
+    "14": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.208203406889044,
+      "UPD@10": 0.13658804956458725
+    },
+    "140": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.331897295291155,
+      "UPD@10": 0.18531818335311387
+    },
+    "141": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.229000311644299,
+      "UPD@10": 0.29074804448333597
+    },
+    "142": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.004438658699826,
+      "UPD@10": 0.41683800930077286
+    },
+    "143": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.45112816302306,
+      "UPD@10": 0.08193376677064658
+    },
+    "144": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.166987888194894,
+      "UPD@10": 0.37433588027344733
+    },
+    "145": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.16556518001234,
+      "UPD@10": 0.4755484945424758
+    },
+    "146": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.46517621917651,
+      "UPD@10": 0.0851156995545766
+    },
+    "147": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.492595012947621,
+      "UPD@10": 0.0809226495429198
+    },
+    "148": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.25718085759227,
+      "UPD@10": 0.19511711480188582
+    },
+    "149": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.30532173485724,
+      "UPD@10": 0.28416933357859886
+    },
+    "15": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.738984289003005,
+      "UPD@10": 0.13124429621762734
+    },
+    "150": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.039215099973998,
+      "UPD@10": 0.4934226057601447
+    },
+    "151": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.316579328638834,
+      "UPD@10": 0.37246638783255326
+    },
+    "152": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.683050095383141,
+      "UPD@10": 0.21661721164570918
+    },
+    "153": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.921095542494156,
+      "UPD@10": 0.1908745046211096
+    },
+    "154": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.065697499921622,
+      "UPD@10": 0.5395064368768621
+    },
+    "155": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.40129296576304,
+      "UPD@10": 0.1672283487443656
+    },
+    "156": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.067762639341584,
+      "UPD@10": 0.39015901245828255
+    },
+    "157": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.956397003135068,
+      "UPD@10": 0.40758469642672246
+    },
+    "158": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.280208416586357,
+      "UPD@10": 0.3766107601119991
+    },
+    "159": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.755053331776626,
+      "UPD@10": 0.19408282609053099
+    },
+    "16": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.119679314481685,
+      "UPD@10": 0.5217834580821694
+    },
+    "160": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.306232980372602,
+      "UPD@10": 0.1943198215595553
+    },
+    "161": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.182184172695484,
+      "UPD@10": 0.4059369371110204
+    },
+    "162": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.002681239818743,
+      "UPD@10": 0.37529626823860607
+    },
+    "163": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.903895729785117,
+      "UPD@10": 0.23645279766002797
+    },
+    "164": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.885742051907487,
+      "UPD@10": 0.7118632793592745
+    },
+    "165": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.05694857482547,
+      "UPD@10": 0.07310400793180986
+    },
+    "166": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.352498886313095,
+      "UPD@10": 0.1967477617552611
+    },
+    "167": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.797327596770897,
+      "UPD@10": 0.2371702411875793
+    },
+    "168": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.25040675189426,
+      "UPD@10": 0.18144508120114022
+    },
+    "169": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.01958474525964,
+      "UPD@10": 0.5363098072812748
+    },
+    "17": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.933457866058322,
+      "UPD@10": 0.18260398282384202
+    },
+    "170": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.289212755326812,
+      "UPD@10": 0.3922665163851085
+    },
+    "171": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.465357730753187,
+      "UPD@10": 0.11524679329390258
+    },
+    "172": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.0803570758276,
+      "UPD@10": 0.6352976196974357
+    },
+    "173": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.293033835696962,
+      "UPD@10": 0.33438909715118054
+    },
+    "174": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.189045388009076,
+      "UPD@10": 0.4885602196406618
+    },
+    "175": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.129871048563722,
+      "UPD@10": 0.4188212310720749
+    },
+    "176": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.109223924580988,
+      "UPD@10": 0.19360885653008075
+    },
+    "177": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.152698455157964,
+      "UPD@10": 0.2183519725285386
+    },
+    "178": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.123386184226908,
+      "UPD@10": 0.6178756270231924
+    },
+    "179": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.47720113364839,
+      "UPD@10": 0.26300419843278666
+    },
+    "18": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.346056299745323,
+      "UPD@10": 0.4681207468195208
+    },
+    "180": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.147968738147894,
+      "UPD@10": 0.3056984351190557
+    },
+    "181": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.934369053344166,
+      "UPD@10": 0.8231891095572041
+    },
+    "182": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.000589929688283,
+      "UPD@10": 0.3568671487303674
+    },
+    "183": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.090045957706035,
+      "UPD@10": 0.5229848362894218
+    },
+    "184": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.296276255875469,
+      "UPD@10": 0.4851978926808302
+    },
+    "185": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.012249900910442,
+      "UPD@10": 0.20785264894585026
+    },
+    "186": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.684717980809623,
+      "UPD@10": 0.1381595609140324
+    },
+    "187": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.981677133654502,
+      "UPD@10": 0.5661236006735826
+    },
+    "188": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.06086833918629,
+      "UPD@10": 0.28116575081179807
+    },
+    "189": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.299422946553632,
+      "UPD@10": 0.2606075487518499
+    },
+    "19": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8173480355412535,
+      "UPD@10": 0.6548575458269756
+    },
+    "190": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.069543629452292,
+      "UPD@10": 0.19514198753999373
+    },
+    "191": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.515509432753618,
+      "UPD@10": 0.08088003474187658
+    },
+    "192": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.998237270017286,
+      "UPD@10": 0.5087256743873156
+    },
+    "193": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.185500539906098,
+      "UPD@10": 0.25116284171063447
+    },
+    "194": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.20898146123515,
+      "UPD@10": 0.4938566904552193
+    },
+    "195": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.572365940826463,
+      "UPD@10": 0.21912262595814513
+    },
+    "196": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.898341360877213,
+      "UPD@10": 0.5605218825340386
+    },
+    "197": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.916521203593742,
+      "UPD@10": 0.0732191302441733
+    },
+    "198": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.146557408215957,
+      "UPD@10": 0.584489116955663
+    },
+    "199": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.948082640086201,
+      "UPD@10": 0.4591479170272448
+    },
+    "2": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.038927941493446,
+      "UPD@10": 0.4250177510042883
+    },
+    "20": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.04410033815822,
+      "UPD@10": 0.4591479170272448
+    },
+    "200": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.067316588629026,
+      "UPD@10": 0.3705782891721041
+    },
+    "201": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.19405102220981,
+      "UPD@10": 0.5188822199618712
+    },
+    "202": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.949826107660809,
+      "UPD@10": 0.1908745046211096
+    },
+    "203": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.951328159004056,
+      "UPD@10": 0.42317535146326185
+    },
+    "204": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.63310916201171,
+      "UPD@10": 0.1326136934153883
+    },
+    "205": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.523914587627974,
+      "UPD@10": 0.07539593734971192
+    },
+    "206": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 10.064925400805473,
+      "UPD@10": 0.15356166794579545
+    },
+    "207": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.993312323821027,
+      "UPD@10": 0.597026112503334
+    },
+    "208": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.082409320181062,
+      "UPD@10": 0.47635053688488826
+    },
+    "209": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.861171369898349,
+      "UPD@10": 0.56278270669339
+    },
+    "21": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.879393957570139,
+      "UPD@10": 0.0764703969854201
+    },
+    "210": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.08672110951092,
+      "UPD@10": 0.5940598137505837
+    },
+    "211": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.892415916157118,
+      "UPD@10": 0.4448225949416993
+    },
+    "212": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.03796801812296,
+      "UPD@10": 0.5297578726233217
+    },
+    "213": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.155218776673745,
+      "UPD@10": 0.5190106000520729
+    },
+    "214": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.133543900107517,
+      "UPD@10": 0.21103750483638672
+    },
+    "215": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.228815757352752,
+      "UPD@10": 0.2853131912150416
+    },
+    "216": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.155151805584046,
+      "UPD@10": 0.4633818507766877
+    },
+    "217": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.229124641957323,
+      "UPD@10": 0.1720882032279551
+    },
+    "218": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.168097355189007,
+      "UPD@10": 0.19450661210642795
+    },
+    "219": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.827120990461616,
+      "UPD@10": 0.8430007575148194
+    },
+    "22": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.187249490918775,
+      "UPD@10": 0.4101410137150088
+    },
+    "220": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.390993917733107,
+      "UPD@10": 0.1465228576945014
+    },
+    "221": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.257726018976774,
+      "UPD@10": 0.3852160557928377
+    },
+    "222": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.255154716904661,
+      "UPD@10": 0.39630457613376135
+    },
+    "223": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.392204207582854,
+      "UPD@10": 0.17689000909932023
+    },
+    "224": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.25771390059761,
+      "UPD@10": 0.4171895428799943
+    },
+    "225": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.949540509287985,
+      "UPD@10": 0.5661236006735826
+    },
+    "226": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.985748425556727,
+      "UPD@10": 0.4591479170272448
+    },
+    "227": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.092063970912498,
+      "UPD@10": 0.3604512078443396
+    },
+    "228": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.075890095851246,
+      "UPD@10": 0.23451584445005744
+    },
+    "229": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.465060071560165,
+      "UPD@10": 0.0583611664522824
+    },
+    "23": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.301968519208256,
+      "UPD@10": 0.25619956974264224
+    },
+    "230": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.205049010064746,
+      "UPD@10": 0.34395384865330697
+    },
+    "231": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.998911025104341,
+      "UPD@10": 0.18131494168147294
+    },
+    "232": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.097250076204412,
+      "UPD@10": 0.26187790285608004
+    },
+    "233": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.319855992977995,
+      "UPD@10": 0.2933052204957801
+    },
+    "234": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.29024218081965,
+      "UPD@10": 0.4190451443038068
+    },
+    "235": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.811075384522526,
+      "UPD@10": 0.11388831850981611
+    },
+    "236": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.960185734588596,
+      "UPD@10": 0.4906454646259372
+    },
+    "237": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.217148039055989,
+      "UPD@10": 0.2360515505449116
+    },
+    "238": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.873502714031962,
+      "UPD@10": 0.33247394607357955
+    },
+    "239": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.187547478821298,
+      "UPD@10": 0.43161800508985604
+    },
+    "24": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.990860446976399,
+      "UPD@10": 0.4357852367076837
+    },
+    "240": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.560731625053336,
+      "UPD@10": 0.03513919514019307
+    },
+    "241": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.405437803309017,
+      "UPD@10": 0.12864499201088608
+    },
+    "242": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.814100750621398,
+      "UPD@10": 0.4591479170272448
+    },
+    "243": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.67423254188907,
+      "UPD@10": 0.1473904641326696
+    },
+    "244": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.083758521950307,
+      "UPD@10": 0.6646962095619358
+    },
+    "245": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.042628713046765,
+      "UPD@10": 0.5918210039183629
+    },
+    "246": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.255683110132901,
+      "UPD@10": 0.36618679250044256
+    },
+    "247": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.93418232399646,
+      "UPD@10": 0.3112781244591328
+    },
+    "248": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.132141598781203,
+      "UPD@10": 0.43984465636092374
+    },
+    "249": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.098317705455269,
+      "UPD@10": 0.5517948144290371
+    },
+    "25": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.22736406897746,
+      "UPD@10": 0.16130262418454766
+    },
+    "250": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.991093719449452,
+      "UPD@10": 0.31880190220988247
+    },
+    "251": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.097973203408873,
+      "UPD@10": 0.3919817756023315
+    },
+    "252": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.805546578499997,
+      "UPD@10": 0.34249494556665416
+    },
+    "253": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.083074261256666,
+      "UPD@10": 0.30184390416731466
+    },
+    "254": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.444712344970938,
+      "UPD@10": 0.2410299565667451
+    },
+    "255": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.943104502392753,
+      "UPD@10": 0.03721270644162857
+    },
+    "256": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.13851495840644,
+      "UPD@10": 0.48698057145262247
+    },
+    "257": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.005209985407001,
+      "UPD@10": 0.5087256743873158
+    },
+    "258": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.611346076995773,
+      "UPD@10": 0.07269364891280133
+    },
+    "259": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8503642611583,
+      "UPD@10": 0.4711694339700462
+    },
+    "26": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.16334478134423,
+      "UPD@10": 0.1621741437804266
+    },
+    "260": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.450226431362715,
+      "UPD@10": 0.22460175271458135
+    },
+    "261": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.20515060775258,
+      "UPD@10": 0.3451427139216314
+    },
+    "262": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.362257944610151,
+      "UPD@10": 0.3493488496141948
+    },
+    "263": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.210564451894339,
+      "UPD@10": 0.5149577839754269
+    },
+    "264": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.790311549695003,
+      "UPD@10": 0.16079003769862069
+    },
+    "265": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.014438388030333,
+      "UPD@10": 0.37050650054950524
+    },
+    "266": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.855645556602916,
+      "UPD@10": 0.22191817963625307
+    },
+    "267": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.140057502969034,
+      "UPD@10": 0.6741758084059348
+    },
+    "268": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.159117590140905,
+      "UPD@10": 0.5677638841021151
+    },
+    "269": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.190486247353238,
+      "UPD@10": 0.7118632793592745
+    },
+    "27": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.875298131380677,
+      "UPD@10": 0.4591479170272448
+    },
+    "270": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.478258405967278,
+      "UPD@10": 0.24028762753339966
+    },
+    "271": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.199421572057048,
+      "UPD@10": 0.4343351845900858
+    },
+    "272": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.226087954882738,
+      "UPD@10": 0.27915851535613034
+    },
+    "273": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.258890973019735,
+      "UPD@10": 0.47530226368478057
+    },
+    "274": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.090683384119433,
+      "UPD@10": 0.515978490895207
+    },
+    "275": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.392936108519184,
+      "UPD@10": 0.06507539543022982
+    },
+    "276": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.049856088314918,
+      "UPD@10": 0.7821866968593183
+    },
+    "277": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.061093593387971,
+      "UPD@10": 0.43984465636092374
+    },
+    "278": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.210369401368391,
+      "UPD@10": 0.24280708383814256
+    },
+    "279": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.430796819154493,
+      "UPD@10": 0.4508545969782844
+    },
+    "28": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.38564839663729,
+      "UPD@10": 0.16797656527128677
+    },
+    "280": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.243793485182271,
+      "UPD@10": 0.4913035820444558
+    },
+    "281": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.419780523235541,
+      "UPD@10": 0.13099959795243976
+    },
+    "282": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.245583073292726,
+      "UPD@10": 0.35207650243864713
+    },
+    "283": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.086278940806249,
+      "UPD@10": 0.4902257944774603
+    },
+    "284": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.368472646913327,
+      "UPD@10": 0.19906061444696313
+    },
+    "285": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.813395566378037,
+      "UPD@10": 0.23645279766002797
+    },
+    "286": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.155047893526985,
+      "UPD@10": 0.38520502321065087
+    },
+    "287": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.892705673219543,
+      "UPD@10": 0.4250177510042883
+    },
+    "288": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.254021135788767,
+      "UPD@10": 0.0783739526308092
+    },
+    "289": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.010789640349392,
+      "UPD@10": 0.31338168623409157
+    },
+    "29": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.208105035313983,
+      "UPD@10": 0.3709006608829793
+    },
+    "290": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.15668658485099,
+      "UPD@10": 0.5552806833846645
+    },
+    "291": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.406632518084997,
+      "UPD@10": 0.28215317379163896
+    },
+    "292": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.215428547620997,
+      "UPD@10": 0.22171381694279024
+    },
+    "293": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.160266511279863,
+      "UPD@10": 0.4737081517428031
+    },
+    "294": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.280312647114812,
+      "UPD@10": 0.20129552462405814
+    },
+    "295": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.13158305905472,
+      "UPD@10": 0.700406475861677
+    },
+    "296": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.153194835819992,
+      "UPD@10": 0.24552813898873613
+    },
+    "297": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.090055655839805,
+      "UPD@10": 0.35797453029393234
+    },
+    "298": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.29420631367732,
+      "UPD@10": 0.2940952558872712
+    },
+    "299": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.252489979584565,
+      "UPD@10": 0.6632794000121169
+    },
+    "3": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.441894040303199,
+      "UPD@10": 0.3108614272319977
+    },
+    "30": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.937874443272724,
+      "UPD@10": 0.4591479170272448
+    },
+    "300": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9761220100986066,
+      "UPD@10": 0.3968000063638934
+    },
+    "301": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.324793513442224,
+      "UPD@10": 0.23960503081573187
+    },
+    "302": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.122914899212894,
+      "UPD@10": 0.353524484626881
+    },
+    "303": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.333947857253063,
+      "UPD@10": 0.3507068872487719
+    },
+    "304": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.032439948147555,
+      "UPD@10": 0.11672530257439494
+    },
+    "305": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.376396236468384,
+      "UPD@10": 0.2832371319497403
+    },
+    "306": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.911959763641915,
+      "UPD@10": 0.23306986405659413
+    },
+    "307": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.230996982908641,
+      "UPD@10": 0.5487949406953987
+    },
+    "308": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.12491135033304,
+      "UPD@10": 0.5068965818908565
+    },
+    "309": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.23749960355013,
+      "UPD@10": 0.4613187872813355
+    },
+    "31": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.927099314183846,
+      "UPD@10": 0.4978905066578724
+    },
+    "310": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9564909183825305,
+      "UPD@10": 0.48534030902224723
+    },
+    "311": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.310594795209997,
+      "UPD@10": 0.22420696179906932
+    },
+    "312": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.181760366323669,
+      "UPD@10": 0.6014707120261996
+    },
+    "313": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.309360736251882,
+      "UPD@10": 0.31362514049898227
+    },
+    "314": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.962938495893527,
+      "UPD@10": 0.7547601808087216
+    },
+    "315": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.942723902658389,
+      "UPD@10": 0.4415352033645099
+    },
+    "316": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.06779937004785,
+      "UPD@10": 0.17569394275363712
+    },
+    "317": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.310245624936133,
+      "UPD@10": 0.16062924455466035
+    },
+    "318": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.125463643863272,
+      "UPD@10": 0.6774038349105047
+    },
+    "319": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.222945722737014,
+      "UPD@10": 0.22421527293826204
+    },
+    "32": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.898600954454112,
+      "UPD@10": 0.36065704994910286
+    },
+    "320": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.268847051605151,
+      "UPD@10": 0.342705081376243
+    },
+    "321": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.1215729682033,
+      "UPD@10": 0.7038830210957336
+    },
+    "322": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.08848488937081,
+      "UPD@10": 0.503746561927088
+    },
+    "323": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.124896363623227,
+      "UPD@10": 0.24065701879965792
+    },
+    "324": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.216266169870917,
+      "UPD@10": 0.16440421608003225
+    },
+    "325": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.404358476203258,
+      "UPD@10": 0.24703397219986548
+    },
+    "326": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.248006112008705,
+      "UPD@10": 0.5076671605047337
+    },
+    "327": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.18124582058762,
+      "UPD@10": 0.6440858609335869
+    },
+    "328": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.339075360119175,
+      "UPD@10": 0.4657521530752984
+    },
+    "329": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.068965642541071,
+      "UPD@10": 0.3173385443775397
+    },
+    "33": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.494247095878334,
+      "UPD@10": 0.15725071517917266
+    },
+    "330": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.256031084546603,
+      "UPD@10": 0.40284345846167713
+    },
+    "331": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.731056801086165,
+      "UPD@10": 0.14224686823061716
+    },
+    "332": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.145612293384463,
+      "UPD@10": 0.37299902368782567
+    },
+    "333": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.926858775200072,
+      "UPD@10": 0.2635287583941467
+    },
+    "334": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.37414124981912,
+      "UPD@10": 0.48201936772276577
+    },
+    "335": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.399591900221028,
+      "UPD@10": 0.09741326260482804
+    },
+    "336": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.110055406881695,
+      "UPD@10": 0.21891392343758476
+    },
+    "337": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.024909648031393,
+      "UPD@10": 0.5229848362894218
+    },
+    "338": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.165570022196736,
+      "UPD@10": 0.049398902703828976
+    },
+    "339": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.235584030382492,
+      "UPD@10": 0.6340014304170942
+    },
+    "34": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.255690132092864,
+      "UPD@10": 0.37736266155242865
+    },
+    "340": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.272243415444507,
+      "UPD@10": 0.3123750316159144
+    },
+    "341": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.250607194099128,
+      "UPD@10": 0.4805094389129932
+    },
+    "342": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.016810330272309,
+      "UPD@10": 0.4490292817394273
+    },
+    "343": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.05555855656079,
+      "UPD@10": 0.6631013305770331
+    },
+    "344": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.281189456042439,
+      "UPD@10": 0.3551457723207406
+    },
+    "345": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.229149510782209,
+      "UPD@10": 0.40487501024992256
+    },
+    "346": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.184767038240667,
+      "UPD@10": 0.45206118734560685
+    },
+    "347": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.326456268585703,
+      "UPD@10": 0.21500209359210082
+    },
+    "348": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.020987773944126,
+      "UPD@10": 0.24765024431689922
+    },
+    "349": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.029089908109817,
+      "UPD@10": 0.6642991177133706
+    },
+    "35": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.228191495212574,
+      "UPD@10": 0.3655438344410304
+    },
+    "350": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.34128546568758,
+      "UPD@10": 0.24315560837231343
+    },
+    "351": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.17153859531867,
+      "UPD@10": 0.3466028127698742
+    },
+    "352": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.138426744351632,
+      "UPD@10": 0.34249494556665416
+    },
+    "353": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.527351401369039,
+      "UPD@10": 0.020720839623908215
+    },
+    "354": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.185013866170516,
+      "UPD@10": 0.48681898458876083
+    },
+    "355": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.332928775704552,
+      "UPD@10": 0.38743256502796536
+    },
+    "356": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.286483125045796,
+      "UPD@10": 0.24947218458764298
+    },
+    "357": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.32737434160383,
+      "UPD@10": 0.3512109260149421
+    },
+    "358": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.00268375711673,
+      "UPD@10": 0.7394468924503993
+    },
+    "359": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.893584614970772,
+      "UPD@10": 0.3852721393632722
+    },
+    "36": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.212314337006443,
+      "UPD@10": 0.2821821659037502
+    },
+    "360": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.02017387380916,
+      "UPD@10": 0.503746561927088
+    },
+    "361": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.493613602983327,
+      "UPD@10": 0.16864368521450313
+    },
+    "362": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.4488070944489,
+      "UPD@10": 0.0791584741794657
+    },
+    "363": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.258217875063455,
+      "UPD@10": 0.34625404582893327
+    },
+    "364": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.46854474867522,
+      "UPD@10": 0.08193376677064658
+    },
+    "365": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9408243935509075,
+      "UPD@10": 0.48757460872339664
+    },
+    "366": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.010085097149362,
+      "UPD@10": 0.76658906878673
+    },
+    "367": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.197416383656426,
+      "UPD@10": 0.28040572821226395
+    },
+    "368": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.229385661006082,
+      "UPD@10": 0.259804200488633
+    },
+    "369": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.904998098461948,
+      "UPD@10": 0.4357852367076837
+    },
+    "37": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.13500520008545,
+      "UPD@10": 0.478497191706593
+    },
+    "370": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.504424975760775,
+      "UPD@10": 0.06980538615733015
+    },
+    "371": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.161533209527242,
+      "UPD@10": 0.20005314413707373
+    },
+    "372": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.269389401766578,
+      "UPD@10": 0.08361079929287515
+    },
+    "373": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.107327852998187,
+      "UPD@10": 0.7355364649370371
+    },
+    "374": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.372481044346266,
+      "UPD@10": 0.20262109968625758
+    },
+    "375": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9313772466330885,
+      "UPD@10": 0.6548575458269756
+    },
+    "376": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.947178596488863,
+      "UPD@10": 0.4591479170272448
+    },
+    "377": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.071072167766621,
+      "UPD@10": 0.271684878064474
+    },
+    "378": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.18381737882958,
+      "UPD@10": 0.4768803091260107
+    },
+    "379": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.294602725643502,
+      "UPD@10": 0.25035428882570665
+    },
+    "38": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.719681702555276,
+      "UPD@10": 0.166910850970532
+    },
+    "380": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.12513323343631,
+      "UPD@10": 0.38607376603991045
+    },
+    "381": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.353579858981675,
+      "UPD@10": 0.22859635436955425
+    },
+    "382": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.125922823918497,
+      "UPD@10": 0.5229848362894218
+    },
+    "383": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.57437153138471,
+      "UPD@10": 0.20035150265334678
+    },
+    "384": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.295934884924227,
+      "UPD@10": 0.12350936298966601
+    },
+    "385": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.299453815835983,
+      "UPD@10": 0.5480037333428938
+    },
+    "386": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.117757809967094,
+      "UPD@10": 0.2815955620958579
+    },
+    "387": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.434063650902601,
+      "UPD@10": 0.3508590715427893
+    },
+    "388": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.960756476415591,
+      "UPD@10": 0.2400471145874707
+    },
+    "389": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.337299540931564,
+      "UPD@10": 0.47218600052606985
+    },
+    "39": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.309801970431955,
+      "UPD@10": 0.23617823841632413
+    },
+    "390": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.064179567154952,
+      "UPD@10": 0.1277106940947188
+    },
+    "391": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.033581093915368,
+      "UPD@10": 0.26801400926138697
+    },
+    "392": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.720579242522057,
+      "UPD@10": 0.08810473441309649
+    },
+    "393": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.161590496165596,
+      "UPD@10": 0.4720620080414979
+    },
+    "394": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.320045015658772,
+      "UPD@10": 0.22562707553503147
+    },
+    "395": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.06036173008729,
+      "UPD@10": 0.18141386611877164
+    },
+    "396": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.040904904578047,
+      "UPD@10": 0.5319658406367963
+    },
+    "397": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.077083506824385,
+      "UPD@10": 0.29303819710874845
+    },
+    "398": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.356709976889576,
+      "UPD@10": 0.23418218943973945
+    },
+    "399": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.252355183707461,
+      "UPD@10": 0.6938524191081037
+    },
+    "4": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.33406822182468,
+      "UPD@10": 0.2232760645253926
+    },
+    "40": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.487948048469915,
+      "UPD@10": 0.07178038703925825
+    },
+    "400": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.430063939353568,
+      "UPD@10": 0.043056393532945145
+    },
+    "401": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.123045081049716,
+      "UPD@10": 0.3756578880086656
+    },
+    "402": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.11932267713297,
+      "UPD@10": 0.18646131470355615
+    },
+    "403": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.165150743734687,
+      "UPD@10": 0.1985025251513829
+    },
+    "404": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.538453037224615,
+      "UPD@10": 0.18672534493949833
+    },
+    "405": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.396706474454376,
+      "UPD@10": 0.5009823896717079
+    },
+    "406": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.269472745281531,
+      "UPD@10": 0.7227220504296161
+    },
+    "407": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.235415310060063,
+      "UPD@10": 0.31458134152449113
+    },
+    "408": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.500469733767655,
+      "UPD@10": 0.03051527436540201
+    },
+    "409": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.410366972048243,
+      "UPD@10": 0.289902024904066
+    },
+    "41": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.206041046386618,
+      "UPD@10": 0.3112781244591328
+    },
+    "410": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.521417856282065,
+      "UPD@10": 0.05889538457747745
+    },
+    "411": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.218876829540742,
+      "UPD@10": 0.4059369371110204
+    },
+    "412": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.03993784020945,
+      "UPD@10": 0.3785614635126814
+    },
+    "413": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.951090533507289,
+      "UPD@10": 0.3025333694507045
+    },
+    "414": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.30520150974205,
+      "UPD@10": 0.14023253367771
+    },
+    "415": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.946989150803418,
+      "UPD@10": 0.4188212310720749
+    },
+    "416": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.244329042163447,
+      "UPD@10": 0.5283393661365139
+    },
+    "417": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.42530250343433,
+      "UPD@10": 0.3064630464577043
+    },
+    "418": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.446740644271959,
+      "UPD@10": 0.1152156590265055
+    },
+    "419": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.939654609590832,
+      "UPD@10": 0.27280560201910964
+    },
+    "42": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.091605173476557,
+      "UPD@10": 0.6241387535490984
+    },
+    "420": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.05002760220221,
+      "UPD@10": 0.3756306742368085
+    },
+    "421": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.236392949175913,
+      "UPD@10": 0.533714821383084
+    },
+    "422": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.485862300340967,
+      "UPD@10": 0.12323122883576478
+    },
+    "423": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.660004537784213,
+      "UPD@10": 0.12288541352722421
+    },
+    "424": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.233393240628772,
+      "UPD@10": 0.19570732303769187
+    },
+    "425": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.253878738948778,
+      "UPD@10": 0.2912847356877849
+    },
+    "426": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.418520623698717,
+      "UPD@10": 0.2204091615927128
+    },
+    "427": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.36684124463513,
+      "UPD@10": 0.33341463612778854
+    },
+    "428": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.33768990298954,
+      "UPD@10": 0.2628982183305905
+    },
+    "429": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.2306060237029,
+      "UPD@10": 0.7249070885783734
+    },
+    "43": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.050086507095237,
+      "UPD@10": 0.6257579340377597
+    },
+    "430": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.021861817913429,
+      "UPD@10": 0.241110486095886
+    },
+    "431": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.40371635762435,
+      "UPD@10": 0.11406604656872492
+    },
+    "432": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.087920888134358,
+      "UPD@10": 0.2621252983232272
+    },
+    "433": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.393562536547567,
+      "UPD@10": 0.07138564444043424
+    },
+    "434": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9197385635714115,
+      "UPD@10": 0.6893917467430878
+    },
+    "435": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.278899734277465,
+      "UPD@10": 0.483872305396134
+    },
+    "436": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.18899267328242,
+      "UPD@10": 0.370134848872398
+    },
+    "437": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.160484598181258,
+      "UPD@10": 0.6961754086106064
+    },
+    "438": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.163880371930805,
+      "UPD@10": 0.19931088574231126
+    },
+    "439": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.865321814460844,
+      "UPD@10": 0.4250177510042883
+    },
+    "44": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.299610422919999,
+      "UPD@10": 0.23497995644761074
+    },
+    "440": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.152309467449044,
+      "UPD@10": 0.6939634175010312
+    },
+    "441": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.873559879249032,
+      "UPD@10": 0.13185852844993734
+    },
+    "442": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.165925944201394,
+      "UPD@10": 0.40601721218642794
+    },
+    "443": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.33003968115904,
+      "UPD@10": 0.13099959795243976
+    },
+    "444": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.305465677561747,
+      "UPD@10": 0.10091884579378539
+    },
+    "445": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.239423935113356,
+      "UPD@10": 0.2575653310024181
+    },
+    "446": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.418759352333314,
+      "UPD@10": 0.07584014721659207
+    },
+    "447": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.909747331816836,
+      "UPD@10": 0.5253664960433022
+    },
+    "448": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.253201999739057,
+      "UPD@10": 0.3880880544951838
+    },
+    "449": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.187019823031067,
+      "UPD@10": 0.2102632426067999
+    },
+    "45": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.253892038532658,
+      "UPD@10": 0.09811323129966183
+    },
+    "450": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.300094714027669,
+      "UPD@10": 0.547876673350838
+    },
+    "451": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 10.084906911389377,
+      "UPD@10": 0.03875038201729264
+    },
+    "452": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.227659117638556,
+      "UPD@10": 0.4593675161104489
+    },
+    "453": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.403606861084635,
+      "UPD@10": 0.22130666690219886
+    },
+    "454": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.339540832559287,
+      "UPD@10": 0.6322753401919068
+    },
+    "455": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.315254971957748,
+      "UPD@10": 0.3961896165288621
+    },
+    "456": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.110639154650864,
+      "UPD@10": 0.6219544725315396
+    },
+    "457": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.281042627761215,
+      "UPD@10": 0.4645477548043288
+    },
+    "458": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.115745897368928,
+      "UPD@10": 0.6123202380775861
+    },
+    "459": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.93142842669924,
+      "UPD@10": 0.5993185756884369
+    },
+    "46": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.256484450990794,
+      "UPD@10": 0.08150092309681232
+    },
+    "460": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.120006365484516,
+      "UPD@10": 0.1825718560286786
+    },
+    "461": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.146976446682524,
+      "UPD@10": 0.06345163544270968
+    },
+    "462": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.189378262415408,
+      "UPD@10": 0.23017224356238736
+    },
+    "463": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.446136603128586,
+      "UPD@10": 0.25353813920340496
+    },
+    "464": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.171547178395437,
+      "UPD@10": 0.17767013727058487
+    },
+    "465": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.642597510945386,
+      "UPD@10": 0.07712404800578668
+    },
+    "466": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.846502586412731,
+      "UPD@10": 0.06923355134992046
+    },
+    "467": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.078859181116066,
+      "UPD@10": 0.17363801998861123
+    },
+    "468": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.985369465537568,
+      "UPD@10": 0.5195116263866973
+    },
+    "469": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.046422275530665,
+      "UPD@10": 0.4778370354549468
+    },
+    "47": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.510854099122346,
+      "UPD@10": 0.037736994941710955
+    },
+    "470": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.966346095554213,
+      "UPD@10": 0.3308451737898822
+    },
+    "471": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.151982891843499,
+      "UPD@10": 0.596544678055706
+    },
+    "472": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.158183426948835,
+      "UPD@10": 0.4488294551683487
+    },
+    "473": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.7961085444559926,
+      "UPD@10": 0.6224347889044249
+    },
+    "474": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.148845638266923,
+      "UPD@10": 0.44468943082313556
+    },
+    "475": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.26032650231744,
+      "UPD@10": 0.05957943556325991
+    },
+    "476": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.397750514746097,
+      "UPD@10": 0.25588107560248313
+    },
+    "477": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.981468099921772,
+      "UPD@10": 0.6224347889044249
+    },
+    "478": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9313266036781584,
+      "UPD@10": 0.5363098072812748
+    },
+    "479": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.290247309818735,
+      "UPD@10": 0.40065715262673873
+    },
+    "48": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.47637411409902,
+      "UPD@10": 0.15675239558107867
+    },
+    "480": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.01913977758844,
+      "UPD@10": 0.48757460872339664
+    },
+    "481": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.141184216985778,
+      "UPD@10": 0.3986055465245282
+    },
+    "482": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.640338431230855,
+      "UPD@10": 0.06008981583089778
+    },
+    "483": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.110614504877324,
+      "UPD@10": 0.19514198753999373
+    },
+    "484": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.246006829489236,
+      "UPD@10": 0.19561533094270075
+    },
+    "485": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.634419895812595,
+      "UPD@10": 0.03513919514019307
+    },
+    "486": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.43140498785342,
+      "UPD@10": 0.051981343024529184
+    },
+    "487": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.110695183688314,
+      "UPD@10": 0.42494909104203293
+    },
+    "488": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.250938104386766,
+      "UPD@10": 0.5070790580100301
+    },
+    "489": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.806335052298863,
+      "UPD@10": 0.11022138205309814
+    },
+    "49": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.383872321188063,
+      "UPD@10": 0.3165160810537599
+    },
+    "490": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.95755762994726,
+      "UPD@10": 0.27883742804668904
+    },
+    "491": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.005503753324053,
+      "UPD@10": 0.271684878064474
+    },
+    "492": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.18037811050975,
+      "UPD@10": 0.4292172136101834
+    },
+    "493": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.972771578126621,
+      "UPD@10": 0.5381427853760248
+    },
+    "494": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.916585649445521,
+      "UPD@10": 0.3536178178935493
+    },
+    "495": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.269401967502079,
+      "UPD@10": 0.3596947154754494
+    },
+    "496": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.250840247685733,
+      "UPD@10": 0.3570993550300534
+    },
+    "497": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.167045783386124,
+      "UPD@10": 0.4791903332539049
+    },
+    "498": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.17441687880614,
+      "UPD@10": 0.3924380969274984
+    },
+    "499": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.395519263967554,
+      "UPD@10": 0.13976871843015864
+    },
+    "5": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.370705974258922,
+      "UPD@10": 0.3281163050132144
+    },
+    "50": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.892152624115477,
+      "UPD@10": 0.6263832733354795
+    },
+    "500": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.151543224399571,
+      "UPD@10": 0.6099865470109874
+    },
+    "501": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.81090068132051,
+      "UPD@10": 0.20350838543982938
+    },
+    "502": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.206293925078848,
+      "UPD@10": 0.5501554847040986
+    },
+    "503": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.255792984806014,
+      "UPD@10": 0.43356237013030563
+    },
+    "504": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.359138047855307,
+      "UPD@10": 0.4848699421711147
+    },
+    "505": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.497455341420997,
+      "UPD@10": 0.09300036622934989
+    },
+    "506": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.26482735763538,
+      "UPD@10": 0.34037080202729253
+    },
+    "507": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.56610177641203,
+      "UPD@10": 0.0875960470156239
+    },
+    "508": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.398188777552477,
+      "UPD@10": 0.21115135834983131
+    },
+    "509": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.270499995991779,
+      "UPD@10": 0.21195921903407816
+    },
+    "51": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.999311499158914,
+      "UPD@10": 0.4591479170272448
+    },
+    "510": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.452430999055098,
+      "UPD@10": 0.27061130483158125
+    },
+    "511": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.396437711345666,
+      "UPD@10": 0.26792181824356637
+    },
+    "512": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.955028241550366,
+      "UPD@10": 0.28148611124962236
+    },
+    "513": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.000680842628132,
+      "UPD@10": 0.20237601361766078
+    },
+    "514": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.07941716861043,
+      "UPD@10": 0.5948588280074394
+    },
+    "515": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.624678476402705,
+      "UPD@10": 0.13800525813971784
+    },
+    "516": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.07843287424313,
+      "UPD@10": 0.2968174342482447
+    },
+    "517": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.893571164450522,
+      "UPD@10": 0.328737743300218
+    },
+    "518": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.688080514587629,
+      "UPD@10": 0.12213304776590553
+    },
+    "519": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.266234888577102,
+      "UPD@10": 0.49234210774843556
+    },
+    "52": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.841611042669737,
+      "UPD@10": 0.5319658406367963
+    },
+    "520": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.36243135625806,
+      "UPD@10": 0.1297179900502377
+    },
+    "521": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.239178279643049,
+      "UPD@10": 0.33347635626565403
+    },
+    "522": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.003185321184159,
+      "UPD@10": 0.5173990419746428
+    },
+    "523": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.508197614859773,
+      "UPD@10": 0.21294087755293345
+    },
+    "524": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.303142708837017,
+      "UPD@10": 0.6917262877072636
+    },
+    "525": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.02475051851258,
+      "UPD@10": 0.43984465636092374
+    },
+    "526": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.167677295007557,
+      "UPD@10": 0.3385699117392635
+    },
+    "527": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.749855992342635,
+      "UPD@10": 0.06933751928756848
+    },
+    "528": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.052745816074449,
+      "UPD@10": 0.4591479170272448
+    },
+    "529": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.697685564719562,
+      "UPD@10": 0.0890752430912981
+    },
+    "53": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.976535681304196,
+      "UPD@10": 0.22863747145200838
+    },
+    "530": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.050951973072888,
+      "UPD@10": 0.3891567565290309
+    },
+    "531": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.456833060336601,
+      "UPD@10": 0.1908745046211096
+    },
+    "532": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.158713517127499,
+      "UPD@10": 0.7541275406592336
+    },
+    "533": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.285396932484591,
+      "UPD@10": 0.39898233785313286
+    },
+    "534": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.946779555748032,
+      "UPD@10": 0.14320646340525198
+    },
+    "535": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.24342140176562,
+      "UPD@10": 0.45471399436174703
+    },
+    "536": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.300421831416314,
+      "UPD@10": 0.4653903431144758
+    },
+    "537": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.264468489859206,
+      "UPD@10": 0.5371956374959935
+    },
+    "538": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.217971693314412,
+      "UPD@10": 0.21285902473221918
+    },
+    "539": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.062176673378364,
+      "UPD@10": 0.5319658406367963
+    },
+    "54": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.836796380558144,
+      "UPD@10": 0.5127131391269453
+    },
+    "540": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.099227726917961,
+      "UPD@10": 0.19511711480188582
+    },
+    "541": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.356312094081403,
+      "UPD@10": 0.19234909101794054
+    },
+    "542": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.192909398122987,
+      "UPD@10": 0.5973651469853084
+    },
+    "543": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.064972979567806,
+      "UPD@10": 0.6412704089903527
+    },
+    "544": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.491501180240487,
+      "UPD@10": 0.06364632812978063
+    },
+    "545": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.390781708265905,
+      "UPD@10": 0.2819274753095784
+    },
+    "546": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.040761557015,
+      "UPD@10": 0.33459556648139865
+    },
+    "547": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.143655207462936,
+      "UPD@10": 0.35257283126150285
+    },
+    "548": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.148310896515168,
+      "UPD@10": 0.26435019674630367
+    },
+    "549": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.175758031641454,
+      "UPD@10": 0.08871838015940596
+    },
+    "55": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.939010026562846,
+      "UPD@10": 0.22565578682616286
+    },
+    "550": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.094172108478373,
+      "UPD@10": 0.22406454068255174
+    },
+    "551": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.240024732685518,
+      "UPD@10": 0.3266916978193715
+    },
+    "552": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.017482812048822,
+      "UPD@10": 0.12806352705607466
+    },
+    "553": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.479397206155344,
+      "UPD@10": 0.1908745046211096
+    },
+    "554": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.311848403374858,
+      "UPD@10": 0.14513883388878093
+    },
+    "555": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.864618356550054,
+      "UPD@10": 0.4188212310720749
+    },
+    "556": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.907260318774879,
+      "UPD@10": 0.5487949406953987
+    },
+    "557": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.349444994304898,
+      "UPD@10": 0.1829689269275272
+    },
+    "558": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.043252115334685,
+      "UPD@10": 0.15569660171244337
+    },
+    "559": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.038381383638933,
+      "UPD@10": 0.5615529019156804
+    },
+    "56": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.254355403957057,
+      "UPD@10": 0.27658801635236213
+    },
+    "560": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.174799963145897,
+      "UPD@10": 0.2527474090726457
+    },
+    "561": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.30186919922901,
+      "UPD@10": 0.3953160269696423
+    },
+    "562": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.27998894288035,
+      "UPD@10": 0.28432258280507733
+    },
+    "563": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.921258682241197,
+      "UPD@10": 0.44197370106493744
+    },
+    "564": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.853587752126529,
+      "UPD@10": 0.4744893455846404
+    },
+    "565": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9636579571417005,
+      "UPD@10": 1.0
+    },
+    "566": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.312819817994964,
+      "UPD@10": 0.38550108325123783
+    },
+    "567": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.196660112281261,
+      "UPD@10": 0.3959228235479749
+    },
+    "568": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.246478099135043,
+      "UPD@10": 0.1863931012427683
+    },
+    "569": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.229668879804226,
+      "UPD@10": 0.26074998480714917
+    },
+    "57": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.681037208241621,
+      "UPD@10": 0.09421422874425056
+    },
+    "570": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.226397352886613,
+      "UPD@10": 0.196596936985934
+    },
+    "571": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8988657854320605,
+      "UPD@10": 0.6548575458269756
+    },
+    "572": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9675540351335155,
+      "UPD@10": 0.5487949406953987
+    },
+    "573": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.01882132944845,
+      "UPD@10": 0.30464419353145555
+    },
+    "574": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.429910934989891,
+      "UPD@10": 0.12028215982418272
+    },
+    "575": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.960895546532093,
+      "UPD@10": 0.3627987332841229
+    },
+    "576": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.971032895055908,
+      "UPD@10": 0.42956313049465866
+    },
+    "577": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.198817709621672,
+      "UPD@10": 0.37171389306262015
+    },
+    "578": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.307198351365308,
+      "UPD@10": 0.1846269185047642
+    },
+    "579": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.873214666301351,
+      "UPD@10": 0.42393568586286556
+    },
+    "58": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.168947845732902,
+      "UPD@10": 0.5187016662571493
+    },
+    "580": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.0867437601996,
+      "UPD@10": 0.4825780751866234
+    },
+    "581": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.959073743699536,
+      "UPD@10": 0.4059369371110204
+    },
+    "582": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.215023326448282,
+      "UPD@10": 0.1370412182772216
+    },
+    "583": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.013897361182327,
+      "UPD@10": 0.3852721393632722
+    },
+    "584": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.109839509727259,
+      "UPD@10": 0.5487949406953987
+    },
+    "585": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 10.535316573015013,
+      "UPD@10": 0.058266550498767694
+    },
+    "586": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.27057523185059,
+      "UPD@10": 0.48523746545927526
+    },
+    "587": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.687775857534703,
+      "UPD@10": 0.03563878587630135
+    },
+    "588": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.274117172187298,
+      "UPD@10": 0.48011300066556345
+    },
+    "589": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.770269851863626,
+      "UPD@10": 0.038389232642420154
+    },
+    "59": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.370552427238689,
+      "UPD@10": 0.25841217937774286
+    },
+    "590": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.022548297077904,
+      "UPD@10": 0.6099865470109875
+    },
+    "591": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.407780600411126,
+      "UPD@10": 0.1594119724442292
+    },
+    "592": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.04437377453365,
+      "UPD@10": 0.40118042455478203
+    },
+    "593": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.24688170109896,
+      "UPD@10": 0.5550032173178238
+    },
+    "594": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.938791965009161,
+      "UPD@10": 0.3958156020033583
+    },
+    "595": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.79312504519457,
+      "UPD@10": 0.1439701656283939
+    },
+    "596": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.47525786239829,
+      "UPD@10": 0.05608488243122004
+    },
+    "597": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.010247191225858,
+      "UPD@10": 0.2639069581334721
+    },
+    "598": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.402245685645068,
+      "UPD@10": 0.16113716896184066
+    },
+    "599": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.89028316529931,
+      "UPD@10": 0.6468509091487045
+    },
+    "6": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.287217915767407,
+      "UPD@10": 0.3137991380421329
+    },
+    "60": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.251145081112526,
+      "UPD@10": 0.4672459970017113
+    },
+    "600": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.169512279562541,
+      "UPD@10": 0.13076201397236067
+    },
+    "601": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.112713592770703,
+      "UPD@10": 0.5552806833846645
+    },
+    "602": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.048837535618375,
+      "UPD@10": 0.08530880722522423
+    },
+    "603": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.081661298332268,
+      "UPD@10": 0.32508678129854895
+    },
+    "604": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.096550095029132,
+      "UPD@10": 0.20883255824106484
+    },
+    "605": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.092144888229003,
+      "UPD@10": 0.2309854147733491
+    },
+    "606": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.264093228631053,
+      "UPD@10": 0.5781405728591061
+    },
+    "607": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.104096249861456,
+      "UPD@10": 0.32725708202160686
+    },
+    "608": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.215913813121235,
+      "UPD@10": 0.6340014304170942
+    },
+    "609": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.076910634682509,
+      "UPD@10": 0.5495837840282118
+    },
+    "61": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.386357762261103,
+      "UPD@10": 0.15483588417256255
+    },
+    "610": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.328550206809275,
+      "UPD@10": 0.12395495246741374
+    },
+    "611": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.528748503291228,
+      "UPD@10": 0.1786112425584665
+    },
+    "612": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8839436643197045,
+      "UPD@10": 0.2883753130167114
+    },
+    "613": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.89792376878019,
+      "UPD@10": 0.5819765115539189
+    },
+    "614": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.02079841542814,
+      "UPD@10": 0.22359030909845146
+    },
+    "615": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.77068459915112,
+      "UPD@10": 0.11383573623063012
+    },
+    "616": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.705862999889169,
+      "UPD@10": 0.1257805380160717
+    },
+    "617": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.711521433634639,
+      "UPD@10": 0.04361902952693146
+    },
+    "618": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.201651854050755,
+      "UPD@10": 0.2610969684050609
+    },
+    "619": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.383390464541291,
+      "UPD@10": 0.18976485769562212
+    },
+    "62": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.288183820428518,
+      "UPD@10": 0.41512214195464997
+    },
+    "620": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.786789747686406,
+      "UPD@10": 0.15702524026365355
+    },
+    "621": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.235574094709076,
+      "UPD@10": 0.5022550267780299
+    },
+    "622": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.164432502133113,
+      "UPD@10": 0.4418713249020624
+    },
+    "623": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.063403283372729,
+      "UPD@10": 0.42317535146326185
+    },
+    "624": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.530409120420162,
+      "UPD@10": 0.1256322044882991
+    },
+    "625": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.026934290644437,
+      "UPD@10": 0.2683215482791712
+    },
+    "626": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.445762215545178,
+      "UPD@10": 0.16969485516067773
+    },
+    "627": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.104877015518941,
+      "UPD@10": 0.4532144023145496
+    },
+    "628": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.417292339826627,
+      "UPD@10": 0.1440095654999522
+    },
+    "629": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.219440758993304,
+      "UPD@10": 0.26635264180378004
+    },
+    "63": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.381285181383435,
+      "UPD@10": 0.13123373209776162
+    },
+    "630": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.484936864525682,
+      "UPD@10": 0.16206148044878477
+    },
+    "631": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.341126875686104,
+      "UPD@10": 0.26205519555251416
+    },
+    "632": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.297968217016786,
+      "UPD@10": 0.194811576312087
+    },
+    "633": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.098193042420606,
+      "UPD@10": 0.3543742543408078
+    },
+    "634": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.388815431049593,
+      "UPD@10": 0.18300898023778064
+    },
+    "635": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.035150241168937,
+      "UPD@10": 0.17657646570884583
+    },
+    "636": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.837699840683304,
+      "UPD@10": 0.3112781244591328
+    },
+    "637": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.668798415078708,
+      "UPD@10": 0.10276194379070577
+    },
+    "638": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.11122181688964,
+      "UPD@10": 0.24280635287985455
+    },
+    "639": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.77457487371706,
+      "UPD@10": 0.10143321100901719
+    },
+    "64": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.32275771752516,
+      "UPD@10": 0.359109858568337
+    },
+    "640": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.116371936422933,
+      "UPD@10": 0.26369509734735735
+    },
+    "641": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.18747142724902,
+      "UPD@10": 0.6213863207653283
+    },
+    "642": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.232659835731658,
+      "UPD@10": 0.3686698650232013
+    },
+    "643": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.426114094133139,
+      "UPD@10": 0.1612255916786629
+    },
+    "644": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.139061512615172,
+      "UPD@10": 0.17927607534717344
+    },
+    "645": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.701177014896452,
+      "UPD@10": 0.07894657623369432
+    },
+    "646": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.328054117810643,
+      "UPD@10": 0.3514315216687659
+    },
+    "647": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.928672571269196,
+      "UPD@10": 0.4591479170272448
+    },
+    "648": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.316532154594054,
+      "UPD@10": 0.34491093326715194
+    },
+    "649": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.099263381928079,
+      "UPD@10": 0.35584608634803505
+    },
+    "65": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.296554953542762,
+      "UPD@10": 0.14527364002125548
+    },
+    "650": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.136803192549703,
+      "UPD@10": 0.49287773033992355
+    },
+    "651": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.214423336165524,
+      "UPD@10": 0.21676345408869285
+    },
+    "652": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.253336769503814,
+      "UPD@10": 0.07771797828651128
+    },
+    "653": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.064453362003178,
+      "UPD@10": 0.46779731657392737
+    },
+    "654": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.17758801357022,
+      "UPD@10": 0.4898676543799138
+    },
+    "655": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.165066148318171,
+      "UPD@10": 0.5949864255571554
+    },
+    "656": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.296074122716306,
+      "UPD@10": 0.21675663328077605
+    },
+    "657": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.869839850723565,
+      "UPD@10": 0.4250177510042883
+    },
+    "658": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.328012332351063,
+      "UPD@10": 0.163323161865243
+    },
+    "659": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.210588070557382,
+      "UPD@10": 0.6568957699682165
+    },
+    "66": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.198079915628725,
+      "UPD@10": 0.09497900494893614
+    },
+    "660": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.294031256573504,
+      "UPD@10": 0.2810331227314919
+    },
+    "661": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.121119196437734,
+      "UPD@10": 0.19049606298403987
+    },
+    "662": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9904727993381215,
+      "UPD@10": 0.5297578726233219
+    },
+    "663": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.301898402643598,
+      "UPD@10": 0.17387674210105106
+    },
+    "664": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.300996720127502,
+      "UPD@10": 0.5972091657280025
+    },
+    "665": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.13088170342547,
+      "UPD@10": 0.2588111660132402
+    },
+    "666": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.226619174160662,
+      "UPD@10": 0.6693785732545836
+    },
+    "667": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.944545673303805,
+      "UPD@10": 0.41479435979681667
+    },
+    "668": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.718109974392629,
+      "UPD@10": 0.05607826808048167
+    },
+    "669": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.089814243384108,
+      "UPD@10": 0.12989719299332622
+    },
+    "67": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.975371642124138,
+      "UPD@10": 0.40593693711102036
+    },
+    "670": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.081796058485264,
+      "UPD@10": 0.5487949406953987
+    },
+    "671": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.943032389899821,
+      "UPD@10": 0.6487363947469558
+    },
+    "672": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.980381192718622,
+      "UPD@10": 0.596544678055706
+    },
+    "673": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.481194135755821,
+      "UPD@10": 0.061441735177535185
+    },
+    "674": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.994292510527437,
+      "UPD@10": 0.09830537746727293
+    },
+    "675": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.412817356228699,
+      "UPD@10": 0.27707135512671166
+    },
+    "676": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.440892897613988,
+      "UPD@10": 0.11267758211896511
+    },
+    "677": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.066501050878417,
+      "UPD@10": 0.4699957158310536
+    },
+    "678": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.942497387376028,
+      "UPD@10": 0.26866647658950915
+    },
+    "679": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.088088387323857,
+      "UPD@10": 0.45043775534400227
+    },
+    "68": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.047461418380234,
+      "UPD@10": 0.1530342821233331
+    },
+    "680": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.055341317068393,
+      "UPD@10": 0.20689248221835246
+    },
+    "681": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.508609217192578,
+      "UPD@10": 0.09791406407569507
+    },
+    "682": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.182758503273641,
+      "UPD@10": 0.3905991084795598
+    },
+    "683": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.707491906941428,
+      "UPD@10": 0.16472795526771944
+    },
+    "684": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.464969584348612,
+      "UPD@10": 0.14061794209356654
+    },
+    "685": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.29653295762421,
+      "UPD@10": 0.1798449394050705
+    },
+    "686": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.464773567571706,
+      "UPD@10": 0.22031469556786276
+    },
+    "687": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.436393535874187,
+      "UPD@10": 0.08962963931177902
+    },
+    "688": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.108105035313983,
+      "UPD@10": 0.5217491543765154
+    },
+    "689": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.132214726786682,
+      "UPD@10": 0.12019514062086557
+    },
+    "69": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.978882495565775,
+      "UPD@10": 0.24837138664694355
+    },
+    "690": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.685128383711056,
+      "UPD@10": 0.1397460641125866
+    },
+    "691": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.928499206084483,
+      "UPD@10": 0.5487949406953987
+    },
+    "692": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.898477091984515,
+      "UPD@10": 0.4591479170272448
+    },
+    "693": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.157671197814304,
+      "UPD@10": 0.3382759760441679
+    },
+    "694": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.387822382918662,
+      "UPD@10": 0.2761682166397286
+    },
+    "695": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.460606236105486,
+      "UPD@10": 0.13540701223206553
+    },
+    "696": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.380701169171346,
+      "UPD@10": 0.23051100587119455
+    },
+    "697": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.336346301406172,
+      "UPD@10": 0.2591167976111392
+    },
+    "698": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.669989915454146,
+      "UPD@10": 0.07504525851312205
+    },
+    "699": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.573429966675615,
+      "UPD@10": 0.23602988748871817
+    },
+    "7": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.414221906153795,
+      "UPD@10": 0.2712671611206193
+    },
+    "70": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.396501037757293,
+      "UPD@10": 0.10490044856215704
+    },
+    "700": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.061980432433673,
+      "UPD@10": 0.17413637456901807
+    },
+    "701": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.171962774068081,
+      "UPD@10": 0.22021773613197115
+    },
+    "702": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.107212782391729,
+      "UPD@10": 0.3497179199295826
+    },
+    "703": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.063603285550972,
+      "UPD@10": 0.1720766711232273
+    },
+    "704": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.742784747654404,
+      "UPD@10": 0.0394411719617517
+    },
+    "705": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.139795308769168,
+      "UPD@10": 0.5087256743873158
+    },
+    "706": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.978885917269696,
+      "UPD@10": 0.4250177510042883
+    },
+    "707": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.97123118307853,
+      "UPD@10": 0.7368546928087414
+    },
+    "708": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.453894336730409,
+      "UPD@10": 0.22606511455866163
+    },
+    "709": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.977130989632765,
+      "UPD@10": 0.44039018837413557
+    },
+    "71": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.259136313652196,
+      "UPD@10": 0.08359289507668441
+    },
+    "710": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.259301187885507,
+      "UPD@10": 0.13275738448222152
+    },
+    "711": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.099890350280978,
+      "UPD@10": 0.6782360371707885
+    },
+    "712": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.167669592538765,
+      "UPD@10": 0.4586416577205274
+    },
+    "713": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.43287092989766,
+      "UPD@10": 0.3832964790325865
+    },
+    "714": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.211247251221712,
+      "UPD@10": 0.14420608562883463
+    },
+    "715": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.230651301919853,
+      "UPD@10": 0.2574840474350456
+    },
+    "716": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.370722496982902,
+      "UPD@10": 0.34045876431702216
+    },
+    "717": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.263246138663424,
+      "UPD@10": 0.22043484607065347
+    },
+    "718": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.041184562653033,
+      "UPD@10": 0.1840719735243435
+    },
+    "719": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.074823386210845,
+      "UPD@10": 0.45107093724745856
+    },
+    "72": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.219637184082758,
+      "UPD@10": 0.27244760224221615
+    },
+    "720": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.476515753370943,
+      "UPD@10": 0.1784335743651837
+    },
+    "721": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.643234147629816,
+      "UPD@10": 0.1527953408218618
+    },
+    "722": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.039777191809838,
+      "UPD@10": 0.11991141857270152
+    },
+    "723": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.908929662808502,
+      "UPD@10": 0.2569811892423542
+    },
+    "724": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.272170184745956,
+      "UPD@10": 0.31909417807060675
+    },
+    "725": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.404547928522545,
+      "UPD@10": 0.08710217027985945
+    },
+    "726": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.855889391666139,
+      "UPD@10": 0.6263832733354795
+    },
+    "727": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.347594265527135,
+      "UPD@10": 0.3946111241749197
+    },
+    "728": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.887389054406816,
+      "UPD@10": 0.4188212310720749
+    },
+    "729": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.589102870876571,
+      "UPD@10": 0.09564127834379933
+    },
+    "73": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.974787625533395,
+      "UPD@10": 0.4675382004934893
+    },
+    "730": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.024092042516694,
+      "UPD@10": 0.11496826294684247
+    },
+    "731": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.955614010748523,
+      "UPD@10": 0.07229983445519518
+    },
+    "732": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.510578317428783,
+      "UPD@10": 0.13917831583307674
+    },
+    "733": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.307251175315397,
+      "UPD@10": 0.07082004441126155
+    },
+    "734": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.03762439590347,
+      "UPD@10": 0.2415378685482112
+    },
+    "735": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.136692022295083,
+      "UPD@10": 0.12808419443606822
+    },
+    "736": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.881543898276507,
+      "UPD@10": 0.48034295612758887
+    },
+    "737": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.022298685909682,
+      "UPD@10": 0.37050650054950524
+    },
+    "738": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.350738680800973,
+      "UPD@10": 0.3323647906343816
+    },
+    "739": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.149650099826825,
+      "UPD@10": 0.33042526679129647
+    },
+    "74": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.450125321253296,
+      "UPD@10": 0.08753312450394729
+    },
+    "740": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.323442925325214,
+      "UPD@10": 0.09544541337488308
+    },
+    "741": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.122001816412517,
+      "UPD@10": 0.1757320574786229
+    },
+    "742": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.993510261305326,
+      "UPD@10": 0.2635287583941467
+    },
+    "743": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.223500707265627,
+      "UPD@10": 0.16814702239616958
+    },
+    "744": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.856912940044259,
+      "UPD@10": 0.43984465636092374
+    },
+    "745": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.258442463096925,
+      "UPD@10": 0.38093009090978813
+    },
+    "746": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.3894053049567,
+      "UPD@10": 0.07815183034057406
+    },
+    "747": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.223534778507666,
+      "UPD@10": 0.36143349358939114
+    },
+    "748": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.074649279979901,
+      "UPD@10": 0.41528109366624755
+    },
+    "749": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.204474874215894,
+      "UPD@10": 0.3490190501045718
+    },
+    "75": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.391878307378613,
+      "UPD@10": 0.21950713894648746
+    },
+    "750": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.531960595931281,
+      "UPD@10": 0.16446876236622476
+    },
+    "751": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.152614690335163,
+      "UPD@10": 0.6150783901772926
+    },
+    "752": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.389565420058748,
+      "UPD@10": 0.07534608631031373
+    },
+    "753": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.049982007628081,
+      "UPD@10": 0.3958156020033583
+    },
+    "754": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.958903202638945,
+      "UPD@10": 0.29459271598319375
+    },
+    "755": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.506834619579381,
+      "UPD@10": 0.0687298047759328
+    },
+    "756": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.189118563074272,
+      "UPD@10": 0.37478742389587344
+    },
+    "757": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.263466680201523,
+      "UPD@10": 0.1586548497788627
+    },
+    "758": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.100087460938505,
+      "UPD@10": 0.5034793641716825
+    },
+    "759": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.827014068864952,
+      "UPD@10": 0.27280560201910964
+    },
+    "76": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.039523538618148,
+      "UPD@10": 0.17519620693013072
+    },
+    "760": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.940911206207443,
+      "UPD@10": 0.3958156020033583
+    },
+    "761": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.188007738278825,
+      "UPD@10": 0.20761978108839407
+    },
+    "762": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.126931530607068,
+      "UPD@10": 0.353524484626881
+    },
+    "763": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.381036729219366,
+      "UPD@10": 0.19785547471221226
+    },
+    "764": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.294530220719786,
+      "UPD@10": 0.1126495623274299
+    },
+    "765": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.006331019342074,
+      "UPD@10": 0.2853811314938828
+    },
+    "766": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.020017249050044,
+      "UPD@10": 0.6615842498739357
+    },
+    "767": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.123279903856043,
+      "UPD@10": 0.5363098072812748
+    },
+    "768": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.926444939983883,
+      "UPD@10": 0.46753820049348926
+    },
+    "769": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.990110923050909,
+      "UPD@10": 0.47694718461544583
+    },
+    "77": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.159109747009918,
+      "UPD@10": 0.36769294085198256
+    },
+    "770": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.221167728308899,
+      "UPD@10": 0.13235739211246295
+    },
+    "771": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.016466350343482,
+      "UPD@10": 0.43578523670768377
+    },
+    "772": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.564213670715564,
+      "UPD@10": 0.050059335602636645
+    },
+    "773": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.170626597831426,
+      "UPD@10": 0.4839530160887836
+    },
+    "774": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.116464131837455,
+      "UPD@10": 0.7287131042890485
+    },
+    "775": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.34048817399139,
+      "UPD@10": 0.14487374265130898
+    },
+    "776": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.73218720587742,
+      "UPD@10": 0.2667496367919471
+    },
+    "777": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.896259389747942,
+      "UPD@10": 0.5229848362894218
+    },
+    "778": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.118288823240253,
+      "UPD@10": 0.3285009285601589
+    },
+    "779": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.025299969430765,
+      "UPD@10": 0.2546778369999282
+    },
+    "78": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.853921746399749,
+      "UPD@10": 0.5715616860768333
+    },
+    "780": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.180265464689139,
+      "UPD@10": 0.4013162469097055
+    },
+    "781": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.059752658278375,
+      "UPD@10": 0.37529626823860607
+    },
+    "782": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.752472258425332,
+      "UPD@10": 0.30380345850207224
+    },
+    "783": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.52978794810207,
+      "UPD@10": 0.13433323829475458
+    },
+    "784": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.472420452049697,
+      "UPD@10": 0.07310400793180986
+    },
+    "785": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.974561256225677,
+      "UPD@10": 0.1654402779767662
+    },
+    "786": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.235556795124161,
+      "UPD@10": 0.5131077121443544
+    },
+    "787": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.504779338731275,
+      "UPD@10": 0.2978089324170211
+    },
+    "788": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.144389175040489,
+      "UPD@10": 0.50729130705888
+    },
+    "789": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.140168735506851,
+      "UPD@10": 0.23953455096595336
+    },
+    "79": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.031666108199067,
+      "UPD@10": 0.29940719242383684
+    },
+    "790": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.179140265448435,
+      "UPD@10": 0.36009523435150204
+    },
+    "791": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.318131891725304,
+      "UPD@10": 0.06665370714512761
+    },
+    "792": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.942993393969357,
+      "UPD@10": 0.4825780751866234
+    },
+    "793": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.048155654863397,
+      "UPD@10": 0.309461695090322
+    },
+    "794": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8827995296506,
+      "UPD@10": 0.6642991177133706
+    },
+    "795": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.272088271359497,
+      "UPD@10": 0.23621174623505609
+    },
+    "796": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.210716088243412,
+      "UPD@10": 0.4925028815460798
+    },
+    "797": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.437095501007823,
+      "UPD@10": 0.17846031981634666
+    },
+    "798": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.327948410586057,
+      "UPD@10": 0.4562153823589563
+    },
+    "799": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.239647710259813,
+      "UPD@10": 0.07152307989387838
+    },
+    "8": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.070030990921499,
+      "UPD@10": 0.3373126562113521
+    },
+    "80": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.992061714767996,
+      "UPD@10": 0.533714821383084
+    },
+    "800": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.019133617361758,
+      "UPD@10": 0.1908745046211096
+    },
+    "801": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.10376678473202,
+      "UPD@10": 0.6233224294757059
+    },
+    "802": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.116780162300497,
+      "UPD@10": 0.20938675327761597
+    },
+    "803": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.259469170288478,
+      "UPD@10": 0.37300419936229784
+    },
+    "804": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.213317024358284,
+      "UPD@10": 0.7013167347458021
+    },
+    "805": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.195460997801899,
+      "UPD@10": 0.45707364600955913
+    },
+    "806": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.263084605572834,
+      "UPD@10": 0.3577837559651419
+    },
+    "807": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.354985521483293,
+      "UPD@10": 0.2690697262510413
+    },
+    "808": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.294235366921997,
+      "UPD@10": 0.20705355542125792
+    },
+    "809": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.403572149906022,
+      "UPD@10": 0.024389940858235315
+    },
+    "81": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.865038329784056,
+      "UPD@10": 0.4591479170272448
+    },
+    "810": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.532826588500622,
+      "UPD@10": 0.1094976293313317
+    },
+    "811": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.342687935923113,
+      "UPD@10": 0.13503708901977396
+    },
+    "812": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.44970434195228,
+      "UPD@10": 0.0050504498603934946
+    },
+    "813": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.172957798263845,
+      "UPD@10": 0.42427826397403945
+    },
+    "814": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.226104457331491,
+      "UPD@10": 0.6622817371734298
+    },
+    "815": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.26195321285356,
+      "UPD@10": 0.3017192631415115
+    },
+    "816": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.458975911852118,
+      "UPD@10": 0.18263839333475268
+    },
+    "817": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.969474921344542,
+      "UPD@10": 0.3112781244591328
+    },
+    "818": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.470841317361197,
+      "UPD@10": 0.08292180568300936
+    },
+    "819": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.323987910458825,
+      "UPD@10": 0.33158977761195174
+    },
+    "82": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.116082821506993,
+      "UPD@10": 0.416487324501742
+    },
+    "820": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.489726055268832,
+      "UPD@10": 0.009756534087137232
+    },
+    "821": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.21527268970199,
+      "UPD@10": 0.20854484086031946
+    },
+    "822": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.947835745809137,
+      "UPD@10": 0.8201119644709259
+    },
+    "823": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.24482061172804,
+      "UPD@10": 0.3742595350102623
+    },
+    "824": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.451161803085395,
+      "UPD@10": 0.1152156590265055
+    },
+    "825": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.507097445796166,
+      "UPD@10": 0.20912820098785506
+    },
+    "826": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.233044936245673,
+      "UPD@10": 0.043737399540752384
+    },
+    "827": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.71328852680114,
+      "UPD@10": 0.02845091155030337
+    },
+    "828": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.159593994355209,
+      "UPD@10": 0.2484822122508533
+    },
+    "829": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.567992765656554,
+      "UPD@10": 0.18094840715418045
+    },
+    "83": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.120620162430773,
+      "UPD@10": 0.618388485452402
+    },
+    "830": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.53453904161274,
+      "UPD@10": 0.15114634972153163
+    },
+    "831": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.183439686413774,
+      "UPD@10": 0.21653024809372026
+    },
+    "832": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.487687234442772,
+      "UPD@10": 0.0008025382728216682
+    },
+    "833": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.169850601286791,
+      "UPD@10": 0.4760459134652447
+    },
+    "834": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.838710821590281,
+      "UPD@10": 0.4119673074925998
+    },
+    "835": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.370013612827467,
+      "UPD@10": 0.1669049304637948
+    },
+    "836": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.111455345672333,
+      "UPD@10": 0.3061476528207058
+    },
+    "837": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.016123283477128,
+      "UPD@10": 0.5487949406953987
+    },
+    "838": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.039223002810235,
+      "UPD@10": 0.24811892565753618
+    },
+    "839": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.883115485413079,
+      "UPD@10": 0.6099865470109875
+    },
+    "84": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.025959559369719,
+      "UPD@10": 0.4591479170272448
+    },
+    "840": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.080553893930013,
+      "UPD@10": 0.4239388235290345
+    },
+    "841": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.58273755293658,
+      "UPD@10": 0.06364632812978063
+    },
+    "842": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.364910464936106,
+      "UPD@10": 0.16961673940860045
+    },
+    "843": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.219818509132248,
+      "UPD@10": 0.6981067342782192
+    },
+    "844": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.205231912598988,
+      "UPD@10": 0.17006545319533314
+    },
+    "845": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.490716948264986,
+      "UPD@10": 0.31148129922095463
+    },
+    "846": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.28278669965103,
+      "UPD@10": 0.5686901353995965
+    },
+    "847": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.239735048982272,
+      "UPD@10": 0.33513578153038376
+    },
+    "848": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.26120784193381,
+      "UPD@10": 0.3439599916582012
+    },
+    "849": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.03082961062349,
+      "UPD@10": 0.33347635626565403
+    },
+    "85": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.245310644494328,
+      "UPD@10": 0.5171404843106495
+    },
+    "850": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.199752242049097,
+      "UPD@10": 0.07117652437159849
+    },
+    "851": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.36350980503946,
+      "UPD@10": 0.3247127562458222
+    },
+    "852": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.01181998586316,
+      "UPD@10": 0.34834791456165115
+    },
+    "853": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.328563723019645,
+      "UPD@10": 0.2665183431587774
+    },
+    "854": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.136515574623829,
+      "UPD@10": 0.352835781687704
+    },
+    "855": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.028538726130764,
+      "UPD@10": 0.768081188585538
+    },
+    "856": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.304538233829359,
+      "UPD@10": 0.16764469791520914
+    },
+    "857": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.224328255259426,
+      "UPD@10": 0.18672534493949833
+    },
+    "858": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.085474467159388,
+      "UPD@10": 0.2968174342482447
+    },
+    "859": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.959819653342501,
+      "UPD@10": 0.5149577839754269
+    },
+    "86": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.37057226610323,
+      "UPD@10": 0.16119988595370544
+    },
+    "860": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.390132779331445,
+      "UPD@10": 0.38508017558880814
+    },
+    "861": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.007973564438403,
+      "UPD@10": 0.40520944935880354
+    },
+    "862": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.165503242598785,
+      "UPD@10": 0.4902257944774603
+    },
+    "863": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.860381768832436,
+      "UPD@10": 0.04274173752689636
+    },
+    "864": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.073057164125597,
+      "UPD@10": 0.684598914667141
+    },
+    "865": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.03447056932432,
+      "UPD@10": 0.3814743816685192
+    },
+    "866": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.193150229010325,
+      "UPD@10": 0.34173659772417925
+    },
+    "867": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.05860909281034,
+      "UPD@10": 0.1283934868261739
+    },
+    "868": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.318557794025061,
+      "UPD@10": 0.4773916361652388
+    },
+    "869": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.19869810726396,
+      "UPD@10": 0.2774101135780161
+    },
+    "87": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.45986940059626,
+      "UPD@10": 0.2562047635502359
+    },
+    "870": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.240980919577263,
+      "UPD@10": 0.7013638483256699
+    },
+    "871": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.360454217469158,
+      "UPD@10": 0.1741185047182594
+    },
+    "872": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.545387323840377,
+      "UPD@10": 0.2111783504263497
+    },
+    "873": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.335982574287478,
+      "UPD@10": 0.08193376677064658
+    },
+    "874": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.01979532283674,
+      "UPD@10": 0.11925512350586372
+    },
+    "875": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.252305825544125,
+      "UPD@10": 0.24060703267854802
+    },
+    "876": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8629807661073015,
+      "UPD@10": 0.48534030902224723
+    },
+    "877": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.532440724707614,
+      "UPD@10": 0.15451300522872669
+    },
+    "878": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.615878517410573,
+      "UPD@10": 0.08170081775655344
+    },
+    "879": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.118844322300633,
+      "UPD@10": 0.2907488117263727
+    },
+    "88": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.398428675099217,
+      "UPD@10": 0.18408831558718708
+    },
+    "880": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.262983371462651,
+      "UPD@10": 0.5023555582362852
+    },
+    "881": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.212482504670112,
+      "UPD@10": 0.44575824334760594
+    },
+    "882": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.190850498062627,
+      "UPD@10": 0.24886960751951387
+    },
+    "883": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.183050625456222,
+      "UPD@10": 0.681516239563343
+    },
+    "884": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.304633840334423,
+      "UPD@10": 0.22240205908250235
+    },
+    "885": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.425648303364035,
+      "UPD@10": 0.17579171992330422
+    },
+    "886": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.055434635586664,
+      "UPD@10": 0.7060317146647759
+    },
+    "887": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.157481077065047,
+      "UPD@10": 0.6049896975254998
+    },
+    "888": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.847504465062802,
+      "UPD@10": 0.3112781244591328
+    },
+    "889": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.37827200549753,
+      "UPD@10": 0.38359073722846304
+    },
+    "89": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.424749900624693,
+      "UPD@10": 0.17191039878408068
+    },
+    "890": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.288397006614279,
+      "UPD@10": 0.31269781905392946
+    },
+    "891": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.146465805109269,
+      "UPD@10": 0.2385681207403081
+    },
+    "892": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.365449249454674,
+      "UPD@10": 0.2957891706578244
+    },
+    "893": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.105814927712334,
+      "UPD@10": 0.3314931090732721
+    },
+    "894": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.588905432547175,
+      "UPD@10": 0.1499676512868842
+    },
+    "895": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.9098573032241175,
+      "UPD@10": 0.24835048781787403
+    },
+    "896": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.227283486715828,
+      "UPD@10": 0.26927295065838835
+    },
+    "897": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.039113591844254,
+      "UPD@10": 0.2745774403239228
+    },
+    "898": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.456126052189722,
+      "UPD@10": 0.09575548041337581
+    },
+    "899": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.18897899949846,
+      "UPD@10": 0.5106422502240267
+    },
+    "9": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.8800735548193215,
+      "UPD@10": 0.5918210039183629
+    },
+    "90": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.177971148976997,
+      "UPD@10": 0.5730905325505472
+    },
+    "900": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.951537523504035,
+      "UPD@10": 0.5381427853760248
+    },
+    "901": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.264370846246445,
+      "UPD@10": 0.3105883305543557
+    },
+    "902": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.970166314855495,
+      "UPD@10": 0.22375027983873622
+    },
+    "903": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.052788957015363,
+      "UPD@10": 0.5417583899827154
+    },
+    "904": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.109708655917554,
+      "UPD@10": 0.305744168534982
+    },
+    "905": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.090551146703385,
+      "UPD@10": 0.23887952402010204
+    },
+    "906": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.838424026931551,
+      "UPD@10": 0.5149577839754269
+    },
+    "907": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.418843445468628,
+      "UPD@10": 0.23813674321290684
+    },
+    "908": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.181229260495302,
+      "UPD@10": 0.16580333365146038
+    },
+    "909": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.833771626204252,
+      "UPD@10": 0.6263832733354795
+    },
+    "91": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.43240746027384,
+      "UPD@10": 0.1075007554924209
+    },
+    "910": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.965260702434402,
+      "UPD@10": 0.3336720036295757
+    },
+    "911": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.702446318315515,
+      "UPD@10": 0.1773927767523958
+    },
+    "912": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.133660889688095,
+      "UPD@10": 0.29919156191220553
+    },
+    "913": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.221557622590316,
+      "UPD@10": 0.17656781459342355
+    },
+    "914": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.105629479522507,
+      "UPD@10": 0.8201119644709259
+    },
+    "915": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.336481471984442,
+      "UPD@10": 0.17219764933290913
+    },
+    "916": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.140598892839996,
+      "UPD@10": 0.46298835457134957
+    },
+    "917": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.004127580131534,
+      "UPD@10": 0.4591479170272448
+    },
+    "918": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 9.610907441474916,
+      "UPD@10": 0.2569811892423542
+    },
+    "919": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.305996917557863,
+      "UPD@10": 0.2414314650613814
+    },
+    "92": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.105494997611801,
+      "UPD@10": 0.5287227765584634
+    },
+    "920": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.363888893290513,
+      "UPD@10": 0.23248996399808788
+    },
+    "921": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.576608136118235,
+      "UPD@10": 0.10797479581939434
+    },
+    "922": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.228213147421041,
+      "UPD@10": 0.28364494240822397
+    },
+    "923": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.29123805765576,
+      "UPD@10": 0.39015901245828255
+    },
+    "924": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.215221394902128,
+      "UPD@10": 0.09397481898247527
+    },
+    "925": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.051881554447636,
+      "UPD@10": 0.55306113824802
+    },
+    "926": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.366215246112766,
+      "UPD@10": 0.007299156760473963
+    },
+    "927": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.603726612895938,
+      "UPD@10": 0.10577075018345503
+    },
+    "928": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.77001497904085,
+      "UPD@10": 0.35216095130071173
+    },
+    "929": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.11055301237141,
+      "UPD@10": 0.3785614635126814
+    },
+    "93": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.952378433817938,
+      "UPD@10": 0.38093009090978813
+    },
+    "930": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.094807723984264,
+      "UPD@10": 0.29965774097103104
+    },
+    "931": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.318581663889935,
+      "UPD@10": 0.30295940731549303
+    },
+    "932": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.21616161623542,
+      "UPD@10": 0.4273436597353147
+    },
+    "933": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.430883397029621,
+      "UPD@10": 0.20102372368525315
+    },
+    "934": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.270328215618775,
+      "UPD@10": 0.4467579699478469
+    },
+    "935": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.152316054754039,
+      "UPD@10": 0.09200868176472081
+    },
+    "936": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.948586023317567,
+      "UPD@10": 0.171214923089658
+    },
+    "937": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.925981276755254,
+      "UPD@10": 0.35584608634803505
+    },
+    "938": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.184985385732677,
+      "UPD@10": 0.24764738364324687
+    },
+    "939": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.033802982831329,
+      "UPD@10": 0.4001264433445766
+    },
+    "94": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.37116249225418,
+      "UPD@10": 0.5288572150699773
+    },
+    "940": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.103489009163512,
+      "UPD@10": 0.11342363840556975
+    },
+    "941": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 7.810398396341975,
+      "UPD@10": 0.3112781244591328
+    },
+    "942": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.103683362925242,
+      "UPD@10": 0.23754870939930095
+    },
+    "943": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.274871067288307,
+      "UPD@10": 0.3654785785006281
+    },
+    "95": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.356509964310415,
+      "UPD@10": 0.26471889792599834
+    },
+    "96": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.094391965015738,
+      "UPD@10": 0.33501363402610734
+    },
+    "97": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.129574424032674,
+      "UPD@10": 0.19476071654664223
+    },
+    "98": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.037821600127428,
+      "UPD@10": 0.5137384345664087
+    },
+    "99": {
+      "GenreMiscalibration@10": null,
+      "ILD@10": null,
+      "MeanSelfInformation@10": 8.03736028562849,
+      "UPD@10": 0.585318874555927
+    }
+  }
+}
