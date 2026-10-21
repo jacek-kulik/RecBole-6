@@ -10,6 +10,7 @@ from pathlib import Path
 
 ACTIVITY_GROUPS = ("low", "medium", "high")
 POPULARITY_GROUPS = ("head", "middle", "tail")
+GENDER_GROUPS = ("F","M")
 
 @dataclass(frozen=True)
 class Interaction:
@@ -124,6 +125,69 @@ def popularity_distribution(
     return {group: counts[group] / len(items) for group in POPULARITY_GROUPS} \
         if items else {}
 
+def column_read(path: Path, id_column: str, goal_column: str) -> dict[str, str] | None:
+    """Using the specified path to a Recbole dataset file, read a specific "goal_column" keyed by "id_column"."""
+    with path.open(newline="", encoding="utf-8", errors="replace") as stream:
+        reader = csv.reader(stream, delimiter="\t", quoting=csv.QUOTE_NONE)
+        header = [name.split(":", 1)[0] for name in next(reader, [])]
+
+        if id_column not in header:
+            raise ValueError(f"{path} has no {id_column} column")
+        if goal_column not in header:
+            return None
+
+        key = header.index(id_column)
+        value = header.index(goal_column)
+
+        result = {}
+        for row in reader:
+            if len(row) <= key or not row[key]:
+                continue
+
+            if value < len(row):
+                result[row[key]] = row[value]
+            else:
+                result[row[key]] = ""
+        return result
+
+def load_item_genres(item_path: Path) -> dict[str, tuple[str, ...]]:
+    """Retrieve the list of genres from each item without duplicates"""
+    genre_columns = column_read(item_path, "item_id", "class")
+
+    if genre_columns is None:
+        raise ValueError(f"{item_path} has no class (genre) column")
+
+    result = {}
+    for item, value in genre_columns.items():
+        genres = value.split()
+
+        if not genres:
+            result[item] = ("?",)
+            continue
+
+        unique_genres = []
+        for genre in genres:
+            if genre not in unique_genres:
+                unique_genres.append(genre)
+
+        result[item] = tuple(unique_genres)
+    return result
+
+def load_user_genders(user_path: Path) -> dict[str, str]:
+    """Record if user is female or male (F/M). Any other value is exculded"""
+    gender_columns = column_read(user_path, "user_id", "gender")
+
+    if gender_columns is None:
+        raise ValueError(f"{user_path} has no gender column")
+
+    result = {}
+    for user, gender in gender_columns.items():
+        gender = gender.strip().upper()
+
+        if gender in GENDER_GROUPS:
+            result[user] = gender
+    return result
+
 
 def prepare_metadata(
         train_rows: Iterable[Interaction],
@@ -131,13 +195,7 @@ def prepare_metadata(
         user_file: str | PathLike[str] | None = None,
         catalogue: Iterable[str] | None = None
 ) -> TrainingStatistics:
-    """Runnable placeholder for this function
-    TODO Caio and Victor: load genre/features and training-derived profiles/groups.
-
-    Preserve original IDs. Define relevance, cold-item policy, and available
-    attributes in PROTOCOL.md. Do not infer demographic groups from model scores.
-    Keep ratings/timestamps when reading the exported split CSVs.
-    """
+    """Function Loads genre and training derived groups. Original IDs are preserved and data is based of training set"""
     rows = list(train_rows)
     items = tuple(sorted(set(catalogue) \
                          if catalogue is not None else {row.item for row in rows}))
@@ -151,17 +209,67 @@ def prepare_metadata(
                                               for user, history in histories.items()})
     item_groups = item_popularity_groups(counts)
 
+    pending = {}
+
+    item_path = Path(item_file)
+    item_features = {}
+    if item_path.is_file():
+        genres = load_item_genres(item_path)
+        missing_items = []
+
+        for item in items:
+            if item in genres:
+                item_features[item] = genres[item]
+            else:
+                missing_items.append(item)
+
+        if missing_items:
+            pending["item_genres"] = (f"{len(missing_items)} catalogue items (Items {missing_items}) have no genres in {item_path.name}")
+    else:
+        pending["metadata"] = f"Item file not found: {item_path}"
+
+    genre_profiles = {}
+    unprofiled = 0
+    for user, history in histories.items():
+        if not history:
+            continue
+        all_have_genres = True
+
+        for item in history:
+            if item not in item_features:
+                all_have_genres = False
+                break
+
+        if not all_have_genres:
+            unprofiled += 1
+            continue
+        genre_profiles[user] = genre_distribution(history, item_features)
+
+    if item_features and unprofiled:
+        pending["genre_profiles"] = f"{unprofiled} users have training items without genres"
+
+    gender_groups = {}
+    if user_file is None:
+        pending.setdefault("metadata", "No user file supplied")
+    else:
+        user_path = Path(user_file)
+
+        if user_path.is_file():
+            gender_groups = load_user_genders(user_path)
+        else:
+           pending.setdefault("metadata", f"User file not found: {user_path}")
+
     return TrainingStatistics(
         catalogue=items,
         histories=histories,
         item_counts=counts,
-        item_features={},
-        genre_profiles={},
-        gender_groups={},
+        item_features=item_features,
+        genre_profiles=genre_profiles,
+        gender_groups=gender_groups,
         popularity_profiles={user: popularity_distribution(history, item_groups)
                              for user, history in histories.items()},
         activity_boundaries=boundaries,
         activity_groups=activity,
         item_groups=item_groups,
-        pending={"metadata": "Caio/Victor: metadata preparation is not implemented; genres, genre profiles and recorded gender are unavailable"}
+        pending=pending
     )

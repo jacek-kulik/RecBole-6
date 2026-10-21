@@ -54,8 +54,24 @@ class BundleEvaluationTests(unittest.TestCase):
         self.assertEqual(manifest['status'], 'complete')
         self.assertEqual(manifest['n_training_interactions'], 2)
         self.assertEqual(manifest['n_catalogue_items'], 12)
-        # Preserve the shared loader's honest availability information.
+        # Missing fixture files must retain explicit availability information.
         self.assertIn('metadata', manifest['pending_work'])
+
+    def test_metadata_populates_genre_metrics_and_gender_gaps(self):
+        item_file, user_file = self.root / 'items.item', self.root / 'users.user'
+        item_file.write_text('item_id:token\tclass:token_seq\n' + ''.join(
+            f'{i}\t' + ('Comedy' if i % 2 else 'Drama') + '\n' for i in range(12)))
+        user_file.write_text('user_id:token\tgender:token\nu\tF\nv\tM\n')
+        self.statistics = prepare_metadata(
+            [Interaction('u', '11'), Interaction('v', '0')], item_file, user_file,
+            [str(i) for i in range(12)])
+        files = self.export()
+        beyond = files['beyond_accuracy.json']
+        self.assertIsNotNone(beyond['aggregate']['ILD@10'])
+        self.assertIsNotNone(beyond['aggregate']['GenreMiscalibration@10'])
+        self.assertEqual(beyond['gender_fairness']['counts'], {'F': 1, 'M': 1, 'unknown': 0})
+        self.assertEqual(beyond['gender_fairness']['gaps']['MRR@10']['absolute'], .5)
+        self.assertEqual(files['manifest.json']['pending_work'], {})
 
     def test_warm_scope_cannot_masquerade_as_full_catalogue(self):
         full = self.export()['manifest.json']

@@ -9,11 +9,12 @@
     "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\scripts\\evaluate_alternate_bundle.py"
   ],
   "dataset": "ml-100k",
-  "git_commit": "8dbac867bf1543c50eb91dba7a3fa7860e3f04df",
+  "git_commit": "a5d9680454aa6a4f75453da1768d71b2abfd6960",
   "git_dirty": true,
   "group_construction": {
     "activity": "Linear training-count terciles; ties stay together; zero-history users join low",
-    "gender": "Recorded F/M user metadata; preparation pending with Caio/Victor",
+    "gender": "Recorded F/M from the dataset user file; any other value counts as unknown",
+    "genres": "class column of the item file",
     "item_popularity": "Training interaction shares 20/60/20, with complete count buckets"
   },
   "k": 10,
@@ -52,9 +53,7 @@
     "selected_epoch": 3
   },
   "partition": "test",
-  "pending_work": {
-    "metadata": "Caio/Victor: metadata preparation is not implemented; genres, genre profiles and recorded gender are unavailable"
-  },
+  "pending_work": {},
   "profile_weights": "Equal interactions; each movie contributes equal total genre mass",
   "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
   "relevance": "all held-out test interactions",

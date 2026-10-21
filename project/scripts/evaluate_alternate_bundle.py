@@ -147,6 +147,7 @@ def evaluate():
              'sha256': {'evaluation_source': file_hash(__file__), 'inference_source': file_hash('project/recsys/hybrid_bundle.py'),
                         'metrics_csv': file_hash(RESULTS / 'metrics.csv'),
                         'shared_evaluation_source': file_hash('project/recsys/evaluation.py'),
+                        'metadata_source': file_hash('project/recsys/data.py'),
                         'beyond_accuracy_source': file_hash('project/recsys/metrics/beyond_accuracy.py')},
              'evaluation_files_sha256': {p.relative_to(RESULTS).as_posix(): file_hash(p)
                                          for p in sorted((RESULTS / 'evaluations').glob('*/*/*/*.json'))}}

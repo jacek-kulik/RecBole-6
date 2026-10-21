@@ -85,7 +85,7 @@ def report():
               '`hyperparameters/results/alternate-hybrids-60-20-20/evaluations/<partition>/<scope>/<model>/`. '
               'Each contains the four Task 2.2 inputs: `manifest.json`, flat `metrics.json`, '
               '`per_user_metrics.json`, and `beyond_accuracy.json`. Beyond-accuracy results use the shared '
-              'evaluator; unavailable metadata remains explicitly marked unavailable. '
+              'evaluator with the shared genre/gender metadata loader. '
               'Each selected MLP seed has its own folder; seed means/std and `metrics.csv` are generated '
               'summaries, not additional fitted models. '
               'Historical style notes describe the earlier fits; '

@@ -89,10 +89,10 @@ class ValidateTests(unittest.TestCase):
         reports = self.read("group_metrics.json")
         self.assertEqual((reports["status"], reports["owner"]), ("pending", "Victor"))
         beyond = self.read("beyond_accuracy.json")
-        self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 0, "M": 0, "unknown": 2})
-        self.assertIsNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
-        self.assertIn("Caio/Victor", beyond["gender_fairness"]["reason"])
-        self.assertIn("metadata", manifest["pending_work"])
+        self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 1, "M": 1, "unknown": 0})
+        self.assertIsNotNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
+        self.assertNotIn("metadata", manifest["pending_work"])
+        self.assertIn("group_analysis", manifest["pending_work"])
         self.assertFalse(manifest["project_evaluation_complete"])
 
         boundaries = self.read("groups.json")["activity"]["boundaries"]
@@ -178,7 +178,10 @@ class ValidateTests(unittest.TestCase):
         with patch("sys.argv", args), redirect_stderr(io.StringIO()) as errors, self.assertRaises(SystemExit) as exit:
             main()
         self.assertEqual(exit.exception.code, 2)
-        self.assertIn("File exists", errors.getvalue())
+        # OS error messages differ on Windows; the output must be identified
+        # and the repeated CLI invocation must not evaluate the model again.
+        self.assertIn(self.output.name, errors.getvalue())
+        self.loader.assert_called_once()
 
 
 if __name__ == "__main__":

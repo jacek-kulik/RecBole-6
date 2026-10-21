@@ -21,8 +21,10 @@ class HybridExportTests(unittest.TestCase):
                 return values[indices] if isinstance(indices, int) else [values[i] for i in indices]
 
         loader = SimpleNamespace(uid_list=torch.tensor([1]), uid2history_item={1: torch.tensor([1])})
-        with patch('recbole.utils.case_study.full_sort_scores', return_value=torch.tensor([[-float('inf'), -float('inf'), .25, .5]])):
-            table = export_scores(object(), Dataset(), loader, 'split', 'valid', 'test-model')
+        model = SimpleNamespace(device=torch.device('cpu'))
+        with patch('recbole.utils.case_study.full_sort_scores', return_value=torch.tensor([[-float('inf'), -float('inf'), .25, .5]])) as scoring:
+            table = export_scores(model, Dataset(), loader, 'split', 'valid', 'test-model')
+        scoring.assert_called_once_with([1], model, loader, device=model.device)
         self.assertEqual(table.scores, {'user': {'a': .25, 'b': .5}})
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / 'scores.json.gz'
