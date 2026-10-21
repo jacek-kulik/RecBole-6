@@ -1,5 +1,7 @@
+# Selected by validation NDCG@10 on seed-42 60/20/20; load shared protocol after this.
 model: SLIMElastic
 alpha: 0.2
-l1_ratio: 0.01
+l1_ratio: 0.005
+slim_max_iter: 1000
 positive_only: true
 hide_item: true

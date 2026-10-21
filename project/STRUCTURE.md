@@ -62,6 +62,23 @@ except training history for valid; training and validation history for test).
 Read them with `recbole_adapter.load_scores`. It does not evaluate test data.
 `project/scripts/train_individuals.sh` trains the full Task 1.1 model set.
 
+The starter BPR and FISM configurations run for 20 epochs with `eval_step: 10`,
+so validation occurs only at epochs 10 and 20. With `stopping_step: 20`, these
+runs cannot trigger validation early stopping. Their checkpoint is the better
+of those two validation observations; completing the run is not evidence of
+convergence. Task 1.2 must select and document its training budget separately.
+
+The score-export integration test trains BPR on a tiny synthetic dataset,
+changes the live weights after fitting, and checks that the exported gzip
+scores still match the selected checkpoint. Candidate sets are checked against
+the actual split CSVs for both validation and test. FISM regression tests cover
+candidate self-exclusion, adjusted normalization, gradients, repeated items,
+and empty histories. Run these checks with the repository's RecBole environment:
+
+```sh
+python -m unittest project.tests.test_score_export_integration project.tests.test_fism -v
+```
+
 For an independent accuracy validation run, use (and adapt) the following command:
 Make sure to change the input and output to what you actually want to do
 
