@@ -1,0 +1,4 @@
+model: ItemKNN
+knn_method: user
+k: 50
+shrink: 0.0

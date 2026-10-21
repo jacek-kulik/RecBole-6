@@ -55,8 +55,29 @@ working directory at this worktree's root.
 Training runs the local RecBole implementation, selects a checkpoint using
 validation, and exports the actual train/validation/test interaction splits with
 external IDs, ratings, and timestamps. It saves the supplied YAMLs, resolved
-configuration, split hash, checkpoint path, and validation diagnostics. It does
-not yet export model scores or perform the complete independent evaluation.
+configuration, split hash, checkpoint path, and validation diagnostics. From the
+validation-selected checkpoint it exports `scores-valid.json.gz` and
+`scores-test.json.gz`: a `ScoreTable` over every eligible candidate (all items
+except training history for valid; training and validation history for test).
+Read them with `recbole_adapter.load_scores`. It does not evaluate test data.
+`project/scripts/train_individuals.sh` trains the full Task 1.1 model set.
+
+The starter BPR and FISM configurations run for 20 epochs with `eval_step: 10`,
+so validation occurs only at epochs 10 and 20. With `stopping_step: 20`, these
+runs cannot trigger validation early stopping. Their checkpoint is the better
+of those two validation observations; completing the run is not evidence of
+convergence. Task 1.2 must select and document its training budget separately.
+
+The score-export integration test trains BPR on a tiny synthetic dataset,
+changes the live weights after fitting, and checks that the exported gzip
+scores still match the selected checkpoint. Candidate sets are checked against
+the actual split CSVs for both validation and test. FISM regression tests cover
+candidate self-exclusion, adjusted normalization, gradients, repeated items,
+and empty histories. Run these checks with the repository's RecBole environment:
+
+```sh
+python -m unittest project.tests.test_score_export_integration project.tests.test_fism -v
+```
 
 For an independent accuracy validation run, use (and adapt) the following command:
 Make sure to change the input and output to what you actually want to do
@@ -128,7 +149,7 @@ project/
   configs/
     protocol.yaml              # Shared provisional split/evaluation settings
     experiments.yaml           # TODO model/search/metric/reranker/analysis plan
-    models/bpr.yaml             # First individual-model config; add the lecture set
+    models/*.yaml               # Task 1.1 lecture models (course defaults)
   examples/toy.json             # Tiny synthetic example, committed with the code
   notebooks/
     movielens_analysis.ipynb   # Dataset analysis for data cleanliness and split decision
@@ -139,7 +160,7 @@ project/
     artifacts.py               # Small run-record helpers; extend only if needed
     baselines.py               # Random and training-popularity scoring examples
     demo.py                    # Small runnable example joining the shared pieces
-    recbole_adapter.py         # Real training/split export; full-score export TODO
+    recbole_adapter.py         # Training, split export, full-candidate score export
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
     tuning.py                  # Optional search wrapper; existing scripts may suffice
     validate.py                # Independent validation entrypoint

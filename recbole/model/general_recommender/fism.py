@@ -122,17 +122,21 @@ class FISM(GeneralRecommender):
     def inter_forward(self, user, item):
         """forward the model by interaction"""
         user_inter = self.history_item_matrix[user]
-        item_num = self.history_lens[user].unsqueeze(1)
+        item_num = self.history_lens[user]
         # Sum before taking the target dot product. embedding_bag avoids a
         # batch_size x max_history x embedding_size intermediate tensor.
         user_history = F.embedding_bag(
             user_inter, self.item_src_embedding.weight, mode="sum", padding_idx=0
         )
+        # A candidate must never contribute to its own prediction, including
+        # repeated occurrences. Padding is not a history interaction.
+        occurrences = ((user_inter == item.unsqueeze(1)) & (user_inter != 0)).sum(1)
+        user_history = user_history - occurrences.unsqueeze(1) * self.item_src_embedding(item)
         target = self.item_dst_embedding(item)  # batch_size x embedding_size
         user_bias = self.user_bias[user]  # batch_size x 1
         item_bias = self.item_bias[item]
         similarity = torch.sum(user_history * target, dim=1)
-        coeff = torch.pow(item_num.squeeze(1), -self.alpha)
+        coeff = (item_num - occurrences).clamp_min(1).float().pow(-self.alpha)
         # BCEWithLogitsLoss applies sigmoid internally; training needs raw logits.
         scores = coeff.float() * similarity + user_bias + item_bias
         return scores
@@ -153,16 +157,22 @@ class FISM(GeneralRecommender):
             torch.Tensor: result
 
         """
+        user_input = user_input[user_input != 0]
         user_history = self.item_src_embedding(user_input)  # inter_num x embedding_size
         user_history = user_history.sum(dim=0)
         if pred_slc is None:
+            item_ids = torch.arange(self.n_items, device=user_input.device)
             targets = self.item_dst_embedding.weight  # target_items x embedding_size
             item_bias = self.item_bias
         else:
+            item_ids = pred_slc
             targets = self.item_dst_embedding(pred_slc)
             item_bias = self.item_bias[pred_slc]
         similarity = torch.mv(targets, user_history)
-        coeff = torch.pow(item_num, -self.alpha)
+        occurrences = torch.bincount(user_input, minlength=self.n_items)[item_ids]
+        self_similarity = (self.item_src_embedding(item_ids) * targets).sum(1)
+        similarity = similarity - occurrences * self_similarity
+        coeff = (item_num - occurrences).clamp_min(1).float().pow(-self.alpha)
         scores = coeff.float() * similarity + user_bias + item_bias
         return scores
 
