@@ -1,0 +1,67 @@
+{
+  "budget": {
+    "bpr_fits": 12,
+    "cascade_trials": 1920,
+    "itemknn_fits": 20
+  },
+  "frozen_selection_sha256": "ba3b00b5c54b1fba2da6e608115fa35275094209b24cbedadaeffd68539d4b7a",
+  "identity_sha256": "fb942d4b1e3232e9f5c4102ab9b00246a571ca8d475cbbfac12aaca0be4fab1b",
+  "independent_evaluation_verified": true,
+  "scope": "Full catalogue; all held-out interactions positive; same users/masks as Task 1.3",
+  "seed": 42,
+  "selected": {
+    "best_finite_cascade": {
+      "MRR@10": 0.49376272955276135,
+      "NDCG@10": 0.2786985800360249,
+      "Recall@10": 0.1747037067834524,
+      "bpr_index": 9,
+      "candidate_fraction": 0.0061820174748523655,
+      "candidate_recall": 0.1747037067834524,
+      "itemknn_index": 17,
+      "mean_bpr_candidates": 10.0,
+      "oracle_ndcg_at_10": 0.41081551001958955,
+      "shortlist_size": 10
+    },
+    "bpr": {
+      "embedding_size": 128,
+      "epochs": 50,
+      "learning_rate": 0.0005,
+      "train_batch_size": 512
+    },
+    "components": {
+      "bpr": {
+        "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\cascade-itemknn-bpr\\components\\bpr\\6874f55c4bc2be9a47eaf94da357577324e78e058ce4bf390e23917e13db7603\\scores-valid.json.gz",
+        "sha256": "6ec23cadeca6ef115c6688ad166f54b8cb72b41e31e0d1f7c54375f14053a53b"
+      },
+      "itemknn": {
+        "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\cascade-itemknn-bpr\\components\\itemknn\\d50b5a43e2a670c82fa14ee3311c632baf2bd057ccef2990295f7cc8854ce64b\\scores-valid.json.gz",
+        "sha256": "dcc2dd28b00106090d27071c3395491d4782acc797d7eaa31451be4245771301"
+      }
+    },
+    "itemknn": {
+      "k": 200,
+      "shrink": 10.0
+    },
+    "selection": {
+      "MRR@10": 0.49376272955276135,
+      "NDCG@10": 0.2786985800360249,
+      "Recall@10": 0.1747037067834524,
+      "bpr_index": 9,
+      "candidate_fraction": 0.0061820174748523655,
+      "candidate_recall": 0.1747037067834524,
+      "itemknn_index": 17,
+      "mean_bpr_candidates": 10.0,
+      "oracle_ndcg_at_10": 0.41081551001958955,
+      "shortlist_size": 10
+    },
+    "selection_metric": "validation NDCG@10",
+    "trials_sha256": "078aa7083d0fcd719874010fb7be68492062bea2f527426d93a5a15edc19f065"
+  },
+  "selection_metric": "NDCG@10",
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "test_evaluated": true,
+  "test_policy": "Freeze selection before scoring test; no train+validation refit",
+  "tie_break": "Highest validation NDCG@10, then smaller shortlist, then grid order",
+  "training": "Independent train-only fits; fixed epochs; joint cascade validation selection"
+}

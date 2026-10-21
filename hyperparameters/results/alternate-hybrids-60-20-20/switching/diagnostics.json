@@ -1,0 +1,28 @@
+{
+  "all_validation_interactions": 19633,
+  "bpr_wins": 404,
+  "catalogue_items": 1682,
+  "evaluation_users": 943,
+  "excluded_users": 0,
+  "excluded_zero_training_item_interactions": 43,
+  "route_diagnostics": {
+    "bpr": {
+      "component_mean_ndcg": {
+        "bpr": 0.27365132221003474,
+        "userknn": 0.26907588499942725
+      },
+      "users": 210
+    },
+    "userknn": {
+      "component_mean_ndcg": {
+        "bpr": 0.2747041781849939,
+        "userknn": 0.28814251948074676
+      },
+      "users": 733
+    }
+  },
+  "supported_items": 1615,
+  "supported_validation_interactions": 19590,
+  "ties": 99,
+  "userknn_wins": 440
+}

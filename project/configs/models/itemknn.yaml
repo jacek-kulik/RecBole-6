@@ -1,4 +1,4 @@
 model: ItemKNN
 knn_method: item
-k: 100
+k: 200
 shrink: 100.0

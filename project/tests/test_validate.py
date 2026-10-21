@@ -178,7 +178,10 @@ class ValidateTests(unittest.TestCase):
         with patch("sys.argv", args), redirect_stderr(io.StringIO()) as errors, self.assertRaises(SystemExit) as exit:
             main()
         self.assertEqual(exit.exception.code, 2)
-        self.assertIn("File exists", errors.getvalue())
+        # OS error messages differ on Windows; the output must be identified
+        # and the repeated CLI invocation must not evaluate the model again.
+        self.assertIn(self.output.name, errors.getvalue())
+        self.loader.assert_called_once()
 
 
 if __name__ == "__main__":

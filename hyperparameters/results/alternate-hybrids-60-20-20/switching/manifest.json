@@ -1,0 +1,67 @@
+{
+  "candidate_alignment_verified": true,
+  "component_scores": {
+    "bpr": {
+      "key": "2e3521eb09c22dd58b9f8f0842a107255d1249bc9ea8e3362d593f4eb2b53110",
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\bpr\\2e3521eb09c22dd58b9f8f0842a107255d1249bc9ea8e3362d593f4eb2b53110\\scores-valid.json.gz",
+      "sha256": "437a70d0229320e834f54445c541d3629ba99fb8f2329e4a3c4c745dbc6a1f41"
+    },
+    "userknn": {
+      "key": "93a958d1a23de40e4b5339c604597a65908b48d0619c55627f0be4157c12ca0f",
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\userknn\\93a958d1a23de40e4b5339c604597a65908b48d0619c55627f0be4157c12ca0f\\scores-valid.json.gz",
+      "sha256": "9802854a4ab51f580fb996ced83a7e2b43fb91298418789e7ab2eb53a8bda945"
+    }
+  },
+  "grids": {
+    "history": [
+      0,
+      10,
+      20,
+      40,
+      80,
+      160,
+      320,
+      100000
+    ],
+    "neighbors": [
+      1,
+      5,
+      10,
+      20,
+      40,
+      51
+    ],
+    "overlap": [
+      1,
+      2,
+      5,
+      10,
+      20
+    ]
+  },
+  "routing_unit": "whole user ranking",
+  "rule": "UserKNN if reliable_neighbors >= threshold OR history < min_bpr_history; BPR otherwise",
+  "scope": "training-supported users and items; no cold-start solution",
+  "selected_rule": {
+    "NDCG@10": 0.2849154235880113,
+    "bpr_users": 210,
+    "kind": "switch",
+    "min_bpr_history": 40,
+    "min_overlap": 20,
+    "min_reliable_neighbors": 40,
+    "userknn_users": 733
+  },
+  "selection_metric": "NDCG@10",
+  "sha256": {
+    "accuracy": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+    "features": "93082bd3e7c02d0faee354e92b9e1f0826dcad9d53cc136c121a393cbcc77506",
+    "source": "c57a379e90d734461679d9aa99ffbbb099a66dd7106d5c0c329569da37d443db",
+    "train": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c",
+    "valid": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b"
+  },
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "support": "Among top 50 binary-cosine neighbors, count those sharing at least min_overlap training items",
+  "test_evaluated": false,
+  "tie_break": "prefer constant model; then first grid entry; score ties use external item IDs"
+}

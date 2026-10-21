@@ -1,0 +1,106 @@
+split_id: 1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1
+split:
+- 0.6
+- 0.2
+- 0.2
+seed: 42
+validation_metric: NDCG@10
+models:
+  mlp-mlp-content-seed42:
+    features: items_content
+    file: mlp-mlp-content-seed42.npz
+    hidden: 64
+    kind: mlp
+    residual: false
+    seed: 42
+    selected_epoch: 5
+  mlp-mlp-content-seed43:
+    features: items_content
+    file: mlp-mlp-content-seed43.npz
+    hidden: 64
+    kind: mlp
+    residual: false
+    seed: 43
+    selected_epoch: 10
+  mlp-mlp-content-seed44:
+    features: items_content
+    file: mlp-mlp-content-seed44.npz
+    hidden: 64
+    kind: mlp
+    residual: false
+    seed: 44
+    selected_epoch: 15
+  mlp-mlp-seed42:
+    features: items_cf
+    file: mlp-mlp-seed42.npz
+    hidden: 64
+    kind: mlp
+    residual: false
+    seed: 42
+    selected_epoch: 10
+  mlp-mlp-seed43:
+    features: items_cf
+    file: mlp-mlp-seed43.npz
+    hidden: 64
+    kind: mlp
+    residual: false
+    seed: 43
+    selected_epoch: 10
+  mlp-mlp-seed44:
+    features: items_cf
+    file: mlp-mlp-seed44.npz
+    hidden: 64
+    kind: mlp
+    residual: false
+    seed: 44
+    selected_epoch: 15
+  residual-mlp-content-seed42:
+    features: items_content
+    file: residual-mlp-content-seed42.npz
+    hidden: 64
+    kind: mlp
+    residual: true
+    seed: 42
+    selected_epoch: 1
+  residual-mlp-content-seed43:
+    features: items_content
+    file: residual-mlp-content-seed43.npz
+    hidden: 64
+    kind: mlp
+    residual: true
+    seed: 43
+    selected_epoch: 4
+  residual-mlp-content-seed44:
+    features: items_content
+    file: residual-mlp-content-seed44.npz
+    hidden: 64
+    kind: mlp
+    residual: true
+    seed: 44
+    selected_epoch: 5
+  residual-mlp-seed42:
+    features: items_cf
+    file: residual-mlp-seed42.npz
+    hidden: 128
+    kind: mlp
+    residual: true
+    seed: 42
+    selected_epoch: 1
+  residual-mlp-seed43:
+    features: items_cf
+    file: residual-mlp-seed43.npz
+    hidden: 128
+    kind: mlp
+    residual: true
+    seed: 43
+    selected_epoch: 2
+  residual-mlp-seed44:
+    features: items_cf
+    file: residual-mlp-seed44.npz
+    hidden: 128
+    kind: mlp
+    residual: true
+    seed: 44
+    selected_epoch: 3
+search_records: hyperparameters\results\alternate-hybrids-60-20-20\feature-combination
+joint_component_tuning: false

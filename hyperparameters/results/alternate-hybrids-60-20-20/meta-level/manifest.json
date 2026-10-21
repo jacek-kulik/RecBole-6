@@ -1,0 +1,70 @@
+{
+  "candidate_alignment_verified": true,
+  "checkpoint": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\bpr\\2e3521eb09c22dd58b9f8f0842a107255d1249bc9ea8e3362d593f4eb2b53110\\full-training\\bpr.pth",
+  "checkpoint_cache_max_abs_error": 0.0,
+  "checkpoint_epoch": 49,
+  "checkpoint_sha256": "19d0378cf4f973919caa62452bae88df9fb4fcd6133d142037e0818d44e246fb",
+  "components": {
+    "bpr": {
+      "key": "2e3521eb09c22dd58b9f8f0842a107255d1249bc9ea8e3362d593f4eb2b53110",
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\bpr\\2e3521eb09c22dd58b9f8f0842a107255d1249bc9ea8e3362d593f4eb2b53110\\scores-valid.json.gz",
+      "sha256": "437a70d0229320e834f54445c541d3629ba99fb8f2329e4a3c4c745dbc6a1f41"
+    },
+    "userknn": {
+      "key": "93a958d1a23de40e4b5339c604597a65908b48d0619c55627f0be4157c12ca0f",
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\userknn\\93a958d1a23de40e4b5339c604597a65908b48d0619c55627f0be4157c12ca0f\\scores-valid.json.gz",
+      "sha256": "9802854a4ab51f580fb996ced83a7e2b43fb91298418789e7ab2eb53a8bda945"
+    }
+  },
+  "dataset_access": "Original dataset read only to reconstruct checkpoint token mapping; no build/split/fitting",
+  "fallback": "Zero weights produce zero scores, ties by external item ID; no popularity blending",
+  "items": 1682,
+  "k_grid": [
+    10,
+    20,
+    40,
+    50,
+    80,
+    160,
+    320
+  ],
+  "metadata_features_used": false,
+  "scope": "Full original validation users and catalogue minus training items",
+  "scorer": "sum of positive cosine neighbour weights times binary training interactions; self excluded",
+  "selected": {
+    "bpr-userknn": {
+      "F1@10": 0.1677186175913275,
+      "MAP@10": 0.09008739321844597,
+      "MRR@10": 0.49526334393778676,
+      "NDCG@10": 0.28221605685999257,
+      "Precision@10": 0.23594909862142033,
+      "Recall@10": 0.17566066358087895,
+      "k": 40,
+      "model": "bpr-userknn"
+    },
+    "interaction-cosine-control": {
+      "F1@10": 0.16928545862296102,
+      "MAP@10": 0.0916410556558524,
+      "MRR@10": 0.49764135063710846,
+      "NDCG@10": 0.283823182323207,
+      "Precision@10": 0.2377518557794268,
+      "Recall@10": 0.1768671463866696,
+      "k": 160,
+      "model": "interaction-cosine-control"
+    }
+  },
+  "selection": "validation NDCG@10; ties prefer smaller k",
+  "sha256": {
+    "accuracy": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+    "source": "c109146c8ca398ced529c838b559c0e94cd7e2fbde584000c56d44e62c416863",
+    "train": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c",
+    "valid": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b"
+  },
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "test_evaluated": false,
+  "test_split_read": false,
+  "training_pairs": 60734,
+  "transferred_object": "Frozen BPR user embeddings; item embeddings used only to verify checkpoint scores",
+  "users": 943
+}
