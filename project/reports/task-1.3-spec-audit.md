@@ -1,12 +1,16 @@
 # Task 1.3 experiment audit
 
-Status: provisional results for FISM and the six-component regressor.
+Status: the FISM correction and required rerun are complete. Final evidence is
+in [task-1.3-final-results.md](task-1.3-final-results.md).
 
-This audit originally examined the alpha-100 fit. The subsequent validation-only
-21-penalty search selected alpha 100000, an interior grid value. Its frozen test
-evaluation now leads the seven-model comparison; see
-`task-1.3-ridge-100k-comparison.md`. The FISM defect and required correction below
-remain unresolved.
+PR #14 corrected target self-exclusion and normalization, with regression tests
+for scores and gradients. The corrected model was retuned over all 48 settings,
+its five OOF folds and full-training scores regenerated, and Ridge refitted on
+60,734 raw-rating targets. Validation selection over 24 penalties chose alpha
+30000 before test scoring. The five unaffected columns and per-user metrics
+match the original run exactly. Test NDCG@10 is 0.372549 for FISM and 0.409095
+for the hybrid. The historical audit below records why earlier results were
+provisional; it does not describe a defect remaining in the final run.
 
 ## Explicit course requirements
 
@@ -15,7 +19,7 @@ remain unresolved.
 - Hybrid lecture, page 6: combine component scores linearly with weights summing to one; weights may be learned and user-specific. No explicit nonnegativity constraint is printed on that slide.
 - Neighborhood-model lecture, page 49: low-rank item-item FISM has a zero-diagonal constraint.
 
-## Confirmed FISM implementation defect
+## Historical FISM implementation defect (resolved)
 
 `recbole/model/general_recommender/fism.py`, `inter_forward`, aggregates the complete training history without removing the candidate item. For positive training interactions, that item therefore contributes its own source embedding to its prediction. This violates the intended exclusion of self-contributions. The sigmoid/loss fix did not address this additional inherited defect.
 
@@ -27,7 +31,7 @@ The existing regression tests checked logits, probabilities, and algebraic equiv
 
 The core Task 1.3 regression requirement is implemented. Five-fold OOF component features, per-user candidate z-score normalization, Ridge with an intercept, and 1-5 rating targets were our design choices, not explicit lecture requirements. The loader's target normalization was corrected and verified as an affine transformation preserving rankings.
 
-The fitted coefficients sum to 0.2011817347235848, and UserKNN has a negative coefficient. The sum-one formula is not literally enforced. Because the sum is positive, dividing every coefficient by it produces a sum-one parameterization with identical rankings; the global intercept also has no ranking effect. This presentation issue cannot explain the measured shortfall.
+The historical alpha-100 fit had a negative UserKNN coefficient and coefficient sum 0.2011817347235848. The final alpha-30000 fit has positive coefficients summing to approximately 0.171301256. The sum-one formula is not literally enforced during regression. Dividing the final coefficients by their positive sum gives a sum-one parameterization with identical rankings; the global intercept also has no ranking effect.
 
 ## Experiment limits
 
@@ -36,7 +40,7 @@ The fitted coefficients sum to 0.2011817347235848, and UserKNN has a negative co
 - The seven-model table does not complete Tasks 2.1-2.6: random/popularity baselines, beyond-accuracy measures, group analyses, and evidence-based coefficient analysis remain outside this comparison.
 - A rating regression target is allowed by the brief's unspecified target, but alignment with ranking evaluation must be motivated and empirically tested.
 
-## Required correction before final interpretation
+## Required correction (completed)
 
 Correct FISM target self-exclusion, including its history-length normalization; test present and absent candidates; retune FISM; regenerate only FISM's OOF folds and full-training scores; then refit/select the regressor on validation. Keep the unaffected five verified caches. The current six-model hybrid result does not establish failure of weighted hybrids generally.
 

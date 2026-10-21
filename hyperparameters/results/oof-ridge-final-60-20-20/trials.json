@@ -1,0 +1,818 @@
+[
+  {
+    "alpha": 0.1,
+    "fitted": {
+      "alpha": 0.1,
+      "coefficients": [
+        0.09399937570281668,
+        -0.023468460363208436,
+        -0.08338683913164205,
+        0.018805491944791555,
+        0.018749797213063867,
+        0.21176900570644314
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.14376135126614,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17479991131632389,
+      "MAP@10": 0.09284520381157842,
+      "MRR@10": 0.4994512615933605,
+      "NDCG@10": 0.2921417243647003,
+      "Precision@10": 0.24803817603393363,
+      "Recall@10": 0.18156977407651062
+    }
+  },
+  {
+    "alpha": 1.0,
+    "fitted": {
+      "alpha": 1.0,
+      "coefficients": [
+        0.09399222709773802,
+        -0.023466047268234133,
+        -0.08333661641065644,
+        0.018806356790511736,
+        0.018752139291997857,
+        0.2117127483500682
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.143770634582989,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17479991131632389,
+      "MAP@10": 0.09283813417566467,
+      "MRR@10": 0.4994512615933605,
+      "NDCG@10": 0.29213457182104924,
+      "Precision@10": 0.24803817603393363,
+      "Recall@10": 0.18156977407651062
+    }
+  },
+  {
+    "alpha": 10.0,
+    "fitted": {
+      "alpha": 10.0,
+      "coefficients": [
+        0.0939209190948656,
+        -0.023441931133122925,
+        -0.08283640691066857,
+        0.018815013462355312,
+        0.018775462362840525,
+        0.2111522840125312
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.1438632686042203,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1746484191181721,
+      "MAP@10": 0.09278930683133872,
+      "MRR@10": 0.49937467387096146,
+      "NDCG@10": 0.2920102647508869,
+      "Precision@10": 0.2479321314952274,
+      "Recall@10": 0.18130466272974496
+    }
+  },
+  {
+    "alpha": 100.0,
+    "fitted": {
+      "alpha": 100.0,
+      "coefficients": [
+        0.09322503708810187,
+        -0.02320223469098492,
+        -0.07802845106693576,
+        0.018902324968656743,
+        0.018999311792395675,
+        0.2057506339554628
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.14477038369941,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17435361839216718,
+      "MAP@10": 0.09265686479608601,
+      "MRR@10": 0.4990935716810575,
+      "NDCG@10": 0.29179540498688317,
+      "Precision@10": 0.24772004241781487,
+      "Recall@10": 0.18082906920670883
+    }
+  },
+  {
+    "alpha": 300.0,
+    "fitted": {
+      "alpha": 300.0,
+      "coefficients": [
+        0.09177997658955257,
+        -0.02267881082420444,
+        -0.06847481677223545,
+        0.019099890237116394,
+        0.019442477397396893,
+        0.19493012947899105
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.1466730808611785,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17459476615854946,
+      "MAP@10": 0.09263979674328209,
+      "MRR@10": 0.49868580518103206,
+      "NDCG@10": 0.29208304381231126,
+      "Precision@10": 0.24825026511134612,
+      "Recall@10": 0.18104969469988733
+    }
+  },
+  {
+    "alpha": 1000.0,
+    "fitted": {
+      "alpha": 1000.0,
+      "coefficients": [
+        0.08754636364592981,
+        -0.020938246478947604,
+        -0.04388065143268992,
+        0.0197984151736522,
+        0.020577909587760013,
+        0.16633744006649462
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.1524158654140613,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17563507867488806,
+      "MAP@10": 0.09353441340190022,
+      "MRR@10": 0.50205650658991,
+      "NDCG@10": 0.2936614299373646,
+      "Precision@10": 0.24931071049840867,
+      "Recall@10": 0.1821416360083556
+    }
+  },
+  {
+    "alpha": 3000.0,
+    "fitted": {
+      "alpha": 3000.0,
+      "coefficients": [
+        0.0792142936801567,
+        -0.01660157548064976,
+        -0.00960300428706602,
+        0.02157620479918705,
+        0.02222047187742268,
+        0.12279550018536173
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.164628562608678,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17700922958113774,
+      "MAP@10": 0.0938685190635673,
+      "MRR@10": 0.5045851638640604,
+      "NDCG@10": 0.2949466156573635,
+      "Precision@10": 0.25015906680805877,
+      "Recall@10": 0.18397982331496504
+    }
+  },
+  {
+    "alpha": 10000.0,
+    "fitted": {
+      "alpha": 10000.0,
+      "coefficients": [
+        0.06394677959750084,
+        -0.00608087981452229,
+        0.017693016277018202,
+        0.025193824259913337,
+        0.024229843327159637,
+        0.0738194233149745
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.1908003365506232,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17794653288218162,
+      "MAP@10": 0.094471422467048,
+      "MRR@10": 0.5081077782827511,
+      "NDCG@10": 0.295644042461379,
+      "Precision@10": 0.24941675503711488,
+      "Recall@10": 0.18589558118133137
+    }
+  },
+  {
+    "alpha": 30000.0,
+    "fitted": {
+      "alpha": 30000.0,
+      "coefficients": [
+        0.04695373275714226,
+        0.007655276967421587,
+        0.02118234666920494,
+        0.028186344527812688,
+        0.026056366078681555,
+        0.04126718898109121
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.2266501598166077,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17973891893917576,
+      "MAP@10": 0.09648293875462197,
+      "MRR@10": 0.5142831894157442,
+      "NDCG@10": 0.299155239364729,
+      "Precision@10": 0.25196182396606515,
+      "Recall@10": 0.18742691931501163
+    }
+  },
+  {
+    "alpha": 100000.0,
+    "fitted": {
+      "alpha": 100000.0,
+      "coefficients": [
+        0.031746200842131304,
+        0.018482930560384036,
+        0.014934355092597985,
+        0.02817631861340194,
+        0.026123066947987685,
+        0.02044603008447592
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.272451768377216,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17949167964883483,
+      "MAP@10": 0.0961840386100284,
+      "MRR@10": 0.5152948206500688,
+      "NDCG@10": 0.2989895886324866,
+      "Precision@10": 0.2518557794273589,
+      "Recall@10": 0.18685078185099505
+    }
+  },
+  {
+    "alpha": 300000.0,
+    "fitted": {
+      "alpha": 300000.0,
+      "coefficients": [
+        0.021913859378779425,
+        0.019512277300215358,
+        0.009680386658152485,
+        0.023795873561352897,
+        0.022243864852101218,
+        0.011072249842607929
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.3275845842680196,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17951074186550656,
+      "MAP@10": 0.0958979896821956,
+      "MRR@10": 0.5127590095776725,
+      "NDCG@10": 0.2983231414472618,
+      "Precision@10": 0.25153764581124005,
+      "Recall@10": 0.18714953377598714
+    }
+  },
+  {
+    "alpha": 1000000.0,
+    "fitted": {
+      "alpha": 1000000.0,
+      "coefficients": [
+        0.012449268521068495,
+        0.01313731765537387,
+        0.005239266944364797,
+        0.014811027802432946,
+        0.013904522249845655,
+        0.0054214724656984755
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.409629883627467,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.17918227446057744,
+      "MAP@10": 0.0956088233692545,
+      "MRR@10": 0.5126310828325665,
+      "NDCG@10": 0.29781217525406284,
+      "Precision@10": 0.25100742311770874,
+      "Recall@10": 0.18680614256978176
+    }
+  },
+  {
+    "alpha": 3000000.0,
+    "fitted": {
+      "alpha": 3000000.0,
+      "coefficients": [
+        0.005786460392131056,
+        0.006428497634954552,
+        0.0023911244423230837,
+        0.007085647520180166,
+        0.006661224222483955,
+        0.0023861869449240784
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.47598308547095,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1793532992666273,
+      "MAP@10": 0.0957969501304146,
+      "MRR@10": 0.5135354070932004,
+      "NDCG@10": 0.298232677742669,
+      "Precision@10": 0.25143160127253383,
+      "Recall@10": 0.1868667962425164
+    }
+  },
+  {
+    "alpha": 10000000.0,
+    "fitted": {
+      "alpha": 10000000.0,
+      "coefficients": [
+        0.0020252560614474123,
+        0.002291626372120827,
+        0.0008310674290353774,
+        0.0025059524918731512,
+        0.0023570385272386816,
+        0.000817974846010825
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.514786606577453,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1794086345287494,
+      "MAP@10": 0.09586529165999624,
+      "MRR@10": 0.5140521638135627,
+      "NDCG@10": 0.2983933451141061,
+      "Precision@10": 0.25143160127253383,
+      "Recall@10": 0.18703540228943988
+    }
+  },
+  {
+    "alpha": 30000000.0,
+    "fitted": {
+      "alpha": 30000000.0,
+      "coefficients": [
+        0.0007092603846752973,
+        0.0008067907641065744,
+        0.00029044861941629284,
+        0.0008802498682939463,
+        0.0008280627918899284,
+        0.000284712796323147
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5285072560436297,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09584634299642934,
+      "MRR@10": 0.5140875119931314,
+      "NDCG@10": 0.2983295266733153,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 100000000.0,
+    "fitted": {
+      "alpha": 100000000.0,
+      "coefficients": [
+        0.0002166301870971146,
+        0.0002468753633990869,
+        8.864766882934071e-05,
+        0.00026914004803989174,
+        0.0002531966289500923,
+        8.677231549766223e-05
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5336591352140845,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 300000000.0,
+    "fitted": {
+      "alpha": 300000000.0,
+      "coefficients": [
+        7.25859628004753e-05,
+        8.276394071385637e-05,
+        2.9696867339628025e-05,
+        9.020763641026173e-05,
+        8.486512873824242e-05,
+        2.9056662396079615e-05
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5351670465444345,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 1000000000.0,
+    "fitted": {
+      "alpha": 1000000000.0,
+      "coefficients": [
+        2.1815550615105655e-05,
+        2.487912623027507e-05,
+        8.924677383574667e-06,
+        2.7114575825972192e-05,
+        2.5508858119591078e-05,
+        8.73102001722796e-06
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5356986903195726,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 3000000000.0,
+    "fitted": {
+      "alpha": 3000000000.0,
+      "coefficients": [
+        7.27564639177283e-06,
+        8.297810424060344e-06,
+        2.9763834763463105e-06,
+        9.043183768504079e-06,
+        8.507661417009353e-06,
+        2.9116786566398687e-06
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.535850960509756,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 10000000000.0,
+    "fitted": {
+      "alpha": 10000000000.0,
+      "coefficients": [
+        2.1830928124816853e-06,
+        2.489844175565017e-06,
+        8.930717152350854e-07,
+        2.713479661195263e-06,
+        2.5527932065640114e-06,
+        8.736442592203333e-07
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5359042942371057,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 30000000000.0,
+    "fitted": {
+      "alpha": 30000000000.0,
+      "coefficients": [
+        7.27735603539204e-07,
+        8.299957892269836e-07,
+        2.9770549659663916e-07,
+        9.045431880524567e-07,
+        8.509782025542536e-07,
+        2.9122815277668433e-07
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5359195361774898,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 100000000000.0,
+    "fitted": {
+      "alpha": 100000000000.0,
+      "coefficients": [
+        2.1832467129217516e-07,
+        2.4900374886442837e-07,
+        8.93132162042739e-08,
+        2.713682034086845e-07,
+        2.552984101719833e-07,
+        8.736985290584016e-08
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5359248712486484,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 300000000000.0,
+    "fitted": {
+      "alpha": 300000000000.0,
+      "coefficients": [
+        7.277527046205594e-08,
+        8.300172697580329e-08,
+        2.9771221331320464e-08,
+        9.045656752886778e-08,
+        8.50999414409596e-08,
+        2.9123418312185047e-08
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5359263955920324,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  },
+  {
+    "alpha": 1000000000000.0,
+    "fitted": {
+      "alpha": 1000000000000.0,
+      "coefficients": [
+        2.183262104220221e-08,
+        2.4900568215317658e-08,
+        8.931382072151079e-09,
+        2.71370227302768e-08,
+        2.5530031927936523e-08,
+        8.737039564834544e-09
+      ],
+      "components": [
+        "itemknn",
+        "userknn",
+        "bpr",
+        "slimelastic",
+        "ease",
+        "fism"
+      ],
+      "intercept": 3.5359269291161377,
+      "target": "raw held-out rating",
+      "training_rows": 60734,
+      "transform": "per-user candidate z-score"
+    },
+    "metrics": {
+      "F1@10": 0.1792970086985323,
+      "MAP@10": 0.09583161458827569,
+      "MRR@10": 0.5135572892996002,
+      "NDCG@10": 0.298243387413056,
+      "Precision@10": 0.25132555673382756,
+      "Recall@10": 0.18691757502421072
+    }
+  }
+]

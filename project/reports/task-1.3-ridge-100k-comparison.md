@@ -1,5 +1,7 @@
 # Ridge 100k: updated seven-model comparison
 
+> Historical result, superseded by [the final corrected FISM and Ridge results](task-1.3-final-results.md).
+
 > Provisional: FISM training still includes the candidate in its own history; FISM and the hybrid require correction and rerunning.
 
 MovieLens-100K; 60/20/20 per-user split, seed 42; 943 users. Ridge alpha 100000 selected using validation NDCG@10 and refitted on 60734 OOF raw-rating targets. Component models and histories are unchanged. Test candidates exclude train and validation interactions; per-user score normalization is recomputed for that candidate pool. Original alpha-100 results are preserved.

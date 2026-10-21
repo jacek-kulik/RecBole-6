@@ -1,5 +1,7 @@
 > **Provisional:** A subsequent lecture/spec audit confirmed that FISM training includes the target item in its own history. FISM-dependent results require correction and rerunning; see `task-1.3-spec-audit.md`. The five other component caches remain verified.
 
+> Historical result, superseded by [the final corrected FISM and Ridge results](task-1.3-final-results.md).
+
 # Six components and OOF Ridge regressor
 
 MovieLens-100K; per-user 60/20/20 split, seed 42; 943 users; binary relevance for every held-out interaction. Five-fold OOF regression targets raw ratings. Ridge alpha 100.0 selected by validation NDCG@10 before test evaluation.

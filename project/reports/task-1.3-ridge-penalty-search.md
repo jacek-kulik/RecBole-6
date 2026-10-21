@@ -1,5 +1,7 @@
 # Extended Ridge penalty search
 
+> Historical result, superseded by [the final corrected FISM and Ridge results](task-1.3-final-results.md).
+
 > Provisional: current FISM features retain the target self-contribution issue recorded in the spec audit.
 
 Validation-only search on the existing 60/20/20 OOF experiment. No component retraining and no test evaluation. The original fitted model and reported test results are preserved.

@@ -1,0 +1,4 @@
+# Self-excluded FISM; fixed 20 epochs; selected by independent validation NDCG@10.
+alpha: 0.5
+embedding_size: 256
+reg_weights: [0.0001, 0.0001]

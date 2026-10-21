@@ -1,10 +1,51 @@
 # Task 1.3: out-of-fold weighted hybrid
 
-This branch depends on Gabriel's Task 1.1 PR (#14). It reuses its six model
-YAMLs, RecBole model/trainer factories, full-candidate exporter, external-ID
-ScoreTable contract, and score-file format. Tasks 1.4 and final test evaluation
-are outside this command. A small ridge grid supplies the Task 1.3 validation
-selection; it does not claim completion of all Task 1.5 experiments.
+The final corrected result is in
+[`reports/task-1.3-final-results.md`](reports/task-1.3-final-results.md).
+Task 1.1 PR #14 is merged, including FISM candidate self-exclusion. The final
+48-setting FISM search selects embedding size 256, regularization [0.0001,
+0.0001], and history exponent 0.5 by independent validation NDCG@10. Five FISM
+OOF folds and its full-training fit were regenerated; the other five verified
+components were retained. A 24-penalty Ridge search selects alpha 30000.
+
+Final test NDCG@10 is 0.409095 for the hybrid, 0.401882 for the retained
+SLIMElastic component, and 0.372549 for corrected FISM. All comparisons use
+943 users, the same 60/20/20 split, and 60,734 raw-rating OOF rows. Test had
+already been inspected in earlier experiments, so this is a corrected result
+on a single reused split, not an untouched generalization estimate.
+
+## Reproduce the final correction
+
+Compact evidence, all FISM trials, all Ridge trials, coefficients and source
+hashes are committed under `hyperparameters/results/oof-ridge-final-60-20-20/`.
+The original provisional evidence is preserved separately. Large original OOF
+arrays, checkpoints and full candidate scores remain local under
+`project/artifacts/hybrid-60-20-20`; the exact correction rerun requires those
+verified original artifacts. A fresh clone can inspect the compact evidence
+and run tests, but cannot resume those caches without obtaining them.
+
+Current master has changed shared code and defaults since the original
+experiment. Reconstruct the exact frozen source environment to change only
+FISM, while keeping the original protocol and all five controls:
+
+```powershell
+.venv/Scripts/python.exe -m project.scripts.prepare_oof_refresh --output project/artifacts/oof-final-source
+Set-Location project/artifacts/oof-final-source
+& '../../../.venv/Scripts/python.exe' -u -m project.scripts.refresh_fism_oof --old ../hybrid-60-20-20 --output ../hybrid-60-20-20-fism-final-reproduction
+```
+
+The preparation command needs full Git history, rejects an existing destination,
+and verifies reconstructed source, protocol and dataset hashes. The refresh
+command retains all 48 fixed-budget 20-epoch FISM trials, reconstructs the five
+OOF folds, verifies old cache hashes and row mappings, fits raw 1-5 targets,
+selects Ridge on validation, freezes its selection, and then evaluates test.
+Completed matching stages are reused on interruption. Each FISM full-training
+validation result reproduces the selected tuning trial. The final verification
+also checks exact equality of the five retained OOF columns and their per-user
+metrics. The original generic runners below document the historical pipeline;
+their alpha-100/100000 reports are superseded by the final report above.
+
+## Historical pipeline and intermediate results
 
 ## Run on the main PC
 
