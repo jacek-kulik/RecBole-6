@@ -27,3 +27,19 @@ fitting, rerankers, or group construction.
 The `train` command writes RecBole's validation metrics as training diagnostics.
 The group's final comparisons must call the independent metrics under
 `recsys/metrics/`. The demo's synthetic results are only a wiring example.
+
+## Reranking decisions agreed on 21 October
+
+Use the current shared YAML: seed 42, random per-user 60/20/20, K=10 and
+validation NDCG@10. Jacek's methods use training-only genre and popularity
+profiles and a top-50 eligible candidate pool. Implement separate genre-KL and
+popularity-JS calibration variants, plus the cohort-wide inverse-exposure item
+fairness heuristic. Do not impose equal total exposure on differently sized
+popularity groups.
+
+Sweep strengths 0, 0.25, 0.5, 0.75 and 1. Select each model/method's best target
+metric with at most 5% relative validation NDCG loss, breaking ties by higher
+NDCG then lower strength. Freeze that choice before test evaluation; report
+larger test losses without selecting again. Evaluate all six checked-in
+individual configurations without new model tuning. Detailed objectives,
+provenance checks, commands and ownership boundaries are in [RERANKING.md](RERANKING.md).
