@@ -159,6 +159,7 @@ project/
     data.py                    # Candidate helper and metadata-preparation placeholder
     artifacts.py               # Small run-record helpers; extend only if needed
     baselines.py               # Random and training-popularity scoring examples
+    comparisons.py             # Compare test evaluations in one table
     demo.py                    # Small runnable example joining the shared pieces
     recbole_adapter.py         # Training, split export, full-candidate score export
     hybrids.py                 # Regression hybrid and alternative-hybrid placeholders
@@ -237,7 +238,7 @@ unexpected nonfinite scores are errors, not missing candidates to quietly drop.
 | 1.4 Other hybrids              | `recsys/hybrids.py` (split into modules as needed)                                | Bogdan / Caio                            |
 | 1.5 Hybrid tuning              | `recsys/tuning.py` or a small script; optional `recsys/experiments/task1.py`      | Bogdan / Caio                            |
 | 2.1 Independent metrics        | `recsys/metrics/`                                                                 | Jacek / Caio                             |
-| 2.2 Model/baseline comparison  | `recsys/baselines.py`; optional `recsys/experiments/task2.py`                     | Caio / Gabriel                           |
+| 2.2 Model/baseline comparison  | `recsys/comparisons.py`, `configs/models/pop.yaml`, `random.yaml`                 | Caio / Gabriel
 | 2.3 Coefficient analysis       | `recsys/analysis/coefficients.py`                                                 | Bogdan / Victor                          |
 | 2.4 Explanatory analysis       | `recsys/analysis/explanations.py`                                                 | Victor / Bogdan                          |
 | 2.5 User/item groups           | `recsys/analysis/groups.py`, `recsys/data.py`                                     | Victor / Caio                            |

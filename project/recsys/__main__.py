@@ -22,6 +22,10 @@ def main() -> None: # :)
         evaluation.add_argument("--output", required=True, help="New validation artifact directory (must not exist)")
         evaluation.add_argument("--k", type=int, default=10)
         evaluation.add_argument("--batch-size", type=int, default=1024, help="Batch size for the validation calculations. Too high may cause out of memory errors, but will speed it up")
+    compare = commands.add_parser("compare", help="Compare selected test evaluations in one table")
+    compare.add_argument("evaluations", nargs="+", help="evaluate (test) output folders to compare; optionally Label=folder")
+    compare.add_argument("--k", type=int, default=10, help="Cutoff every evaluation must use")
+    compare.add_argument("--output", required=True, help="New comparison artifact directory (must not exist)")
     for name in ("task1", "task2", "task3"):
         commands.add_parser(name, help="TODO: project experiment orchestration")
     args = parser.parse_args()
@@ -42,6 +46,10 @@ def main() -> None: # :)
             from .evaluate import evaluate_training_run
             output = evaluate_training_run(args.run, args.output, k=args.k, batch_size=args.batch_size)
             print(f"Final test evaluation saved to {output}; see metrics.json, beyond_accuracy.json, and group_metrics.json")
+        elif args.command == "compare":
+            from .comparisons import compare_runs
+            output = compare_runs(args.evaluations, args.output, k=args.k)
+            print(f"Model comparison saved to {output}; see comparison.csv and per_user.csv")
         else:
             importlib.import_module(f"project.recsys.experiments.{args.command}").run()
     except (NotImplementedError, ValueError, FileExistsError, FileNotFoundError) as error:
