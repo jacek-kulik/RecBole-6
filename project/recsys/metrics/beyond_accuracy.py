@@ -76,6 +76,12 @@ def jensen_shannon(
     return result
 
 
+def smoothed_kl(p: Mapping[str, float], q: Mapping[str, float]) -> float:
+    """KL(p || 0.99*q + 0.01*p), using natural logs as in the lecture."""
+    return sum(probability * log(probability / (.99 * q.get(category, 0) + .01 * probability))
+               for category, probability in p.items() if probability)
+
+
 def exposure_gini(
         exposures: Mapping[str, float]
 ) -> float:
@@ -118,10 +124,7 @@ def evaluate_beyond_accuracy(
         miscalibration = None
         if profile and has_genres:
             distribution = genre_distribution(items, statistics.item_features)
-            miscalibration = sum(
-                probability * log(probability / (.99 * distribution.get(genre, 0) + .01 * probability))
-                for genre, probability in profile.items()
-            )
+            miscalibration = smoothed_kl(profile, distribution)
         popularity = statistics.popularity_profiles.get(user)
         deviation = jensen_shannon(popularity,
                                    popularity_distribution(items, statistics.item_groups)) if popularity else None
