@@ -1,0 +1,74 @@
+{
+  "aggregation": "Equal user means for per-user metrics; cohort-wide coverage and exposure",
+  "bundle_model": "mlp-mlp-seed43",
+  "candidate_policy": "RecBole full-sort catalogue excluding padding and training and validation history",
+  "checkpoint": "project/models/alternate-hybrids-60-20-20",
+  "checkpoint_format": "SHA-256 of canonical JSON mapping of portable bundle file hashes",
+  "checkpoint_sha256": "b59c7fd835275ee082fe7950c545b764107eff971f9721e5f813138412e9b3d0",
+  "command": [
+    "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\scripts\\evaluate_alternate_bundle.py"
+  ],
+  "dataset": "ml-100k",
+  "git_commit": "a5d9680454aa6a4f75453da1768d71b2abfd6960",
+  "git_dirty": true,
+  "group_construction": {
+    "activity": "Linear training-count terciles; ties stay together; zero-history users join low",
+    "gender": "Recorded F/M from the dataset user file; any other value counts as unknown",
+    "genres": "class column of the item file",
+    "item_popularity": "Training interaction shares 20/60/20, with complete count buckets"
+  },
+  "k": 10,
+  "kind": "independent-test-evaluation",
+  "metadata_sources": {
+    "items": {
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\dataset\\ml-100k\\ml-100k.item",
+      "sha256": "51d7cdf777ce5c0f5b32c1d947a4a81fe07d75e78abbe761e0cd4d0756064532"
+    },
+    "users": {
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\dataset\\ml-100k\\ml-100k.user",
+      "sha256": "4f670007d9cfbeb9807e757209af1555b9bcc186bde25e767f67cb67c6dd5972"
+    }
+  },
+  "metric_definitions": {
+    "CatalogueCoverage": "Distinct recommended movies / checkpoint catalogue size",
+    "ExposureGini": "Gini over all catalogue movies, including zeros; exposure = 1/log2(rank + 1)",
+    "GRU": "Absolute F/M mean accuracy gap, with both means and signed F-minus-M difference",
+    "GenreMiscalibration": "KL(p || 0.99*q + 0.01*p), natural log; equal movie weights and fractional genres",
+    "ILD": "Mean unordered-pair Jaccard distance between movie genre sets; undefined for K=1",
+    "ItemGroupExposure": "Discounted exposure total, share, and per-movie exposure in each popularity group",
+    "MeanSelfInformation": "Mean -log2((training_count + 1) / (training_interactions + catalogue_size))",
+    "UPD": "Base-2 Jensen-Shannon divergence of unweighted training/recommendation head/middle/tail shares"
+  },
+  "model": "hybrid-mlp-mlp-seed43",
+  "n_catalogue_items": 1682,
+  "n_training_interactions": 60734,
+  "n_users": 943,
+  "parameters": {
+    "features": "items_cf",
+    "file": "mlp-mlp-seed43.npz",
+    "hidden": 64,
+    "kind": "mlp",
+    "residual": false,
+    "seed": 43,
+    "selected_epoch": 10
+  },
+  "partition": "test",
+  "pending_work": {},
+  "profile_weights": "Equal interactions; each movie contributes equal total genre mass",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "relevance": "all held-out test interactions",
+  "retraining_performed": false,
+  "scope": "full",
+  "seed": 43,
+  "smoothing": {
+    "genre_profile_mixture": 0.01,
+    "novelty_pseudocount": 1
+  },
+  "source_git_commit": "524339def30e179517af500c8cdfa7bd35e9f8f3",
+  "source_run": "project/models/alternate-hybrids-60-20-20",
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "split_seed": 42,
+  "status": "complete",
+  "test_evaluated": true,
+  "test_selection_performed": false
+}

@@ -25,6 +25,33 @@ class MetricComparison(TypedDict):
     matches_reported_precision: bool
 
 
+def evaluation_settings(partition: Literal['valid', 'test'], k: int, scope: str = 'full') -> dict[str, Any]:
+    """Shared comparison fields for checkpoint and portable-ranking evaluations."""
+    if partition not in {'valid', 'test'} or scope not in {'full', 'warm'}:
+        raise ValueError('Unknown evaluation partition or candidate scope')
+    history = 'training history' if partition == 'valid' else 'training and validation history'
+    settings = {
+        'kind': 'independent-validation' if partition == 'valid' else 'independent-test-evaluation',
+        'partition': partition, 'k': k, 'test_evaluated': partition == 'test',
+        'relevance': f'all held-out {partition} interactions',
+        'candidate_policy': f'RecBole full-sort catalogue excluding padding and {history}',
+        'metric_definitions': METRIC_DEFINITIONS,
+        'aggregation': 'Equal user means for per-user metrics; cohort-wide coverage and exposure',
+        'smoothing': {'novelty_pseudocount': 1, 'genre_profile_mixture': .01},
+        'group_construction': {
+            'activity': 'Linear training-count terciles; ties stay together; zero-history users join low',
+            'gender': 'Recorded F/M from the dataset user file; any other value counts as unknown',
+            'genres': 'class column of the item file',
+            'item_popularity': 'Training interaction shares 20/60/20, with complete count buckets',
+        },
+        'profile_weights': 'Equal interactions; each movie contributes equal total genre mass',
+    }
+    if scope == 'warm':
+        settings['candidate_policy'] += '; restricted to items with training interactions'
+        settings['relevance'] += ' on items with training interactions'
+    return settings
+
+
 def print_summary(
         accuracy: AccuracyResults,
         beyond: BeyondAccuracyResults,
@@ -42,26 +69,13 @@ def evaluation_manifest(source: dict[str, Any], run_dir: Path, partition: str,
                         k: int, batch_size: int) -> dict[str, Any]:
     """Common provenance and metric definitions for original and reranked lists."""
     checkpoint = run_dir / source["checkpoint"]
-    history = "training history" if partition == "valid" else "training and validation history"
     manifest: dict[str, Any] = {
         **provenance(), "status": "running",
-        "kind": "independent-validation" if partition == "valid" else "independent-test-evaluation",
+        **evaluation_settings(partition, k),
         "source_run": str(run_dir), "source_git_commit": source["git_commit"],
         "checkpoint": str(checkpoint), "checkpoint_sha256": hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
         "split_id": source["split_id"], "model": source["model"], "dataset": source["dataset"],
-        "seed": source["seed"], "partition": partition, "k": k, "batch_size": batch_size,
-        "test_evaluated": partition == "test", "relevance": f"all held-out {partition} interactions",
-        "candidate_policy": f"RecBole full-sort catalogue excluding padding and {history}",
-        "metric_definitions": METRIC_DEFINITIONS,
-        "aggregation": "Equal user means for per-user metrics; cohort-wide coverage and exposure",
-        "smoothing": {"novelty_pseudocount": 1, "genre_profile_mixture": .01},
-        "group_construction": {
-            "activity": "Linear training-count terciles; ties stay together; zero-history users join low",
-            "gender": "Recorded F/M from the dataset user file; any other value counts as unknown",
-            "genres": "class column of the item file",
-            "item_popularity": "Training interaction shares 20/60/20, with complete count buckets",
-        },
-        "profile_weights": "Equal interactions; each movie contributes equal total genre mass",
+        "seed": source["seed"], "batch_size": batch_size,
     }
     return manifest
 

@@ -1,0 +1,52 @@
+{
+  "added_entries": 47150,
+  "cached_baseline_max_absolute_error": 0.00022123164244769455,
+  "equal": false,
+  "mean_added_mass": 7.655817249440986,
+  "mean_observed_mass": 64.4050901378579,
+  "objective": "||R-XB||_F^2/(2*n_users) + alpha*l1_ratio*||B||_1 + alpha*(1-l1_ratio)*||B||_F^2/2; diag(B)=0; B>=0",
+  "outputs_sha256": {
+    "comparison.json": "9501d2a39c3cb332c24aab37f888c9f3b935277fa8cf881bcc7c220c923a1c64",
+    "metrics-augmented.json": "5d6d26a9634c71d156c29683925ff346aa7379122c4977fb9261ba6398574d4f",
+    "metrics-baseline.json": "8fb2840e55df9b427e9c25dae3b58114a12e686a2c7de0a1cce53b297728718c",
+    "model.npz": "ee0d4a0b5d7bcf1552c056ae8e3d7dae0d0c95d478f5400bf6457f7fdfce6bad",
+    "scores-valid-augmented.json.gz": "1f06b70c25275025a3ca4b780e0ee1556170b9825796a4cdc4d7bfee5e468061",
+    "scores-valid-baseline.json.gz": "221365f8d569dc102265a404c12ed48a47f71cde9ed5bea662a10d769ac07923"
+  },
+  "prediction_scale": "per-user positive unseen maximum; top-N external-token tie break",
+  "receiver": "slimelastic",
+  "receiver_cache": {
+    "identity_sha256": "0945992eb27a65a06c053f2960435f6ae9316f6b9b1505fcc62cc49629c0be0a",
+    "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\slimelastic\\294e9f0930de80e6dedeeab64a07ce1a1594a534eb68b97964d04697a646e4e8\\scores-valid.json.gz",
+    "sha256": "d6c6f58aa05b364d4a6a988405237f626bffc3724a6eb6e529487eb3cc6945fc"
+  },
+  "reg": 250,
+  "seconds": 32.955710599999975,
+  "sha256": {
+    "implementation": "538cd1f2dcd208804477cb05bcd8d585f53adc7b5a85c13b423ebd7c7a0b0080",
+    "metrics": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+    "train": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c",
+    "valid": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b"
+  },
+  "slim_alpha": 0.2,
+  "slim_l1_ratio": 0.005,
+  "slim_solver": {
+    "max_iter": 1000,
+    "positive": true,
+    "random_state": 42,
+    "selection": "random",
+    "tol": 0.0001
+  },
+  "source": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source",
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "strength": 0.25,
+  "target": "unchanged binary training matrix, including zero entries",
+  "test_evaluated": false,
+  "top_n": 50,
+  "userknn": {
+    "identity_sha256": "57666ed81299a3ea34d057a99afe0a5480560b8567a05f28c2dfae809687f6d0",
+    "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\alternate-corrected-source\\components\\userknn\\93a958d1a23de40e4b5339c604597a65908b48d0619c55627f0be4157c12ca0f\\scores-valid.json.gz",
+    "sha256": "9802854a4ab51f580fb996ced83a7e2b43fb91298418789e7ab2eb53a8bda945"
+  }
+}
