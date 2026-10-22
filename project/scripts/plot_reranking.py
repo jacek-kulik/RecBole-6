@@ -40,7 +40,11 @@ def plot(run: Path, output: Path) -> None:
             strength = selection["methods"][method]["selected"]["strength"]
             chosen = next(i for i, row in enumerate(points) if row["strength"] == strength)
             ax.scatter(x[chosen], y[chosen], marker="*", s=170, color=color, edgecolors="black", linewidths=.6, zorder=4)
-            row = next(row for row in tested if row["method"] == method)
+            row = next((row for row in tested if row["method"] == method), None)
+            if row is None:
+                test_ax.text(index, .04, "Unavailable", transform=test_ax.get_xaxis_transform(),
+                             ha="center", fontsize=8, color="#777777")
+                continue
             ndcg_change = 100 * (row["ndcg"] / original_test["ndcg"] - 1)
             gain = 100 * (1 - row[metric] / original_test[metric])
             test_ax.bar(index - .18, ndcg_change, width=.35, color="#565B65")
@@ -52,7 +56,7 @@ def plot(run: Path, output: Path) -> None:
         ax.grid(alpha=.15)
         test_ax.axhline(-5, color="#777777", linestyle="--", linewidth=1)
         test_ax.axhline(0, color="#aaaaaa", linewidth=.7)
-        test_ax.set(title=model.upper(), ylabel="Change relative to original (%)",
+        test_ax.set(title=model.upper(), ylabel="Change relative to original (%)", xlim=(-.5, 2.5),
                     xticks=range(3), xticklabels=("Genre", "Popularity", "Exposure"))
         test_ax.margins(y=.2)
         test_ax.grid(axis="y", alpha=.15)
