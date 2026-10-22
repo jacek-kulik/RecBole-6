@@ -4,6 +4,23 @@ Jacek owns the calibration and item-fairness contributions, their integration
 and the Task 3.2 trade-off evaluation. This record covers those implementations.
 Diversification and user-side fairness remain pending with their owners.
 
+## Status after the 22 October master merge
+
+The numerical tables below record the 21 October experiment at implementation
+`7fc5e6a82`. The branch subsequently merged master `5730b718a`, retaining
+Bogdan's alternate hybrids and shared evaluation settings, and fixed the
+metadata-isolation and strength-directory issues found in review. The combined
+code passes 148 tests with warnings treated as errors. Ruff passes for the
+branch's changed Python files; the full-project scan reports 42 existing issues
+in files identical to master.
+
+The six-model experiment has not been rerun after that merge. Its ItemKNN and
+UserKNN configurations used 100 and 50 neighbours; current master uses 200 and
+160. The original ignored checkpoints, score exports, evaluation folders and
+figures lived in a temporary worktree that is no longer available. The tables
+remain as the recorded results, but a fresh run is needed to regenerate the
+supporting artifacts and establish results for the current configurations.
+
 ## Experiment identity
 
 - Base: `origin/master` at `887b6c38a`; implementation: `7fc5e6a82`.
@@ -77,9 +94,10 @@ cohort allocation. A single seed does not establish statistical significance.
 
 ## Verification
 
-The project suite passes 99 tests with warnings treated as errors. Ruff
-passes for the project modules, tests and new scripts. Three pre-existing
-test lint issues were corrected without changing their assertions.
+At the original experiment snapshot, the project suite passed 99 tests with
+warnings treated as errors. Ruff passed for the project modules, tests and new
+scripts. Three pre-existing test lint issues were corrected without changing
+their assertions. The current integrated checks are recorded above.
 
 The saved-run audit passed for 120 evaluated points and 113,160 ranking
 lists. It independently recalculated all six accuracy metrics and exposure
@@ -103,8 +121,9 @@ Selected outputs:
 - [Test effects](../artifacts/reranking-001/figures/test-effects.png).
 - The figure directory also contains standalone PDFs.
 
-These links resolve in the experiment worktree. Detailed generated outputs
-remain ignored by Git; the table above preserves the compact result record.
+These links identify the original artifact locations, which are not available
+in the restored worktree or committed to Git. The tables above preserve the
+compact result record; use the reproduction commands to regenerate the outputs.
 
 ## Review handoffs and remaining dependencies
 
@@ -122,7 +141,8 @@ peer reviews or permission to implement another owner's work.
 
 Caio can review Task 3.2 using the comparison and audit. Gabriel reviews
 item fairness/integration; Victor reviews calibration. No branches were
-merged and no teammate implementations were replaced during this work.
+merged during the original reranking experiment. The later master merge
+preserves its hybrid implementations; no teammate rerankers were replaced.
 
 ## Task 3.1 report draft
 
