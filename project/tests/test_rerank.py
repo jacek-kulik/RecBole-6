@@ -189,6 +189,51 @@ class RerankRunTests(unittest.TestCase):
         self.assertEqual(methods["popularity_calibration"]["status"], "complete")
         self.assertEqual(methods["item_fairness"]["status"], "complete")
 
+    def test_test_only_missing_genres_preserve_frozen_choices_and_other_methods(self) -> None:
+        self.item_file.write_text("item_id:token\tclass:token_seq\na\tDrama\nb\tDrama\nc\tAction\ns\tAction\n")
+        # The unannotated cold item is outside the validation pool, but enters
+        # the test pool when validation history is excluded.
+        self.write_scores("valid", {user: {"a": 1., "b": .9, "c": .8, "d": .1} for user in ("u1", "u2")})
+        self.write_scores("test", {user: {"a": 1., "b": .9, "d": .1} for user in ("u1", "u2")})
+
+        def predictions(*args, **kwargs):
+            result = self.predictions(*args, **kwargs)
+            result.catalogue += ("d",)
+            return result
+
+        self.loader.side_effect = predictions
+        run_reranking(self.source, self.output, k=2, candidate_count=3, strengths=[0, 1])
+        selection = self.output / "selection.json"
+        frozen_bytes = selection.read_bytes()
+        frozen = json.loads(frozen_bytes)
+        self.assertEqual(frozen["methods"]["genre_calibration"]["selected"]["strength"], 1)
+        test = run_reranking(self.source, self.root / "test", partition="test", k=2, candidate_count=3,
+                             selection=selection)
+        manifest = json.loads((test / "manifest.json").read_text())
+        self.assertEqual(manifest["status"], "complete")
+        method = manifest["methods"]["genre_calibration"]
+        self.assertEqual(method["status"], "unavailable")
+        self.assertIn("item d", method["reason"])
+        self.assertEqual(method["selected"], frozen["methods"]["genre_calibration"]["selected"])
+        for name in ("popularity_calibration", "item_fairness"):
+            self.assertEqual(manifest["methods"][name]["status"], "complete")
+            self.assertEqual(manifest["methods"][name]["selected"], frozen["methods"][name]["selected"])
+        self.assertEqual(selection.read_bytes(), frozen_bytes)
+        comparison = json.loads((test / "comparison/comparison.json").read_text())
+        self.assertEqual({row["label"] for row in comparison},
+                         {"userknn-original", "userknn-popularity_calibration", "userknn-item_fairness"})
+
+    def test_nearby_strengths_use_distinct_evaluation_folders(self) -> None:
+        strengths = [0.25000001, 0.25000002]
+        run_reranking(self.source, self.output, k=2, candidate_count=3, strengths=strengths)
+        rows = json.loads((self.output / "summary.json").read_text())
+        for method in ("genre_calibration", "popularity_calibration", "item_fairness"):
+            trials = [row for row in rows if row["method"] == method]
+            self.assertEqual({row["strength"] for row in trials}, {0, *strengths})
+            self.assertEqual(len({row["evaluation"] for row in trials}), 3)
+            for row in trials:
+                self.assertTrue((self.output / row["evaluation"] / "rankings.json").is_file())
+
     def test_existing_output_is_preserved(self) -> None:
         self.output.mkdir()
         with self.assertRaises(FileExistsError):

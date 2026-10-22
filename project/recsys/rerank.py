@@ -214,9 +214,9 @@ def run_reranking(run_dir: str | PathLike[str], output: str | PathLike[str],
             rows = []
             try:
                 for strength in choices:
-                    print(f"{common['label']} {partition}: {name} strength={strength:g}", flush=True)
+                    print(f"{common['label']} {partition}: {name} strength={strength:.17g}", flush=True)
                     rankings = reranker(pool, context, k, strength)
-                    folder = f"{name}-{strength:g}"
+                    folder = f"{name}-{strength:.17g}"
                     row = _save_evaluation(output / folder, rankings, predictions.relevant, statistics,
                                             common, name, strength, candidate_count)
                     row["target"] = row[target_key]
@@ -228,10 +228,10 @@ def run_reranking(run_dir: str | PathLike[str], output: str | PathLike[str],
                     selected = frozen["methods"][name]["selected"]
                 methods[name] = {**method, "status": "complete", "selected": selected}
             except (MissingMetadataError, NotImplementedError) as error:
-                if frozen is not None:
-                    raise ValueError(f"Selected method {name} is no longer available: {error}") from error
                 methods[name] = {**method, "status": "pending" if isinstance(error, NotImplementedError) else "unavailable",
                                  "reason": str(error)}
+                if frozen is not None:
+                    methods[name]["selected"] = frozen["methods"][name]["selected"]
                 print(f"{name}: {methods[name]['status']} ({owner}): {error}", flush=True)
             records.extend(rows)
 

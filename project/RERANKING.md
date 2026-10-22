@@ -39,9 +39,11 @@ and the declared user order. Gini includes the full checkpoint catalogue,
 including movies absent from every top-50 candidate pool.
 
 Missing required metadata makes the affected method unavailable for the cohort.
-The runner preserves the cohort and continues other methods. Profiles use only
-training interactions. Validation masks training history; test masks training
-and validation history.
+The runner preserves the cohort and continues other methods. If a new test
+candidate lacks metadata, the affected method retains its frozen choice and
+is recorded as unavailable; the comparison includes the methods that ran.
+Profiles use only training interactions. Validation masks training history;
+test masks training and validation history.
 
 ## Validation and final test
 
