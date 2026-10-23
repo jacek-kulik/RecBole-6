@@ -1,0 +1,48 @@
+{
+  "best_finite_cascade": {
+    "MRR@10": 0.49376272955276135,
+    "NDCG@10": 0.2786985800360249,
+    "Recall@10": 0.1747037067834524,
+    "bpr_index": 9,
+    "candidate_fraction": 0.0061820174748523655,
+    "candidate_recall": 0.1747037067834524,
+    "itemknn_index": 17,
+    "mean_bpr_candidates": 10.0,
+    "oracle_ndcg_at_10": 0.41081551001958955,
+    "shortlist_size": 10
+  },
+  "bpr": {
+    "embedding_size": 128,
+    "epochs": 50,
+    "learning_rate": 0.0005,
+    "train_batch_size": 512
+  },
+  "components": {
+    "bpr": {
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\cascade-itemknn-bpr\\components\\bpr\\6874f55c4bc2be9a47eaf94da357577324e78e058ce4bf390e23917e13db7603\\scores-valid.json.gz",
+      "sha256": "6ec23cadeca6ef115c6688ad166f54b8cb72b41e31e0d1f7c54375f14053a53b"
+    },
+    "itemknn": {
+      "path": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\cascade-itemknn-bpr\\components\\itemknn\\d50b5a43e2a670c82fa14ee3311c632baf2bd057ccef2990295f7cc8854ce64b\\scores-valid.json.gz",
+      "sha256": "dcc2dd28b00106090d27071c3395491d4782acc797d7eaa31451be4245771301"
+    }
+  },
+  "itemknn": {
+    "k": 200,
+    "shrink": 10.0
+  },
+  "selection": {
+    "MRR@10": 0.49376272955276135,
+    "NDCG@10": 0.2786985800360249,
+    "Recall@10": 0.1747037067834524,
+    "bpr_index": 9,
+    "candidate_fraction": 0.0061820174748523655,
+    "candidate_recall": 0.1747037067834524,
+    "itemknn_index": 17,
+    "mean_bpr_candidates": 10.0,
+    "oracle_ndcg_at_10": 0.41081551001958955,
+    "shortlist_size": 10
+  },
+  "selection_metric": "validation NDCG@10",
+  "trials_sha256": "078aa7083d0fcd719874010fb7be68492062bea2f527426d93a5a15edc19f065"
+}

@@ -1,0 +1,63 @@
+split_id: 1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1
+split:
+- 0.6
+- 0.2
+- 0.2
+seed: 42
+validation_metric: NDCG@10
+models:
+  userknn:
+    file: userknn.npz
+    kind: userknn
+    parameters:
+      k: 160
+      shrink: 0
+  ease:
+    file: ease.npz
+    kind: linear
+    parameters:
+      reg_weight: 500.0
+  slim:
+    file: slim.npz
+    kind: itemknn
+    parameters:
+      alpha: 0.2
+      hide_item: true
+      l1_ratio: 0.005
+      positive_only: true
+      slim_max_iter: 1000
+  aug-ease-weak:
+    additions: aug-ease-weak-additions.npz
+    file: aug-ease-weak.npz
+    kind: augmentation
+    parameters:
+      reg: 500.0
+      slim_alpha: 0.2
+      slim_l1_ratio: 0.01
+      strength: 0.25
+      top_n: 50
+    sender: userknn
+  aug-slim-weak:
+    additions: aug-slim-weak-additions.npz
+    file: aug-slim-weak.npz
+    kind: augmentation
+    parameters:
+      reg: 250
+      slim_alpha: 0.2
+      slim_l1_ratio: 0.005
+      strength: 0.25
+      top_n: 50
+    sender: userknn
+  aug-slim-comparable:
+    additions: aug-slim-comparable-additions.npz
+    file: aug-slim-comparable.npz
+    kind: augmentation
+    parameters:
+      reg: 250
+      slim_alpha: 0.2
+      slim_l1_ratio: 0.005
+      strength: 1.0
+      top_n: 50
+    sender: userknn
+search_records: hyperparameters\results\alternate-hybrids-60-20-20\augmentation
+joint_component_tuning: false

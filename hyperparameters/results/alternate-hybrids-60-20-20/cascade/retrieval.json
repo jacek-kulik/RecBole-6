@@ -1,0 +1,14 @@
+{
+  "test": {
+    "candidate_fraction": 0.006262622371840381,
+    "candidate_recall": 0.21139899629738299,
+    "mean_bpr_candidates": 10.0,
+    "oracle_ndcg_at_10": 0.49046139769806624
+  },
+  "valid": {
+    "candidate_fraction": 0.0061820174748523655,
+    "candidate_recall": 0.1747037067834524,
+    "mean_bpr_candidates": 10.0,
+    "oracle_ndcg_at_10": 0.41081551001958955
+  }
+}
