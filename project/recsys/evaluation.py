@@ -131,19 +131,12 @@ def run_evaluation(
         #write_json(output / "statistics.json", statistics)
         write_json(output / "groups.json", group_definitions(statistics, rankings))
         write_json(output / "group_metrics.json", group_report)
-        #remove
-        pending_work = dict(statistics.pending)
-        if group_report["pending"]:
-            pending_work["group_analysis"] = "; ".join(
-                f"{section}: {reason}" for section, reason in sorted(group_report["pending"].items()))
-        # Other tasks (hybrids, rerankers, remaining analyses) are still open.
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
                         activity_boundaries=list(statistics.activity_boundaries),
                         n_training_interactions=statistics.n_interactions,
                         n_catalogue_items=len(statistics.catalogue),
                         group_minimum_size=group_report["minimum_group_size"],
-                        project_evaluation_complete=False,
-                        pending_work=pending_work)
+                        project_evaluation_complete=False)
         print_summary(accuracy, beyond, group_report, k)
     except Exception as error:
         manifest.update(status="failed", error=str(error))

@@ -169,14 +169,7 @@ def _item_group_reports(
         audience: Mapping[str, Mapping[str, float | None]],
         audience_beyond: Mapping[str, Mapping[str, float | None]],
 ) -> dict[str, ItemGroupReport]:
-    """Aggregate recommendation slots, hits, and held-out items per item group.
-
-    ``membership`` maps an item to every group it belongs to (one popularity
-    band, or several genres), so multi-label groupings count an item in each
-    of their groups. ``audience`` carries the audience-accuracy values per
-    group; ``exposure`` may be empty when discounted exposure is only defined
-    per popularity band, leaving that field None.
-    """
+    """Aggregate recommendation slots, hits, and held-out items per item group."""
     totals = {group: {"recommended": 0, "hits": 0, "relevant": 0} for group in groups}
     for user, items in rows.items():
         positives = relevant[user]
@@ -227,16 +220,7 @@ def compare_groups(
 
     User groups are training-count activity which Seperates users based on how 
     many items it has ranked in the training data. High for items > 92 
-    Medium for 34 < items < 92 and low for items < 34 
-    and recorded gender(F/M). Item groups are training popularity bands (head/middle/tail). Every
-    cohort is scored with the shared metric implementations, so group values use the
-    same definitions as the overall report. Groups are never hidden: empty cohorts
-    report null metrics with an explicit reason, and cohorts below
-    ``minimum_group_size`` are flagged. Groups come from training data and metadata
-    only; held-out labels never enter group construction.
-
-    Call once per ranking set (Task 3.4 compares before and after reranking); the
-    report layout is identical so the two outputs diff cleanly.
+    Medium for 34 < items < 92 and low for items < 34, recorded gender(F/M) and their top@n favorite genres. Item groups are in popularity bands (head/middle/tail).
     """
     if type(minimum_group_size) is not int or minimum_group_size < 1:
         raise ValueError("minimum_group_size must be a positive integer")
