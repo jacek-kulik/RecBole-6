@@ -11,6 +11,31 @@ from project.recsys.component_cache import save_fold, load_fold, run_lock
 
 
 class OOFHybridTests(unittest.TestCase):
+    def test_integer_scores_match_float_features_and_ranking(self):
+        scores = [[0, 7], [6, 4], [4, 8], [0, 6]]
+        tables = [ScoreTable(name, 'split', 'valid', {
+            'u': {f'i{i + 1}': row[j] for i, row in enumerate(scores)}})
+            for j, name in enumerate(('a', 'b'))]
+        floats = [ScoreTable(t.model, t.split_id, t.partition, {
+            'u': {i: float(v) for i, v in t.scores['u'].items()}}) for t in tables]
+        pairs, features = candidate_features(tables)
+        expected = np.asarray(scores, dtype=float)
+        expected = (expected - expected.mean(axis=0)) / expected.std(axis=0)
+        self.assertEqual(pairs, [('u', f'i{i + 1}') for i in range(4)])
+        self.assertEqual(features.dtype, np.float64)
+        np.testing.assert_allclose(features, expected)
+        np.testing.assert_array_equal(features, candidate_features(floats)[1])
+        fitted = {'components': ['a', 'b'], 'coefficients': [1., .5], 'intercept': 0.}
+        prediction = predict_weighted_hybrid(tables, fitted).top_k(4)
+        self.assertEqual(prediction, {'u': ['i3', 'i2', 'i1', 'i4']})
+        self.assertEqual(prediction, predict_weighted_hybrid(floats, fitted).top_k(4))
+
+    def test_integer_constant_component_maps_to_zero(self):
+        table = ScoreTable('constant', 'split', 'valid', {'u': {'a': 7, 'b': 7}})
+        _, features = candidate_features([table])
+        self.assertEqual(features.dtype, np.float64)
+        np.testing.assert_array_equal(features, [[0.], [0.]])
+
     def test_verified_fold_cache_and_partial_stage(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'fold.npz'

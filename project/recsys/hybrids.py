@@ -19,7 +19,7 @@ def candidate_features(tables):
     pairs, blocks = [], []
     for user in sorted(tables[0].scores):
         items = sorted(tables[0].scores[user])
-        values = np.array([[t.scores[user][item] for t in tables] for item in items])
+        values = np.array([[t.scores[user][item] for t in tables] for item in items], dtype=float)
         deviation = values.std(axis=0)
         active = deviation > 1e-12
         block = np.zeros_like(values)

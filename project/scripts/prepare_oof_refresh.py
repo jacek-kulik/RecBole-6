@@ -18,6 +18,15 @@ def matching_bytes(blob, expected):
     return None
 
 
+def restore_recorded_bytes(path, expected, label):
+    """Restore only a newline-equivalent file to its exact recorded byte identity."""
+    path = Path(path)
+    blob = matching_bytes(path.read_bytes(), expected)
+    if blob is None:
+        raise ValueError(f'{label} differs from the recorded experiment')
+    path.write_bytes(blob)
+
+
 def prepare(output):
     repo = Path(__file__).resolve().parents[2]
     records = repo / 'hyperparameters/results/oof-ridge-final-60-20-20'
@@ -46,6 +55,8 @@ def prepare(output):
         else:
             raise ValueError(f'Cannot reconstruct recorded source: {path}; fetch full Git history')
     identity = json.loads((records / 'fism-tuning/identity.json').read_text())
+    restore_recorded_bytes(output / 'dataset/ml-100k/ml-100k.inter',
+                           identity['dataset_sha256'], 'Dataset')
     protocol = matching_bytes((records / 'frozen-protocol.yaml').read_bytes(), identity['protocol_sha256'])
     if protocol is None:
         raise ValueError('Protocol differs from the recorded experiment')
