@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "oof_rows": 60734,
+  "components": 6,
+  "fism_tuning_trials": 48,
+  "ridge_trials": 24,
+  "reused_five_columns_exact": true,
+  "targets_and_folds_exact": true,
+  "reused_five_full_metrics_exact": true,
+  "selected_fism_full_refit_reproduces_tuning_metrics": true,
+  "frozen_selection_hashes_match": true,
+  "test_selection_performed": false
+}
