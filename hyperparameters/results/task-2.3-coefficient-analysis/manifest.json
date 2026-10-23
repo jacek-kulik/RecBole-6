@@ -1,0 +1,84 @@
+{
+  "augmentation_sender": {
+    "k": 160,
+    "model": "userknn",
+    "shrink": 0
+  },
+  "augmentation_strengths": [
+    0.0,
+    0.25,
+    1.0
+  ],
+  "bootstrap": {
+    "paired_users": true,
+    "replicates": 2000,
+    "scope": "conditional on existing split/fits; descriptive, no multiple-comparison correction",
+    "seed": 42
+  },
+  "candidate_masks": "valid excludes train; test excludes train and valid",
+  "ease_reg": 500,
+  "equal_additions": false,
+  "implementation_sha256": {
+    "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\scripts\\analyze_hybrid_coefficients.py": "d25eb5f96b7928b140255bff6b450eee3dea556fb983fd0329006e29187d6417",
+    "project\\recsys\\analysis\\coefficients.py": "58c1dcc43d2ab05827126e03e5254d9c651d8d8924e836c9979bb91e2b7a4919",
+    "project\\recsys\\feature_augmentation.py": "538cd1f2dcd208804477cb05bcd8d585f53adc7b5a85c13b423ebd7c7a0b0080",
+    "project\\recsys\\metrics\\accuracy.py": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8"
+  },
+  "k": 10,
+  "local_run": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\task-2.3-coefficient-analysis-2026-10-23-verified",
+  "metadata_corrections": [
+    "Separate selected_entries from actual nonzero added_entries at strength zero; no fits, scores, metrics or comparisons changed."
+  ],
+  "new_hyperparameter_selection": false,
+  "partitions": [
+    "valid",
+    "test"
+  ],
+  "receiver_retrained_each_strength": true,
+  "result_sha256": {
+    "augmentation.csv": "a50f03b4432f8d195d721d8204e7d75873f24cbfc2debb733d90c46c5c44aabf",
+    "weighted-fits.json": "535fa0c1c26209267e44169b447c1320440485513f66e82d291de968d0072b47",
+    "weighted.csv": "3d23cca5802d727ace56be353e4beb9860f7bd9389d6344138fea46ec8c01728"
+  },
+  "scope": "full",
+  "seed": 42,
+  "slim_alpha": 0.2,
+  "slim_l1_ratio": 0.005,
+  "slim_solver": {
+    "fit_intercept": false,
+    "max_iter": 1000,
+    "positive": true,
+    "random_state": 42,
+    "selection": "random",
+    "tol": 0.0001
+  },
+  "source_bundle_package_sha256": "e3296e434125de074d7277e5959e711d580f7634aff04ac29d99ade0f755ab2a",
+  "source_snapshots": {
+    "analysis-source.py": "58c1dcc43d2ab05827126e03e5254d9c651d8d8924e836c9979bb91e2b7a4919",
+    "runner-resumed-source.py": "d25eb5f96b7928b140255bff6b450eee3dea556fb983fd0329006e29187d6417",
+    "runner-source.py": "3de6d0fe791031b31d28d301153a7c5268030fa0efcce95ecfe8c9db8313c5c1"
+  },
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "targets": "unchanged binary training matrix",
+  "test_previously_inspected": true,
+  "test_selection_performed": false,
+  "tie_break": "lexicographic external item token",
+  "top_n": 50,
+  "weighted_components_retuned": false,
+  "weighted_normalization": "per-user candidate z-score recomputed separately on valid/test masks",
+  "weighted_penalty": 30000,
+  "weighted_regularization_retuned": false,
+  "weighted_source": "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final",
+  "weighted_stage_original_implementation_sha256": {
+    "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\scripts\\analyze_hybrid_coefficients.py": "3de6d0fe791031b31d28d301153a7c5268030fa0efcce95ecfe8c9db8313c5c1",
+    "project\\recsys\\analysis\\coefficients.py": "58c1dcc43d2ab05827126e03e5254d9c651d8d8924e836c9979bb91e2b7a4919",
+    "project\\recsys\\feature_augmentation.py": "538cd1f2dcd208804477cb05bcd8d585f53adc7b5a85c13b423ebd7c7a0b0080",
+    "project\\recsys\\metrics\\accuracy.py": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8"
+  },
+  "weighted_variants": [
+    "original",
+    "six frozen removals",
+    "six fixed-penalty OOF refits"
+  ]
+}
