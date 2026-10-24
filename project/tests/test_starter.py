@@ -76,9 +76,8 @@ class StarterTests(unittest.TestCase):
 
     def test_score_export_rejects_nonfinite_eligible_scores(self):
         for value in (float("nan"), float("inf"), float("-inf")):
-            with self.subTest(value=value):
-                with self.assertRaisesRegex(ValueError, "nonfinite"):
-                    _scores_to_table("m", "split", "valid", ["u"], ["[PAD]", "a"], [[0.0, value]], [[1]])
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, "nonfinite"):
+                _scores_to_table("m", "split", "valid", ["u"], ["[PAD]", "a"], [[0.0, value]], [[1]])
 
     def test_exported_models_with_same_masking_are_aligned(self):
         args = ("split", "valid", ["u"], ["[PAD]", "a", "b"])
