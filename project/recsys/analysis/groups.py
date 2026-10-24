@@ -220,7 +220,7 @@ def compare_groups(
 
     User groups are training-count activity which Seperates users based on how 
     many items it has ranked in the training data. High for items > 92 
-    Medium for 34 < items < 92 and low for items < 34, recorded gender(F/M) and their top@n favorite genres. Item groups are in popularity bands (head/middle/tail).
+    Medium for 26 < items < 69 and low for items < 26, recorded gender(F/M) and their top@n favorite genres. Item groups are in popularity bands (head/middle/tail).
     """
     if type(minimum_group_size) is not int or minimum_group_size < 1:
         raise ValueError("minimum_group_size must be a positive integer")
@@ -294,7 +294,7 @@ def group_definitions(
         "status": "complete",
         "owner": "Victor",
         "activity": {
-            "definition": "Seperates users based on how many items it has ranked in the training data. High for items > 92 Medium for 34 < items < 92 and low for items < 34",
+            "definition": "Seperates users based on how many items it has ranked in the training data. High for items > 69 Medium for 26 < items < 69 and low for items < 26",
             "boundaries": list(statistics.activity_boundaries),
             "members": {user: _activity_group(statistics, user) for user in users},
         },

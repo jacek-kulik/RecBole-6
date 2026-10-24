@@ -87,7 +87,8 @@ class ValidateTests(unittest.TestCase):
         self.assertEqual(manifest["source_git_commit"], "training-commit")
         self.assertEqual(manifest["checkpoint_sha256"], hashlib.sha256(b"selected checkpoint").hexdigest())
         reports = self.read("group_metrics.json")
-        self.assertEqual((reports["status"], reports["owner"]), ("pending", "Victor"))
+        self.assertEqual((reports["status"], reports["owner"]), ("complete", "Victor"))
+    
         beyond = self.read("beyond_accuracy.json")
         self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 1, "M": 1, "unknown": 0})
         self.assertIsNotNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])

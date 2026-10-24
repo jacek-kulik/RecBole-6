@@ -136,7 +136,8 @@ def run_evaluation(
                         n_training_interactions=statistics.n_interactions,
                         n_catalogue_items=len(statistics.catalogue),
                         group_minimum_size=group_report["minimum_group_size"],
-                        project_evaluation_complete=False)
+                        project_evaluation_complete=False,
+                        pending_work = {**statistics.pending})
         print_summary(accuracy, beyond, group_report, k)
     except Exception as error:
         manifest.update(status="failed", error=str(error))
