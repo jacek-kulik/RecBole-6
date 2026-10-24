@@ -53,6 +53,7 @@ def source_records(paths):
 def save_figure(figure, output, name, sources, data):
     svg, png = output / f"{name}.svg", output / f"{name}.png"
     figure.savefig(svg, metadata={"Date": None})
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     figure.savefig(png, dpi=160)
     plt.close(figure)
     return {

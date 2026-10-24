@@ -1,7 +1,7 @@
 {
   "kind": "report figure provenance",
   "report_source_snapshot": "54e60bffb",
-  "generator_sha256": "65315cbe62e510fbcc0216350f55e159e4a1ff8c6e60ab1ff4cf4f130f544370",
+  "generator_sha256": "7680c45107727e6eb6a6ea5102a46c543402747d40101a48a31e69a02ce1841d",
   "training_or_selection_performed": false,
   "figures": {
     "validation-tradeoffs": {
@@ -67,7 +67,7 @@
         }
       },
       "files": {
-        "training-popularity.svg": "c0131a062e9ac33dcec1b520ea8ecb90df70338f4ce70deae5cab1a96135ce0f",
+        "training-popularity.svg": "9696226b76eb03f7aafce01425e65192a99535b54f238f30a6a91ed0d002c8dc",
         "training-popularity.png": "670d377acc9d1c93cfd405e29d6bfcf4ed0a5626297e516389b87f69cb3f9ff0"
       }
     },
@@ -399,7 +399,7 @@
         }
       },
       "files": {
-        "individual-tuning.svg": "44055ab6dd15ba69036d0654f145de97fae1a9b8d3028b09d27fcd1d5da52e30",
+        "individual-tuning.svg": "a2d63945260ea8c77654da5d59cde812dada7c203503e6d244024b4f2995f994",
         "individual-tuning.png": "57b3a411a0b1a29823f7d200423d525e080ebae1fe14c591508f5ff656c485e7"
       }
     },
@@ -464,7 +464,7 @@
         }
       },
       "files": {
-        "hybrid-comparisons.svg": "45c62c92107002be5acaf74830acb247b31fde6f0da1a5efec0128517b17d516",
+        "hybrid-comparisons.svg": "de4ab807e28f2a651b445fe494249bbd2536e554382c7411cfad7981ee5a36af",
         "hybrid-comparisons.png": "537e7231446dd233f89f6fc987d729d3925b1b187a65734bcd5dd11bc41ac72e"
       }
     },
@@ -557,7 +557,7 @@
         }
       },
       "files": {
-        "coefficient-ablation.svg": "975525e14aade73b2ce2281116bb6d59e26c0465ef561f33b81ca54d8b3f958d",
+        "coefficient-ablation.svg": "2d30edd19cb00a5f5e90a24df7d3f367964d8b081f1cfe6d87335efc5b9c6a64",
         "coefficient-ablation.png": "ce73d4053f9de721314d91e19fb928c969fc3da26b1ecde2838ef0e0f9260818"
       }
     }

@@ -121,6 +121,7 @@
       "contents_links": 29
     },
     "project_suite_rerun": false,
-    "project_suite_note": "No recommendation runtime modules or assessment logic changed; the earlier project suites are preserved above. This extension ran figure generation with warnings as errors, source/data checks, image inspection, browser rendering and packaging checks."
+    "project_suite_note": "No recommendation runtime modules or assessment logic changed; the earlier project suites are preserved above. This extension ran figure generation with warnings as errors, source/data checks, image inspection, browser rendering and packaging checks.",
+    "svg_cleanup": "Removed exporter trailing whitespace; normalized SVG element geometry/text is unchanged, every PNG is byte-identical, and plotted data is unchanged."
   }
 }
