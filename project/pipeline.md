@@ -14,7 +14,7 @@ python -W error -m unittest discover -s project/tests -v
 ### 2. Train the model
 
 Check the settings in `project/configs/models/bpr.yaml` first.
-The current BPR configuration is a small five-epoch starting run.
+The checked-in configuration determines the training budget.
 
 ```sh
 python -m project.recsys train \
@@ -74,7 +74,10 @@ python -m json.tool project/artifacts/bpr-test-001/manifest.json
 
 Keep the training, validation, and test directory names with any reported results.
 
-Metadata preparation and group reporting still contain placeholders. Check
+Group reporting still contains placeholders. Check
 unavailable metric reasons and `pending_work` before using results in the report.
-Full score export, hybrids, and rerankers also remain unfinished; there are no
-working shell commands for those stages yet.
+Full score export is available in current training runs. For Jacek's calibration
+and item-fairness methods, follow [the reranking workflow](RERANKING.md): select
+strengths on validation before evaluating their frozen choices on test.
+Diversification, user fairness, hybrids and group reporting still need their
+respective owners' contributions.

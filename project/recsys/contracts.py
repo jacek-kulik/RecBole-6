@@ -62,13 +62,14 @@ def require_aligned(tables: Sequence[ScoreTable]):
 
 @dataclass
 class RerankContext:
-    """Jacek and Victor: fill from training data and approved metadata, not test outcomes.
+    """Training-only profiles and prepared metadata; never held-out outcomes.
 
-    TODO: agree feature definitions, profile normalization, group construction,
-    and missing-metadata behavior before implementing the four rerankers.
+    user_profiles contains fractional genre distributions. Popularity profiles
+    use the training-derived head/middle/tail item groups.
     """
 
     item_features: Mapping[str, Sequence[str]] = field(default_factory=dict)
     user_profiles: Mapping[str, Mapping[str, float]] = field(default_factory=dict)
     user_groups: Mapping[str, str] = field(default_factory=dict)
     item_groups: Mapping[str, str] = field(default_factory=dict)
+    popularity_profiles: Mapping[str, Mapping[str, float]] = field(default_factory=dict)

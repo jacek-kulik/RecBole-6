@@ -96,10 +96,10 @@ and a manifest storing run information.
 
 The independent beyond-accuracy metric implementations also belong to Jacek
 (Task 2.1). `beyond_accuracy.json` contains values for the inputs currently
-available. Caio/Victor's `prepare_metadata` is a runnable placeholder: it uses
-Jacek's committed training/count/distribution helpers, but does not load genres
-or recorded gender. ILD, genre miscalibration and gender unfairness remain
-`null` with explicit reasons until those inputs are prepared.
+available. Caio's `prepare_metadata` loads genres and recorded gender, reusing
+Jacek's training/count/distribution helpers. Missing inputs still produce
+unavailable metrics with explicit reasons. Jacek's calibration, item-exposure
+fairness and validation/test strength workflow are documented in [RERANKING.md](RERANKING.md).
  
 Victor's Task 2.5/3.4 reporting remains unfinished. `group_metrics.json` returns
 `status: pending` and names Victor; `groups.json` exposes the existing activity
@@ -130,8 +130,9 @@ are no fabricated zero metrics or silent pass-through implementations.
 
 The first four rows support the 6 October end-to-end checkpoint in
 `work_distribution.md`; the reranker interface follows for Task 3. The
-synthetic demo only illustrates the interfaces. Real score export, hybrid
-fitting, metrics, and rerankers remain team work.
+synthetic demo only illustrates the interfaces. Real score export, independent
+metrics and Jacek's rerankers are available. Hybrid fitting, diversification,
+user fairness and group reporting still need their respective contributions.
 
 The generic `experiments/task*.py` commands, `tuning.py`, and
 `configs/experiments.yaml` are optional coordination placeholders. Keep the
@@ -154,9 +155,9 @@ project/
   notebooks/
     movielens_analysis.ipynb   # Dataset analysis for data cleanliness and split decision
   recsys/
-    __main__.py                # CLI: demo, train, validate, task1, task2, task3
+    __main__.py                # CLI: demo, train, validate/evaluate, rerank, compare, task1/2/3
     contracts.py               # ScoreTable, alignment checks, ranking, metadata types
-    data.py                    # Candidate helper and metadata-preparation placeholder
+    data.py                    # Candidates, metadata and training statistics
     artifacts.py               # Small run-record helpers; extend only if needed
     baselines.py               # Random and training-popularity scoring examples
     comparisons.py             # Compare test evaluations in one table
@@ -166,6 +167,7 @@ project/
     tuning.py                  # Optional search wrapper; existing scripts may suffice
     validate.py                # Independent validation entrypoint
     evaluate.py                # Independent final-test entrypoint
+    rerank.py                  # Validation strength selection and frozen reranker test evaluation
     evaluation.py              # Jacek metric runner; teammate reports remain pending
     metrics/
       _validation.py           # External ID and ranking list validation for metric computation
@@ -207,15 +209,16 @@ add the separately prepared Overleaf ZIP to the repository.
 2. Train individuals through `recbole_adapter.py`. Export the actual splits
    from that run; do not reconstruct them independently without comparing IDs
    and hashes. The saved CSVs preserve relevance-related fields.
-3. Implement `export_scores` in the adapter. Emit a `ScoreTable` for every model,
-   using original user/item tokens as strings. Export all eligible candidates
-   per user so a hybrid can align scores across models.
+3. Training uses `export_scores` in the adapter to emit a `ScoreTable` for every
+   model, using original user/item tokens as strings. Read the full eligible
+   candidate scores with `load_scores` so hybrids can align models.
 4. Fit and tune models/hybrids on their assigned development data. Call
    `require_aligned` before combining scores. Save fitted normalisation and
    regression coefficients with the component run IDs.
 5. Produce rankings, run the group's independent metrics, and save both detailed
    and aggregate measurements. Accuracy and beyond-accuracy formulas are available;
-   metadata preparation, group reporting and rerankers remain unfinished.
+   metadata preparation is available; group reporting, diversification and user
+   fairness remain unfinished. Use `rerank` for Jacek's strength comparisons.
 6. Apply the four rerankers and compare strengths. Task 3.3 needs both rerank then
    combine and combine then rerank. A reranker returns an ordered list; combining
    those lists requires an explicit fusion/rank-to-score and truncation policy.
@@ -265,8 +268,9 @@ reranker contribution reviews follow the separate table in the work plan.
   search. Start the diversification method once metadata is agreed.
 - Bogdan: choose coefficient-fitting and selection data, implement the
   regression hybrid, then add the other hybrids and both reranking orders.
-- Jacek: implement the agreed metrics with known-answer cases (DONE), then calibration
-  and item fairness. Review score masking before the larger experiment runs.
+- Jacek: metrics, calibration and item fairness are implemented. Reproduce the
+  strength comparisons using `RERANKING.md`; integrate/review the remaining
+  teammate rerankers when their implementations are ready.
 - Victor: prepare training-derived groups/profiles with Caio, implement user
   fairness, and draft the explanatory comparisons and report figures.
 
