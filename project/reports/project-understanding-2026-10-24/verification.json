@@ -14,10 +14,10 @@
     }
   ],
   "report_words": {
-    "jacek": 3939,
-    "other_and_shared": 3939
+    "jacek": 4773,
+    "other_and_shared": 4773
   },
-  "word_count_rule": "Regex word tokens within each Part heading up to the next Part/Evidence heading; includes tables and code identifiers, excludes front matter and source definitions.",
+  "word_count_rule": "Regex word tokens within each substantive Part after stripping HTML tags; includes figure explanations, tables and code identifiers; excludes front matter, evidence/navigation section and source definitions.",
   "master_tests": {
     "run": 151,
     "skipped": 0,
@@ -101,5 +101,26 @@
       "screenshots": "Screenshot capture timed out in the browser tool; visual screenshots were not verified."
     }
   },
-  "scope": "Models were not retrained. Saved reranking arithmetic and portable hybrid predictions were rechecked; some other numeric evidence was source-inspected from committed experiment records."
+  "scope": "Models were not retrained. Saved reranking arithmetic and portable hybrid predictions were rechecked; some other numeric evidence was source-inspected from committed experiment records.",
+  "figure_extension": {
+    "figures": 6,
+    "jacek_figures": 3,
+    "other_and_shared_figures": 3,
+    "original_figures_copied_without_alteration": 2,
+    "new_views_of_recorded_results": 4,
+    "new_training_or_selection": false,
+    "provenance": "figures/manifest.json",
+    "validation": "All source and asset checksums verified; original PNG bytes matched; training item/interaction counts conserved; plotted ablation deltas independently subtracted from saved metrics; word and figure allocation checked.",
+    "visual_review": "All six figure PNGs inspected for legibility and layout.",
+    "generator": "build_visualizations.py ran successfully with warnings as errors.",
+    "browser_rendering": {
+      "embedded_figures_loaded": 6,
+      "figures_fit_containers": 6,
+      "jacek_figures": 3,
+      "other_and_shared_figures": 3,
+      "contents_links": 29
+    },
+    "project_suite_rerun": false,
+    "project_suite_note": "No recommendation runtime modules or assessment logic changed; the earlier project suites are preserved above. This extension ran figure generation with warnings as errors, source/data checks, image inspection, browser rendering and packaging checks."
+  }
 }

@@ -1,0 +1,565 @@
+{
+  "kind": "report figure provenance",
+  "report_source_snapshot": "54e60bffb",
+  "generator_sha256": "65315cbe62e510fbcc0216350f55e159e4a1ff8c6e60ab1ff4cf4f130f544370",
+  "training_or_selection_performed": false,
+  "figures": {
+    "validation-tradeoffs": {
+      "kind": "existing project figure copied without alteration",
+      "sources": [
+        {
+          "path": "/home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/evaluation/figures/validation-tradeoffs.png",
+          "sha256": "6628352d2e87db68211eaa2dc7c9d64f2b4e5410f429f7dcf35d9447a274e23b"
+        }
+      ],
+      "files": {
+        "validation-tradeoffs.png": "6628352d2e87db68211eaa2dc7c9d64f2b4e5410f429f7dcf35d9447a274e23b"
+      },
+      "source_code": "PR24 at 580bfaa63: project/scripts/plot_reranking.py"
+    },
+    "test-effects": {
+      "kind": "existing project figure copied without alteration",
+      "sources": [
+        {
+          "path": "/home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/evaluation/figures/test-effects.png",
+          "sha256": "3f08222586b352460b0fa3de542ba459c46717731a9b734dd891e3115a21e9c2"
+        }
+      ],
+      "files": {
+        "test-effects.png": "3f08222586b352460b0fa3de542ba459c46717731a9b734dd891e3115a21e9c2"
+      },
+      "source_code": "PR24 at 580bfaa63: project/scripts/plot_reranking.py"
+    },
+    "training-popularity": {
+      "kind": "new visualization of recorded results",
+      "sources": [
+        {
+          "path": "/home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/training/itemknn-rerankers-20261022-001/splits/train.csv",
+          "sha256": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c"
+        },
+        {
+          "path": "/home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/evaluation/itemknn/test/original/groups.json",
+          "sha256": "915d5e11c3ae42e18f177169a7d0cec09ee30521481f28fd3fb9ef5f5a55092d"
+        }
+      ],
+      "plotted_data": {
+        "catalogue_items": 1682,
+        "training_interactions": 60734,
+        "groups": {
+          "head": {
+            "items": 60,
+            "interactions": 12540,
+            "item_share_percent": 3.56718192627824,
+            "interaction_share_percent": 20.64741331050153
+          },
+          "middle": {
+            "items": 485,
+            "interactions": 36494,
+            "item_share_percent": 28.83472057074911,
+            "interaction_share_percent": 60.0882536964468
+          },
+          "tail": {
+            "items": 1137,
+            "interactions": 11700,
+            "item_share_percent": 67.59809750297265,
+            "interaction_share_percent": 19.264332993051667
+          }
+        }
+      },
+      "files": {
+        "training-popularity.svg": "c0131a062e9ac33dcec1b520ea8ecb90df70338f4ce70deae5cab1a96135ce0f",
+        "training-popularity.png": "670d377acc9d1c93cfd405e29d6bfcf4ed0a5626297e516389b87f69cb3f9ff0"
+      }
+    },
+    "individual-tuning": {
+      "kind": "new visualization of recorded results",
+      "sources": [
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-00.json",
+          "sha256": "44af29e8c9c9b5dc3cd45cdbcbe200976889e7b7ab9551b6392090f246870add"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-01.json",
+          "sha256": "4a4a40a40deabc9c4826ea798625a772cbe4bc8929f7d7b2b6abe97a3d312590"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-02.json",
+          "sha256": "0435914332dd4e75659b2903df752f529c6f1ae408e424a57b0c266bb8eccdf4"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-03.json",
+          "sha256": "48b4d2d19a64b1ac46e3a58f17ef9f3d24481d62bb97a8be3331ec8caf77a60e"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-04.json",
+          "sha256": "985f9b136c6660abd8c7767175ab3b01a08dbd98dcf21afa765e92d41171fb78"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-05.json",
+          "sha256": "4389e1e6e442e7b9a5f39cff01742213215c91e8ea2d85489330cc0d740743f2"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-06.json",
+          "sha256": "41df5f38688894af7fd392542da6baddd4681855e67226990e413fd1d0073424"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-07.json",
+          "sha256": "0cf3864e902faa0fb4b6565234cbfd998443541d014332bb95e5c94a858ebe53"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/trial-08.json",
+          "sha256": "ab45c2ca07ec8ee46149316c0041463c91e67ce630d85fcb98a9e508549593f3"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-00.json",
+          "sha256": "d75a0b415ba3f7f9c72f0b7dc9d64d08fc1892b24e80a10a6b06151c0e041750"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-01.json",
+          "sha256": "20dce56a1e1b85162b52963164952f75d57239cb893269b72c49afd9cfdeab9f"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-02.json",
+          "sha256": "6c16170abfdcf04b607b3b306923172676bba37dddf5d1a8ab5a8635e6074a18"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-03.json",
+          "sha256": "4f3843b670eeb7da6b0e8cfc0ea94bc9de43f3f3c05f1bcbcef99bcf7d797d5e"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-04.json",
+          "sha256": "d46b19d10c1c88f84bf6c9f98e9603c2a35ab9fb228f7fb17e9df4f9900faa11"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-05.json",
+          "sha256": "24b83ba4c88200a19916060352bcdb3086ce89e1bb8adfc3c49d3370ab2f97fc"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-06.json",
+          "sha256": "456feb9f8843225816f7b9e33f75808c58e822824e611cd006a944c98aabc3dc"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-07.json",
+          "sha256": "851a4591208149757999d59f3c8b46e7e7a1c77acb949d02c8ff38a41bf1fa68"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-08.json",
+          "sha256": "f05fb74fa3c9bdaf1f790827a33a805b57e526f5975648fa96fafbe0d323be34"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-09.json",
+          "sha256": "cdc53f77f9fbbd6479c559a1bb9dc2d31773f4811802087f7d53ab8941ce2b7d"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-10.json",
+          "sha256": "412ae7ebf51a58a74fae0597308e58ced448fb65d16885cae39075e2e3a57c83"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-11.json",
+          "sha256": "4bb7630f7a823b4633e00bc540d80b10d538661039c48f39b86021b7b123d824"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-12.json",
+          "sha256": "79ab574332e5b0f30d5aee086a3f601ea4b209875a745f50337c17dd29b0d115"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-13.json",
+          "sha256": "4e16368b10aeed025d116e5b5715f68d5288029a1b98ddd80638adbd10bcb6a8"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-14.json",
+          "sha256": "46a11c4d575faad4ee34dabe34119dea6496e721443594da64ab017e218b267d"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-15.json",
+          "sha256": "a5f83fb4d1295a29054a5bfcfecc7b9060e7979c8580b79aa7de1a33d31dda18"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-16.json",
+          "sha256": "8386eb44464ff8c7e43650381d1a065bc81a0c3f83654b6d943555e85f329e39"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-17.json",
+          "sha256": "ade4bb03c3dddbf1bd3cf44c6b8937ac086362208c0dccb6bc02d82b2f199b89"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-18.json",
+          "sha256": "747a9a97d9ec9b8c5ab03f91c96652b4c2044c3fea75520aec0b7ed3fec06441"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-19.json",
+          "sha256": "fd5ed36ad650ef109e2f9a19081af7fadcd628f3ae6badb548dc2be6b3d4d4d7"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-20.json",
+          "sha256": "6b206ca251e94dcbcc2c1f3402f014146cc2f9d2f126891f91025ca3056b92ea"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-21.json",
+          "sha256": "da567c0ffa09ad0722ffc27e85724a3671fa9250d1d79ae2f6b430160a391d71"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-22.json",
+          "sha256": "bb722003ce648e2b9a47ba0143a6c2402c10fc262282054d9fa07e0b483af1b3"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-23.json",
+          "sha256": "e3382a43532599fe3f47cdd30f35b27f7645e31914c1c61b3216c7236b11a7da"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/trial-24.json",
+          "sha256": "fbb165709f240925bd83efa8f9b3738ed6dcde07abc424cac76601c362a21ca5"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/EASE/selection.json",
+          "sha256": "1f977c30963a2467235756d036d68cb57ecf27e976b1f01c74da1362259e9a40"
+        },
+        {
+          "path": "hyperparameters/results/individual-retuned-60-20-20/SLIMElastic/selection.json",
+          "sha256": "bbddd615a84047d25c8b08bde323e5d738509e9ee187db06ede7fb54aba980d3"
+        }
+      ],
+      "plotted_data": {
+        "ease": [
+          {
+            "regularization": 1.0,
+            "ndcg": 0.18410627669563648
+          },
+          {
+            "regularization": 10.0,
+            "ndcg": 0.23381418524313016
+          },
+          {
+            "regularization": 25.0,
+            "ndcg": 0.2527212541989062
+          },
+          {
+            "regularization": 50.0,
+            "ndcg": 0.2716199715021655
+          },
+          {
+            "regularization": 100.0,
+            "ndcg": 0.28492326387186123
+          },
+          {
+            "regularization": 250.0,
+            "ndcg": 0.2978659115193076
+          },
+          {
+            "regularization": 500.0,
+            "ndcg": 0.2980991100486171
+          },
+          {
+            "regularization": 1000.0,
+            "ndcg": 0.2979413596452513
+          },
+          {
+            "regularization": 2000.0,
+            "ndcg": 0.29202787955435167
+          }
+        ],
+        "slim": [
+          {
+            "alpha": 0.005,
+            "l1_ratio": 0.005,
+            "ndcg": 0.26899763427924567
+          },
+          {
+            "alpha": 0.005,
+            "l1_ratio": 0.01,
+            "ndcg": 0.26894848554995154
+          },
+          {
+            "alpha": 0.005,
+            "l1_ratio": 0.02,
+            "ndcg": 0.26894351976256464
+          },
+          {
+            "alpha": 0.005,
+            "l1_ratio": 0.1,
+            "ndcg": 0.2718546688377597
+          },
+          {
+            "alpha": 0.005,
+            "l1_ratio": 0.5,
+            "ndcg": 0.2754869060721572
+          },
+          {
+            "alpha": 0.01,
+            "l1_ratio": 0.005,
+            "ndcg": 0.2773165365398185
+          },
+          {
+            "alpha": 0.01,
+            "l1_ratio": 0.01,
+            "ndcg": 0.27688042576423527
+          },
+          {
+            "alpha": 0.01,
+            "l1_ratio": 0.02,
+            "ndcg": 0.2761079974462469
+          },
+          {
+            "alpha": 0.01,
+            "l1_ratio": 0.1,
+            "ndcg": 0.2790478182369566
+          },
+          {
+            "alpha": 0.01,
+            "l1_ratio": 0.5,
+            "ndcg": 0.2823060525932255
+          },
+          {
+            "alpha": 0.05,
+            "l1_ratio": 0.005,
+            "ndcg": 0.29322121262151896
+          },
+          {
+            "alpha": 0.05,
+            "l1_ratio": 0.01,
+            "ndcg": 0.29379229058252626
+          },
+          {
+            "alpha": 0.05,
+            "l1_ratio": 0.02,
+            "ndcg": 0.2944070259144155
+          },
+          {
+            "alpha": 0.05,
+            "l1_ratio": 0.1,
+            "ndcg": 0.29081425513979386
+          },
+          {
+            "alpha": 0.05,
+            "l1_ratio": 0.5,
+            "ndcg": 0.26524764795282696
+          },
+          {
+            "alpha": 0.2,
+            "l1_ratio": 0.005,
+            "ndcg": 0.3011250527950637
+          },
+          {
+            "alpha": 0.2,
+            "l1_ratio": 0.01,
+            "ndcg": 0.3001539144387765
+          },
+          {
+            "alpha": 0.2,
+            "l1_ratio": 0.02,
+            "ndcg": 0.29718380739528133
+          },
+          {
+            "alpha": 0.2,
+            "l1_ratio": 0.1,
+            "ndcg": 0.27883893909500657
+          },
+          {
+            "alpha": 0.2,
+            "l1_ratio": 0.5,
+            "ndcg": 0.20526164588185697
+          },
+          {
+            "alpha": 0.5,
+            "l1_ratio": 0.005,
+            "ndcg": 0.29463654470823825
+          },
+          {
+            "alpha": 0.5,
+            "l1_ratio": 0.01,
+            "ndcg": 0.29292960860915324
+          },
+          {
+            "alpha": 0.5,
+            "l1_ratio": 0.02,
+            "ndcg": 0.2880800143527715
+          },
+          {
+            "alpha": 0.5,
+            "l1_ratio": 0.1,
+            "ndcg": 0.25522445104452085
+          },
+          {
+            "alpha": 0.5,
+            "l1_ratio": 0.5,
+            "ndcg": 0.044604261157144796
+          }
+        ],
+        "selected": {
+          "ease": {
+            "reg_weight": 500.0
+          },
+          "slim": {
+            "alpha": 0.2,
+            "hide_item": true,
+            "l1_ratio": 0.005,
+            "positive_only": true,
+            "slim_max_iter": 1000
+          }
+        }
+      },
+      "files": {
+        "individual-tuning.svg": "44055ab6dd15ba69036d0654f145de97fae1a9b8d3028b09d27fcd1d5da52e30",
+        "individual-tuning.png": "57b3a411a0b1a29823f7d200423d525e080ebae1fe14c591508f5ff656c485e7"
+      }
+    },
+    "hybrid-comparisons": {
+      "kind": "new visualization of recorded results",
+      "sources": [
+        {
+          "path": "hyperparameters/results/oof-ridge-final-60-20-20/aggregate-metrics.json",
+          "sha256": "9d0caf29c39f86507262da1a33c104177c496738c1c76600a1811416efab3e6d"
+        },
+        {
+          "path": "hyperparameters/results/alternate-hybrids-60-20-20/metrics.csv",
+          "sha256": "7b3b18f607b7fc12a09363fcb62bee6a08fd1d01554c00593b03f1d92e07e8dc"
+        }
+      ],
+      "plotted_data": {
+        "weighted/valid": {
+          "itemknn": 0.27289118500045956,
+          "userknn": 0.2748411204855965,
+          "bpr": 0.2692919841678785,
+          "slimelastic": 0.3001539144387765,
+          "ease": 0.2978659115193076,
+          "fism": 0.2794974181638789,
+          "regressor": 0.299155239364729
+        },
+        "weighted/test": {
+          "itemknn": 0.3657155430757621,
+          "userknn": 0.36125123615565974,
+          "bpr": 0.3544973148511532,
+          "slimelastic": 0.40188230669214303,
+          "ease": 0.399226287089167,
+          "fism": 0.3725494206225976,
+          "regressor": 0.4090947058789749
+        },
+        "alternate/valid": {
+          "bpr": 0.2744387004907187,
+          "ease": 0.2980991100486171,
+          "slim": 0.3011250527950637,
+          "paired-slim": 0.30111203192339525,
+          "aug-slim-weak": 0.30467007293797577,
+          "aug-slim-comparable": 0.30305540369593953,
+          "aug-ease-weak": 0.29815641493182754,
+          "cascade": 0.27869858003602577,
+          "meta": 0.28221605685999257,
+          "meta-control": 0.283823182323207,
+          "mlp-mlp": 0.26323052687340837,
+          "residual-mlp": 0.2756140060476259
+        },
+        "alternate/test": {
+          "bpr": 0.3736649996603322,
+          "ease": 0.4048716310149405,
+          "slim": 0.40326573385909487,
+          "paired-slim": 0.40325402399821736,
+          "aug-slim-weak": 0.4119041780855256,
+          "aug-slim-comparable": 0.4073742207224466,
+          "aug-ease-weak": 0.4037468437322831,
+          "cascade": 0.38459325503046793,
+          "meta": 0.37536379410036175,
+          "meta-control": 0.3690136124188024,
+          "mlp-mlp": 0.3456232074844787,
+          "residual-mlp": 0.3732333823549397
+        }
+      },
+      "files": {
+        "hybrid-comparisons.svg": "45c62c92107002be5acaf74830acb247b31fde6f0da1a5efec0128517b17d516",
+        "hybrid-comparisons.png": "537e7231446dd233f89f6fc987d729d3925b1b187a65734bcd5dd11bc41ac72e"
+      }
+    },
+    "coefficient-ablation": {
+      "kind": "new visualization of recorded results",
+      "sources": [
+        {
+          "path": "hyperparameters/results/oof-ridge-final-60-20-20/hybrid.json",
+          "sha256": "fc170ef013a9d6fe460a47ad5cf43b090b7d8fbb3ca78a61da95ad78ba8825f4"
+        },
+        {
+          "path": "hyperparameters/results/task-2.3-coefficient-analysis/weighted.csv",
+          "sha256": "3d23cca5802d727ace56be353e4beb9860f7bd9389d6344138fea46ec8c01728"
+        }
+      ],
+      "plotted_data": {
+        "coefficients": {
+          "itemknn": 0.04695373275714226,
+          "userknn": 0.007655276967421587,
+          "bpr": 0.02118234666920494,
+          "slimelastic": 0.028186344527812688,
+          "ease": 0.026056366078681555,
+          "fism": 0.04126718898109121
+        },
+        "removals": {
+          "Frozen removal": {
+            "itemknn": {
+              "delta_ndcg": 0.004193934103652672,
+              "ci_low": 0.0007909571050704738,
+              "ci_high": 0.007726655760253091
+            },
+            "userknn": {
+              "delta_ndcg": -0.0008898926879825676,
+              "ci_low": -0.002449534268328319,
+              "ci_high": 0.0007995844963957055
+            },
+            "bpr": {
+              "delta_ndcg": -0.0011665644955219825,
+              "ci_low": -0.0028358273681221395,
+              "ci_high": 0.0002448350194702132
+            },
+            "slimelastic": {
+              "delta_ndcg": -0.004289081340732763,
+              "ci_low": -0.007268447066354221,
+              "ci_high": -0.0014378315735501508
+            },
+            "ease": {
+              "delta_ndcg": -0.0026431189512286794,
+              "ci_low": -0.0055661983356597245,
+              "ci_high": 0.0002021421078649361
+            },
+            "fism": {
+              "delta_ndcg": -0.0046075758794564,
+              "ci_low": -0.0064700499300818365,
+              "ci_high": -0.002770560496962299
+            }
+          },
+          "OOF refit, fixed alpha": {
+            "itemknn": {
+              "delta_ndcg": 0.0025238365723255466,
+              "ci_low": -0.0009228295783606945,
+              "ci_high": 0.00623004948092554
+            },
+            "userknn": {
+              "delta_ndcg": -0.00114171866753739,
+              "ci_low": -0.00277925719383628,
+              "ci_high": 0.0005888643995247511
+            },
+            "bpr": {
+              "delta_ndcg": -0.0006977584695505445,
+              "ci_low": -0.0021646364089370285,
+              "ci_high": 0.0005892891231027856
+            },
+            "slimelastic": {
+              "delta_ndcg": -0.004673364292529584,
+              "ci_low": -0.007608414810304276,
+              "ci_high": -0.0017838238784116146
+            },
+            "ease": {
+              "delta_ndcg": -0.0025490523796173397,
+              "ci_low": -0.0053486360732153265,
+              "ci_high": 0.0001669029852647736
+            },
+            "fism": {
+              "delta_ndcg": -0.003950378795991057,
+              "ci_low": -0.005718780582601845,
+              "ci_high": -0.002252288656223288
+            }
+          }
+        }
+      },
+      "files": {
+        "coefficient-ablation.svg": "975525e14aade73b2ce2281116bb6d59e26c0465ef561f33b81ca54d8b3f958d",
+        "coefficient-ablation.png": "ce73d4053f9de721314d91e19fb928c969fc3da26b1ecde2838ef0e0f9260818"
+      }
+    }
+  }
+}

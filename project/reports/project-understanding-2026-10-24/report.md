@@ -8,6 +8,8 @@ The substantive report has two equally weighted halves. **Part A covers your ass
 
 The reference snapshot is merged `master` at **54e60bffb07d0cf8ed538935b9c7b609be28f856**. Local `master` was fast-forwarded from `94d3610ef` and matched `origin/master`. Two open PRs are included separately: [#24, your rerankers][pr24], head **580bfaa63**, and [#26, Victor's group analysis][pr26], head **67be0b246**. Neither was merged for this report. A PR description is useful context; code and saved artifacts take precedence when they disagree.
 
+The six annotated figures follow the same balance: A1–A3 explain your work; B1–B3 explain the other contributions. The two saved reranking plots are reused unchanged. Four additional charts visualize recorded data and results without rerunning experiments. Select any figure to open its full-size image.
+
 ## Part A — Your work: measuring and changing recommendations
 
 ### A1. Your responsibility and its place in the system
@@ -93,6 +95,18 @@ The same boundary applies to ratings. The independent ranking protocol treats al
 
 Missing metadata is handled explicitly. The loader records pending reasons, metric availability reflects incomplete inputs, and reranking can mark a method unavailable for the cohort. In PR #24, required metadata is checked for the whole supplied candidate pool. Silently dropping users or inconvenient items would change the experiment and make apparent gains difficult to interpret. [Source: training statistics][data].
 
+#### Figure A1. What the training popularity groups actually contain
+
+<figure class="report-figure" id="figure-a1"><a href="figures/training-popularity.svg"><img src="figures/training-popularity.svg" alt="Cumulative training interaction share by sorted catalogue share, beside item and interaction shares for head, middle and tail groups."></a></figure>
+
+**Read the figure.** The left curve sorts movies from most to least frequent in training. Its horizontal axis is the fraction of catalogue items encountered, and its vertical axis is the fraction of training interactions accounted for. The shaded regions are the existing head, middle, and tail memberships. Dashed lines mark the intended 20% and 80% cumulative boundaries. Complete count ties explain why the actual boundaries cross those targets slightly.
+
+The right panel makes the denominator difference visible. The 60 head movies are only **3.6% of the catalogue**, yet account for **20.6% of training interactions**. The middle contains 485 movies and 60.1% of interactions; the tail contains **67.6% of movies but only 19.3% of interactions**. These are neither equal movie groups nor exactly equal interaction percentages.
+
+**Interpretation.** A popularity-oriented recommender has much more historical evidence for a small part of the catalogue. This motivates reporting novelty, coverage, and exposure alongside accuracy. It also explains why equal total exposure for head and tail would give very different exposure per movie: the tail contains many more movies. The curve describes training observations; it does not show user satisfaction, causal popularity bias, or any reranker's effect. A recommendation-exposure curve would be a different measurement.
+
+**Origin.** This is a new visualization of the already saved training counts and popularity memberships from the 22 October run. No groups were fitted using held-out interactions. Exact inputs and plotted values are in the [figure provenance record](figures/manifest.json).
+
 ### A6. Calibration reranking: a greedy construction of a balanced list
 
 PR #24 implements both genre and popularity calibration in `rerankers/calibration.py`. A keyword-only `attribute` chooses which profile and divergence to use. The default is genres. Both variants build a list one position at a time and select the remaining candidate maximizing a combination of relevance and profile agreement.
@@ -133,6 +147,22 @@ Selection is per model and per objective. Genre, popularity, and exposure runs a
 
 Once selected, the strength remains frozen on test. A validation constraint does not guarantee the same test loss, and a test outcome exceeding 5% is retained and flagged. Choosing another strength after seeing that outcome would turn test into another development set. [Source: candidate and selection runner][rerank].
 
+#### Figure A2. Reading the original validation trade-off curves
+
+<figure class="report-figure" id="figure-a2"><a href="figures/validation-tradeoffs.png"><img src="figures/validation-tradeoffs.png" alt="Six model panels showing validation NDCG change against reduction of genre mismatch, popularity deviation, or exposure Gini; stars identify selected strengths and a dashed vertical line marks minus five percent NDCG."></a></figure>
+
+**Read the figure.** Each panel is one base model. A point is an evaluated strength, and the connecting lines follow the strength sweep. Horizontal position is `100*(reranked_NDCG/original_NDCG-1)`, so negative values mean accuracy loss. Vertical position is the percentage reduction in that method's target metric. Blue means genre mismatch, orange popularity deviation, and green exposure Gini. The stars identify the validation-selected settings.
+
+The dashed vertical line marks **−5%** NDCG change. Feasible choices lie on or to its right; the largest target improvement outside that region cannot win under the declared policy. For a given method, movement upward and rightward is preferable, but the colors represent different quantities. An orange reduction of forty percent and a green reduction of five percent do not quantify comparable amounts of user benefit.
+
+**Interpretation.** Stronger genre/popularity calibration can reduce mismatch much further than the selected stars, but often only at substantial accuracy cost. The experiment therefore reports a constrained operating point rather than the largest attractive percentage. ItemKNN's green star lies slightly to the right of zero: its selected exposure variant improves validation NDCG a little, while redistributing exposure. That is a result of this measured combination, not a general guarantee from the heuristic.
+
+The panels use different horizontal ranges, so compare tick values rather than apparent distances. These curves show development choices on one split; they are not training-loss curves, confidence intervals, or evidence that the validation trade-off will transfer unchanged to test.
+
+Use the selected strengths recorded in the stored files, since visual proximity alone cannot replace the explicit validation selection rule.
+
+**Origin.** This is the existing `validation-tradeoffs.png`, copied without alteration from the saved reranking bundle. The [original plotting implementation][rerank-plots] defines both percentage formulas and the selection stars.
+
 ### A9. Provenance, saved outputs, and what the safeguards establish
 
 `rerank.py:source_identity` binds the choice to the checkpoint hash, both score exports, saved split identity, dataset files, relevant source code, K, candidate count, and accuracy-loss budget. Test evaluation requires a completed validation `selection.json` with matching identity and settings. It rejects a fresh strength grid. Hashing test scores establishes input identity; it is not itself test-based model selection.
@@ -167,6 +197,20 @@ ItemKNN exposure reranking is an instructive example: test NDCG changes from 0.3
 UserKNN exposure obtains the largest relative Gini reduction, 7.30%, but loses 6.45% test NDCG. EASE genre calibration substantially improves the targeted mismatch measure while suffering the largest accuracy loss. Neither result is an implementation failure merely because it reveals a cost; the purpose of Task 3.2 is to measure and explain such costs.
 
 The defensible claim is that these specific greedy methods can improve their chosen beyond-accuracy objectives within common top-fifty pools, at model-dependent accuracy costs. It is a single-seed offline experiment, with no demonstrated significance or uniform subgroup benefit. Your explanation should end at that evidence boundary, while identifying sensitivity studies and group analysis as the next ways to test robustness. [Source: fresh PR experiment and local bundle][pr24].
+
+#### Figure A3. What happened to the frozen choices on test
+
+<figure class="report-figure" id="figure-a3"><a href="figures/test-effects.png"><img src="figures/test-effects.png" alt="Six model panels comparing grey bars for test NDCG change with colored bars for target metric reduction, with selected strengths annotated and a minus five percent reference line."></a></figure>
+
+**Read the figure.** Each group of two bars is one method applied to one model. The grey bar is the relative change in test NDCG: below zero means worse ranking accuracy. The colored bar is the reduction in that method's test target: above zero means less mismatch or less exposure inequality. Text above the bars records the strength already chosen on validation. Nothing in this figure chooses a new strength.
+
+**Interpretation.** The large positive blue/orange bars alongside negative grey bars make the central trade-off explicit. Genre calibration reduces its target substantially, yet EASE loses approximately **6.73%** NDCG. UserKNN exposure reduces Gini by approximately **7.30%**, at **6.45%** NDCG loss. ItemKNN exposure has a much smaller grey loss, approximately **0.12%**, showing that the cost depends on the base model.
+
+The dashed horizontal line at −5% is a reference to the validation budget, not a test feasibility rule. Six of the eighteen frozen choices fall below it on test. Those outcomes are retained and reported; moving them back above the line by test-based reselection would invalidate the procedure. The figure therefore shows a limit of validation transfer as well as successful target reductions.
+
+Panel heights and tick ranges differ. Colored reductions use different target metrics, and the bars have no uncertainty intervals. Their size cannot establish significance, equal benefits for user groups, or improved satisfaction. The accompanying coverage example also matters: reaching more distinct movies can coexist with a high remaining Gini.
+
+**Origin.** This is the existing `test-effects.png` from the same fresh experiment, copied without alteration. Its underlying lists and selections passed the saved-result audit described in A9.
 
 ## Part B — The other contributions and the shared system
 
@@ -250,6 +294,20 @@ Source corrections also require redoing dependent calculations. The final OOF up
 
 Cached stages use source/config/data identity and hashes, atomic completion markers, and run locks. Resume is allowed only for compatible completed work. This makes expensive cross-fitting reproducible and prevents a partial artifact from masquerading as a completed stage. It also means an exact historical rerun may require original local caches that are not committed. [Sources: retuning report][retuning], [OOF reproduction notes][oof-doc].
 
+#### Figure B1. What the recorded tuning search says about regularization
+
+<figure class="report-figure" id="figure-b1"><a href="figures/individual-tuning.svg"><img src="figures/individual-tuning.svg" alt="EASE validation NDCG against logarithmic regularization, with previous and selected settings marked, beside a five by five SLIM alpha and L1 ratio heatmap."></a></figure>
+
+**Read the figure.** The EASE curve shows all nine declared regularization settings, using a logarithmic horizontal axis. The square marks the previous setting, 250; the star marks the NDCG-selected setting, 500. The SLIM heatmap shows all twenty-five alpha/L1-ratio combinations. Brighter cells have higher validation NDCG, and the outlined cell is the recorded selection. Rows and columns are the tested categorical grid positions, not a continuous optimization surface.
+
+**Interpretation.** EASE improves markedly from very weak regularization, then flattens around the better settings. Increasing regularization indefinitely does not continue improving the score. The small separation between 250 and 500 is real but modest: NDCG changes from about 0.297866 to 0.298099. That small gain should not be described with the same emphasis as the large difference from the weakest settings.
+
+SLIM selects alpha 0.2 and L1 ratio 0.005. The very poor lower-right cell demonstrates that plausible hyperparameter ranges can also include a badly performing combination. It does not prove that every increase in either parameter harms performance: the rows have different patterns. Rounded cell labels and saturated colors can hide small differences, so exact selection uses the stored full-precision values.
+
+All SLIM fits converged, and both searches share the declared protocol. These are validation measurements used for selection, not independent evidence of test gains. The figure visualizes existing trial records; neither models nor hyperparameters were fitted again for this report.
+
+**Origin.** The chart reads the nine EASE and twenty-five SLIM JSON trial records plus their NDCG-based selections under `individual-retuned-60-20-20/`.
+
 ### B5. The weighted hybrid: out-of-fold rating regression
 
 Bogdan's weighted hybrid learns how to combine the six component score columns using Ridge regression. The target is each observed training interaction's **raw 1–5 rating**. Unrated candidates are not assigned zero ratings. The final prediction is an intercept plus a weighted sum of normalized component scores, subsequently sorted to obtain a ranking.
@@ -309,6 +367,20 @@ Cascade gains over its own BPR control but remains below EASE and SLIM in the re
 
 The bundle stores trained arrays, mappings, masks, labels, search evidence, and reference metrics. `HybridBundle.rankings` reconstructs eligible lists and applies special cascade masking where needed. That portable inference is stronger reproducibility evidence than a report table alone, although it does not independently regenerate every historical training fit. The preparation of this report replayed the available evaluation cases against their committed accuracy results. [Source: corrected results and reproduction][alternate-results].
 
+#### Figure B2. Compare hybrid results with the right component controls
+
+<figure class="report-figure" id="figure-b2"><a href="figures/hybrid-comparisons.svg"><img src="figures/hybrid-comparisons.svg" alt="Validation and test NDCG markers for the OOF hybrid and its six components on the left, and separately for the corrected full catalogue alternative hybrids and their controls on the right."></a></figure>
+
+**Read the figure.** Blue and orange markers are validation and test NDCG for the same recorded system. The left panel contains the OOF experiment's six retained components and final Ridge combination. The right panel contains the corrected alternative-hybrid fits and their controls. Their source configurations differ, so the panels deliberately preserve the experiment families instead of treating every repeated model name as one interchangeable fit.
+
+**Interpretation.** In the left panel, Ridge's validation NDCG is slightly below the retained SLIM component, while its test score is higher: approximately **0.409095 versus 0.401882**. This is a measured validation/test ordering change. It does not mean that the combination was selected on test, or that the validation result should be rewritten to make the story simpler.
+
+In the right panel, weak UserKNN-to-SLIM augmentation reaches approximately **0.411904** test NDCG against the paired receiver's **0.403254**. Strength one gives a smaller gain. The EASE augmentation row, in contrast, is slightly worse than its control on test. Feature combination and residual correction also do not automatically improve the base model. These controlled counterexamples are central to the project's explanation of when additional model structure helps.
+
+Every displayed row uses full-catalogue scope. Warm switching is excluded because it changes candidates and relevance. Asterisks mark means over three scorer seeds conditional on one frozen BPR fit; no uncertainty bars are drawn, so those means must not be mistaken for noiseless estimates. Higher test markers are not an improvement from validation to test: those are different held-out partitions with different masks.
+
+**Origin.** This new view uses the committed final OOF aggregate metrics and corrected alternative-hybrid comparison CSV, retaining the same frozen outcomes and selection rules.
+
 ### B8. Coefficients, ablation, and explanatory claims
 
 Task 2.3 compares two forms of component removal. A frozen removal sets one Ridge coefficient to zero while holding the others and intercept fixed. A refit removes that feature and relearns remaining coefficients on the same OOF targets, at the same alpha 30,000. The first measures dependence of this particular fitted combination; the second measures whether other components can compensate under that fixed design.
@@ -320,6 +392,20 @@ The components are correlated; standardization changes coefficient units; the re
 `paired_summary` records per-user differences, counts of improved/worse/tied users, top-ten overlap, and a seeded 2,000-resample user bootstrap. Such intervals are conditional on this split and these trained fits. They do not include variation from new training seeds, new datasets, repeated model selection, or a fresh test holdout. An interval should therefore accompany a precise estimand rather than a broad claim of universal model importance.
 
 Task 2.3's result is explanatory evidence, not authorization to select a new reduced hybrid from test improvements. A deployable removal choice would need validation selection before a later evaluation. This is also the standard you apply when reviewing Victor's Task 2.6 improvement: distinguish an observed mechanism, a proposed change, and an independently evaluated improvement. [Sources: ablation code][coefficients], [coefficient report][coefficient-results].
+
+#### Figure B3. Why the largest coefficient is not the largest contribution
+
+<figure class="report-figure" id="figure-b3"><a href="figures/coefficient-ablation.svg"><img src="figures/coefficient-ablation.svg" alt="Fitted regression coefficients beside test NDCG changes from frozen and refitted component removal, with recorded paired user bootstrap intervals and a zero reference line."></a></figure>
+
+**Read the figure.** The left bars are coefficients multiplying per-user standardized component scores. Their units belong to the raw-rating regression. The right points ask a different question: how test NDCG changes when that component is removed. Orange holds the remaining fit fixed; green relearns remaining coefficients at the same Ridge penalty. A point to the right of zero means that removing the component improved this recorded ranking.
+
+**Interpretation.** ItemKNN receives the largest coefficient, yet its removal has a positive point estimate in both comparisons. FISM has a relatively large coefficient too, but removing it hurts. SLIM also causes a substantial loss on removal despite its smaller coefficient. The paired panels make the failure of a coefficient-as-importance interpretation visible: correlated score features and a rating-error training objective are not equivalent to independent contributions to ranking accuracy.
+
+Error bars show the recorded 95% paired user-bootstrap intervals. Several cross zero, including ItemKNN's refit interval, while its frozen-removal interval stays positive in this conditional analysis. This distinguishes uncertainty in a particular controlled comparison from a broad claim that the component is always harmful. The intervals hold the split and trained systems fixed; they omit new training fits, new data splits, and uncertainty from the model-selection process.
+
+The graph is descriptive evidence for Task 2.3. Choosing a reduced hybrid because its test removal looks favorable would reuse test for selection. It therefore motivates a development-only follow-up rather than declaring a newly selected best model.
+
+**Origin.** Coefficients come from the final frozen `hybrid.json`; removal deltas and intervals come from the existing Task 2.3 `weighted.csv`. Both are preserved at their original precision in the figure provenance record.
 
 ### B9. Baselines, comparisons, metadata, and subgroup interpretation
 
@@ -347,7 +433,18 @@ The strongest current conclusion is methodological: comparable candidates, expli
 
 ## Evidence, navigation, and reproduction
 
-The two substantive halves each contain approximately 3,940 words under the same word-count rule. Snapshot metadata, references, and this navigation section sit outside that allocation.
+The two substantive halves each contain 4,773 words under the same word-count rule, including figure explanations. Each half has three annotated figures. Snapshot metadata, references, and this navigation section sit outside that allocation.
+
+| Figure | Existing work shown | How to use it |
+| --- | --- | --- |
+| [A1: Training popularity](#figure-a1) | Saved training counts and item-band memberships | Separate catalogue share from interaction share. |
+| [A2: Validation trade-offs](#figure-a2) | Original six-model validation plot | Read feasible strengths and selected operating points. |
+| [A3: Frozen test effects](#figure-a3) | Original six-model test plot | Read gains, losses, and failures of budget transfer. |
+| [B1: Individual tuning](#figure-b1) | All 34 EASE/SLIM trial records | Assess regularization sensitivity and small selection gains. |
+| [B2: Hybrid comparisons](#figure-b2) | Final OOF and corrected alternative-hybrid results | Compare within experiment families using the proper controls. |
+| [B3: Coefficients and ablation](#figure-b3) | Frozen coefficients and recorded removal experiments | Distinguish regression weight from measured ranking utility. |
+
+`figures/manifest.json` records source hashes, figure hashes, and the exact plotted data for the newly visualized results. The two original plots have byte-identical copies in this report. The four added views come from `build_visualizations.py`, which reads existing evidence and does not train models, tune parameters, or reevaluate recommendation lists.
 
 | What to inspect | Main entrypoints | Report sections |
 | --- | --- | --- |
@@ -419,3 +516,4 @@ The saved bundle is local and ignored by Git. A fresh clone can inspect the comm
 [content]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/content_based.py
 [orders]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/experiments/task3.py
 [explanations]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/analysis/explanations.py
+[rerank-plots]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/scripts/plot_reranking.py
