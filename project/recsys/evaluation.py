@@ -8,7 +8,7 @@ from os import PathLike
 from pathlib import Path
 from typing import Any, Literal, TypedDict
 
-from .analysis.groups import PendingGroupAnalysis, compare_groups, group_definitions
+from .analysis.groups import GroupComparison, compare_groups, group_definitions
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
 from .data import prepare_metadata, read_training_interactions
 from .metrics.accuracy import evaluate_accuracy
@@ -54,14 +54,18 @@ def evaluation_settings(partition: Literal['valid', 'test'], k: int, scope: str 
 def print_summary(
         accuracy: AccuracyResults,
         beyond: BeyondAccuracyResults,
-        group_report: PendingGroupAnalysis,
+        group_report: GroupComparison,
         k: int
 ) -> None:
     print(f"Users: {len(accuracy['per_user'])}; MRR@{k}: {accuracy['aggregate'][f'MRR@{k}']:.5f}; "
           f"NDCG@{k}: {accuracy['aggregate'][f'NDCG@{k}']:.5f}")
     if beyond["gender_fairness"]["reason"]:
         print(f"Gender fairness unavailable: {beyond['gender_fairness']['reason']}")
-    print(f"Group analysis {group_report['status']} ({group_report['owner']}): {group_report['reason']}")
+    for section, reason in sorted(group_report["pending"].items()):
+        print(f"Group analysis pending for {section}: {reason}")
+    n_user_groups = sum(len(cohorts) for cohorts in group_report["user_groups"].values())
+    print(f"Group analysis {group_report['status']}: {n_user_groups} user cohorts and "
+          f"{len(group_report['item_groups'])} item groups at k={group_report['k']}")
 
 
 def run_evaluation(
@@ -110,7 +114,7 @@ def run_evaluation(
                                       item_file, user_file, predictions.catalogue)
         accuracy = evaluate_accuracy(rankings, relevant, k)
         beyond = evaluate_beyond_accuracy(rankings, statistics, accuracy["per_user"], k)
-        group_report = compare_groups(accuracy["per_user"], beyond, statistics)
+        group_report = compare_groups(rankings, relevant, statistics, k)
         comparison: dict[str, MetricComparison] = {}
         if diagnostics is not None:
             reference = {name.lower(): value for name, value in diagnostics["metrics"].items()}
@@ -138,14 +142,15 @@ def run_evaluation(
             write_json(output / "comparison.json", comparison)
         write_json(output / "example.json", example)
         write_json(output / "beyond_accuracy.json", beyond)
+        #write_json(output / "statistics.json", statistics)
         write_json(output / "groups.json", group_definitions(statistics, rankings))
         write_json(output / "group_metrics.json", group_report)
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
                         activity_boundaries=list(statistics.activity_boundaries),
                         n_training_interactions=statistics.n_interactions,
                         n_catalogue_items=len(statistics.catalogue),
-                        project_evaluation_complete=False,
-                        pending_work={**statistics.pending, "group_analysis": group_report["reason"]})
+                        group_minimum_size=group_report["minimum_group_size"],
+                        project_evaluation_complete=False)
         print_summary(accuracy, beyond, group_report, k)
     except Exception as error:
         manifest.update(status="failed", error=str(error))
