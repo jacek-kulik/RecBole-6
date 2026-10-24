@@ -1,0 +1,17 @@
+{
+  "accuracy_recomputed_from_saved_full_predictions": true,
+  "actual_added_entries_at_zero_strength": 0,
+  "augmentation_rows": 12,
+  "augmentation_scores_reconstructed_from_saved_inputs_and_weights": true,
+  "augmentation_selected_entries": 47150,
+  "candidate_masks_match_exactly": true,
+  "evaluation_rows": 38,
+  "focused_tests_passed": 8,
+  "max_metric_error": 0.0,
+  "numpy": "1.26.4",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "shared_accuracy_tests_passed": 10,
+  "status": "passed",
+  "weighted_rows": 26,
+  "weighted_source_snapshot_hashes_match": true
+}

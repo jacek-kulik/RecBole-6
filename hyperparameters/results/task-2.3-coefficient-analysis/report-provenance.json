@@ -1,0 +1,9 @@
+{
+  "augmentation_csv_sha256": "a50f03b4432f8d195d721d8204e7d75873f24cbfc2debb733d90c46c5c44aabf",
+  "discussion_word_count": 174,
+  "generator_sha256": "d501f9d931058decf52e248401ae78f5429006c8344eeb516c87ac8ea15dd660",
+  "numerical_manifest_sha256": "2f2b57a746057fd1f4be7f3b0ee278eeef3ee6d082d220c5bd91eb631b986494",
+  "numerical_results_changed_by_report_rendering": false,
+  "report_sha256": "75475a9653df5e014a6e49245875aeadfeb7a60cc5551e3cd813be580764ea03",
+  "weighted_csv_sha256": "3d23cca5802d727ace56be353e4beb9860f7bd9389d6344138fea46ec8c01728"
+}
