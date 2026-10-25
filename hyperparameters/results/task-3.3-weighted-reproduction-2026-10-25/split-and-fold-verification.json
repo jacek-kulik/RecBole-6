@@ -1,0 +1,13 @@
+{
+  "fold_mapping_matches_recorded_after_line_ending_normalization": true,
+  "recorded_sha256": "2c51303a611726f0b532aee8406572342ee86c1b0cb9b0d2afc4ab364351b54b",
+  "fresh_sha256": "a57313af42a25d74799e79147866efa13cee423eb58433b072af31def1a2bc61",
+  "folds": 5,
+  "training_rows": 60734,
+  "outer_split_memberships_match": true,
+  "split_counts": {
+    "train": 60734,
+    "valid": 19633,
+    "test": 19633
+  }
+}

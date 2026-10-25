@@ -1,0 +1,19 @@
+{
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\fism-prepared\\components\\fism\\96eba83f317e757ceeabcff17f7cf2372bdb42aa2527854ac2fc6971a6347a94\\scores-valid.json.gz": "7e2defd7c17cb9e60d69c878b90aea0cf5e8202d3700fcdaa4d9c152e6b5e350",
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20\\components\\bpr\\2a87bcc850d39d3a0033b6645f347e6659c9a749445cd3a71891dbc8853df2fe\\scores-valid.json.gz": "6083dab110e3194ace5da8cf7465f4968517defd9749de109d0c6848c1eb9d50",
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20\\components\\ease\\a90be8afaa1830816b20736d36484143b4c1558d4393092e817d5ab053583b03\\scores-valid.json.gz": "1ea760b50cdb6b7ca2df89ea7aa71a30fea5c006ee62e06fd955b5648dbe9e2b",
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20\\components\\itemknn\\cef4f406aacdbcd7dd68f575308dd1b919e6884266479f157e6d979f93fe15cb\\scores-valid.json.gz": "b45e0d019b784dec81acf2bdbfa8eb9f26f225f23702119f7f55e1b24c0b48b1",
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20\\components\\slimelastic\\c58ae9fea9a3f78a651ae1d70554323630d929472b029b4c166036431bafdfa1\\scores-valid.json.gz": "1fd7829f3afed6e57f291e86a1d6ca89bccb1e3357b320c5c6bb62fa94e99cfd",
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20\\components\\userknn\\615fa3854bd855de90c31d907971dc6b56c98b3e0af05cdd65b4f544e1a44ddf\\scores-valid.json.gz": "e102d4e10b2f45d203fb46a456fe377b4fcddc57a2c4f967befd29e206c08fa8",
+  "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\hybrid-60-20-20\\oof-progress.npz": "1fd60f9f9f6e48ccfff30f5e088043a331a49ef87348ba44bb31347185ecc404",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\folds.json": "2c51303a611726f0b532aee8406572342ee86c1b0cb9b0d2afc4ab364351b54b",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\hybrid.json": "d9a7e579465c2139b56c6c4e59ed2c7c77e8fbd6aec67013fc768aa003f9c3b7",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\inputs.json": "c472213d3a0ed7e035b769ec6ac12cb20430493951d2230efa898568ca1dc3b4",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\manifest.json": "e24e7edf9b2c1ee30e1bcb65454c503a9eda5fc6c9a48d00e287b38bb5d7e5b8",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\oof-progress.npz": "415e87e72ad2f7b01b492455e0c5ee82409695fac03e03bb80c2c83bac3bd591",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\selection.json": "882cea443dcbcbbb622e860fcf6accca1a2064a62144b0779322c7ee5a82c516",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\splits\\test.csv": "c59db83907ca572a8461d30af2ba8b6c6cdfd5b48d8b0840f63cb81f933a9e0c",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\splits\\train.csv": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final\\splits\\valid.csv": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b",
+  "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\fism-prepared\\oof-progress.npz": "56e5ca2b9c9c9dc8189f1b9a4d44e397950072ba6aa31ba4b2f49a18de2425a1"
+}
