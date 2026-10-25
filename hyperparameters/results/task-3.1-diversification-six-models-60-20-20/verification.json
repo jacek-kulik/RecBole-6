@@ -1,0 +1,21 @@
+{
+  "checked_ranking_lists": 215004,
+  "comparison_per_user_rows": 39606,
+  "evaluations": 228,
+  "models": 6,
+  "status": "passed",
+  "test_cases_exceeding_validation_loss_budget": [
+    "itemknn/genre_calibration",
+    "userknn/genre_calibration",
+    "userknn/item_fairness",
+    "slimelastic/genre_calibration",
+    "slimelastic/coverage_diversification",
+    "ease/genre_calibration",
+    "ease/item_fairness",
+    "ease/coverage_diversification",
+    "fism/diversification",
+    "fism/popularity_diversification"
+  ],
+  "test_comparison_rows": 42,
+  "validation_selections": 36
+}

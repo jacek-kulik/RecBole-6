@@ -1,0 +1,35 @@
+{
+  "input_identity": {
+    "checkpoint_sha256": "78cf84b82c6e6f14964049ad264f9a79f0844faa192a4c6dffc719b6db59bab6",
+    "code_sha256": "52b4d781d9609197e0ec9791e2753c014232bb0f554a3123a894ac318f77381d",
+    "data_sha256": {
+      "inter": "d4832a77576cb5a480517a9554eef1872331f1ba780ddcd3f4bf956d562ccfc2",
+      "item": "d464074b022a10862d32e8885d298ad09464733be6effaf4bd26761995afea38",
+      "user": "94005f99b329506e0c6da740267d2bc41dc7d22425ce2096d9a892e42bd499f0"
+    },
+    "dataset": "ml-100k",
+    "label": "slimelastic",
+    "model": "SLIMElastic",
+    "scores_sha256": {
+      "test": "32a31e72314f06a58d73477616a15f7e1b1244ff317c8a3aa08e6b78e4452e50",
+      "valid": "35ba53cda92b26fa5b01be2a19d19f052b66cd36dd7464f4807a8d08a4be8072"
+    },
+    "seed": 42,
+    "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb"
+  },
+  "manifest": {
+    "checkpoint": "checkpoints\\ml-100k-SLIMElastic-Oct-25-2026_13-33-05.pth",
+    "dataset": "ml-100k",
+    "label": "slimelastic",
+    "model": "SLIMElastic",
+    "score_files": {
+      "test": "scores-test.json.gz",
+      "valid": "scores-valid.json.gz"
+    },
+    "seed": 42,
+    "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb",
+    "test_evaluated": false
+  },
+  "model_yaml": "# Selected by validation NDCG@10 on seed-42 60/20/20; load shared protocol after this.\nmodel: SLIMElastic\nalpha: 0.2\nl1_ratio: 0.005\nslim_max_iter: 1000\npositive_only: true\nhide_item: true\n",
+  "protocol_yaml": "# Jacek: 60/20/20 adopted on 14 Oct; definitions recorded in PROTOCOL.md.\n# Shared settings are loaded AFTER the model YAML to keep comparisons consistent.\ndataset: ml-100k\nseed: 42\nreproducibility: true\nuse_gpu: false\nshow_progress: false\nload_col:\n  inter: [user_id, item_id, rating, timestamp]\neval_args:\n  split: {RS: [0.6, 0.2, 0.2]}\n  group_by: user\n  order: RO\n  mode: full\n# All recorded interactions are implicit positive feedback.\n# Validation masks training history; final test also masks validation history.\n# These RecBole metrics are training diagnostics; final reports use independent code.\nmetrics: [Recall, MRR, NDCG]\ntopk: [10]\n# Primary selection metric shared with the alternate-hybrid comparisons.\nvalid_metric: NDCG@10\nvalid_metric_bigger: true\nsave_dataset: false\nsave_dataloaders: false\n"
+}
