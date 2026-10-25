@@ -1,2 +1,2 @@
-
 model: Pop
+train_neg_sample_args: null
