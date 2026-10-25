@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # @Time   : 2020/8/11 9:57
 # @Author : Zihan Lin
 # @Email  : linzihan.super@foxmail.com
@@ -30,12 +29,14 @@ class Pop(GeneralRecommender):
     type = ModelType.TRADITIONAL
 
     def __init__(self, config, dataset):
-        super(Pop, self).__init__(config, dataset)
+        super().__init__(config, dataset)
 
-        self.item_cnt = torch.zeros(
-            self.n_items, 1, dtype=torch.long, device=self.device, requires_grad=False
+        # Fit once on real training interactions, before the loader adds negatives.
+        counts = torch.bincount(
+            dataset.inter_feat[self.ITEM_ID], minlength=self.n_items
         )
-        self.max_cnt = None
+        self.item_cnt = counts.to(self.device).view(-1, 1)
+        self.max_cnt = self.item_cnt.max(dim=0)[0].clamp_min(1)
         self.fake_loss = torch.nn.Parameter(torch.zeros(1))
         self.other_parameter_name = ["item_cnt", "max_cnt"]
 
@@ -43,12 +44,7 @@ class Pop(GeneralRecommender):
         pass
 
     def calculate_loss(self, interaction):
-        item = interaction[self.ITEM_ID]
-        self.item_cnt[item, :] = self.item_cnt[item, :] + 1
-
-        self.max_cnt = torch.max(self.item_cnt, dim=0)[0]
-
-        return torch.nn.Parameter(torch.zeros(1)).to(self.device)
+        return self.fake_loss.sum() * 0
 
     def predict(self, interaction):
         item = interaction[self.ITEM_ID]
