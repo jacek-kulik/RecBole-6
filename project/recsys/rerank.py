@@ -218,6 +218,10 @@ def run_reranking(run_dir: str | PathLike[str], output: str | PathLike[str],
         for name, (owner, reranker, metric, direction) in METHODS.items():
             target_key = "GRU" if metric == "GRU" else f"{metric}@{k}"
             method = {"owner": owner, "target_metric": target_key, "direction": direction}
+            if frozen is not None and name not in frozen["methods"]:
+                methods[name] = {**method, "status": "unavailable",
+                                 "reason": "Method was not included in the frozen validation selection"}
+                continue
             if frozen is not None and frozen["methods"][name]["status"] != "complete":
                 methods[name] = frozen["methods"][name]
                 continue
