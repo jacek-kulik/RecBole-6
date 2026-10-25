@@ -1,16 +1,17 @@
 """Audit saved Task 3.3 lists, masks, metrics and validation-only selection."""
 
 import argparse
-from collections import Counter
-from math import log, log2
-from pathlib import Path
+import csv
 import json
+from collections import Counter
+from math import isfinite, log, log2
+from pathlib import Path
 
 import numpy as np
 
 from project.recsys.artifacts import fingerprint, write_json
-from project.recsys.component_cache import file_hash
 from project.recsys.comparisons import compare_runs
+from project.recsys.component_cache import file_hash
 from project.recsys.data import prepare_metadata, read_training_interactions
 from project.recsys.hybrid_bundle import HybridBundle
 from project.recsys.metrics.accuracy import evaluate_accuracy
@@ -21,6 +22,61 @@ from project.scripts.analyze_hybrid_coefficients import WEIGHTED
 
 def read(path):
     return json.loads(Path(path).read_text())
+
+
+def verify_metric_values(actual, expected, label):
+    """Compare saved numeric fields, including unavailable values and NaNs."""
+    max_error = 0.
+    for key, value in expected.items():
+        if key not in actual:
+            raise ValueError(f'{label}: missing {key}')
+        saved = actual[key]
+        if value is None:
+            if saved is not None:
+                raise ValueError(f'{label}: {key} differs')
+            continue
+        if isinstance(saved, bool) or not isinstance(saved, (int, float)) or not isfinite(saved):
+            raise ValueError(f'{label}: {key} must be finite')
+        error = abs(saved - value)
+        if error > 1e-12:
+            raise ValueError(f'{label}: {key} differs')
+        max_error = max(max_error, error)
+    return max_error
+
+
+def verify_summary_csv(path, rows):
+    """The hashed CSV and the JSON used by selection/reports must agree."""
+    with path.open(newline='', encoding='utf-8') as stream:
+        saved = list(csv.DictReader(stream))
+    if len(saved) != len(rows):
+        raise ValueError('CSV and JSON summary lengths differ')
+    for actual, expected in zip(saved, rows):
+        if actual.keys() != expected.keys():
+            raise ValueError('CSV and JSON summary fields differ')
+        numbers = {}
+        for key, value in expected.items():
+            if isinstance(value, (int, float)):
+                numbers[key] = float(actual[key])
+            elif actual[key] != ('' if value is None else value):
+                raise ValueError(f'CSV and JSON summaries differ: {key}')
+        verify_metric_values(numbers, {k: expected[k] for k in numbers}, 'CSV summary')
+
+
+def verify_saved_metrics(folder, row, accuracy, beyond, baseline_ndcg, target_metric):
+    """Check canonical files and every metric alias consumed by reports."""
+    ndcg = accuracy['aggregate']['NDCG@10']
+    original = row['method'] == 'original'
+    expected = {
+        **accuracy['aggregate'], **beyond['aggregate'], 'ndcg': ndcg,
+        'relative_ndcg_loss': 0. if original else 1 - ndcg / baseline_ndcg,
+        'target': None if original else beyond['aggregate'][target_metric],
+    }
+    return max(
+        verify_metric_values(row, expected, str(folder)),
+        verify_metric_values(read(folder / 'metrics.json'), accuracy['aggregate'], 'Saved accuracy'),
+        verify_metric_values(read(folder / 'beyond_accuracy.json')['aggregate'],
+                             beyond['aggregate'], 'Saved beyond-accuracy'),
+    )
 
 
 def independent_targets(ranked, stats):
@@ -47,7 +103,8 @@ def independent_targets(ranked, stats):
         js.append(value)
     amounts = np.sort(list(exposure.values()))
     lorenz = np.r_[0., amounts.cumsum()] / amounts.sum()
-    gini = 1 - 2 * np.trapz(lorenz, dx=1 / len(amounts))
+    # Uniform-width trapezoids work on both NumPy 1.x and 2.x.
+    gini = 1 - np.sum(lorenz[:-1] + lorenz[1:]) / len(amounts)
     return {'GenreMiscalibration@10': float(np.mean(kl)), 'UPD@10': float(np.mean(js)),
             'ExposureGini@10': float(gini),
             'CatalogueCoverage@10': sum(x > 0 for x in exposure.values()) / len(exposure)}
@@ -58,8 +115,8 @@ def compact_report(rows):
     base = next(r for r in tested if r['order'] == 'baseline')
     targets = {'genre': 'GenreMiscalibration@10', 'popularity': 'UPD@10', 'exposure': 'ExposureGini@10'}
     lines = ['# Task 3.3: rerank before or after hybrid combination', '',
-             f"Baseline test NDCG@10: **{base['ndcg']:.6f}**. Pre: rerank components then combine. "
-             'Post: combine then rerank. Target reductions are relative to the corresponding baseline metric.', '',
+             (f"Baseline test NDCG@10: **{base['ndcg']:.6f}**. Pre: rerank components then combine. "
+              'Post: combine then rerank. Target reductions are relative to the corresponding baseline metric.'), '',
              '| Target | Order | Strength | Test NDCG@10 | NDCG loss | Target reduction |',
              '|---|---|---:|---:|---:|---:|']
     for r in tested:
@@ -68,8 +125,8 @@ def compact_report(rows):
         reduction = 100 * (1 - r[t] / base[t])
         lines.append(f"| {r['method']} | {r['order']} | {r['strength']:g} | {r['ndcg']:.6f} | "
                      f"{100*r['relative_ndcg_loss']:.2f}% | {reduction:.2f}% |")
-    lines += ['', f"Baseline targets: genre KL {base['GenreMiscalibration@10']:.4f}; "
-              f"popularity JS {base['UPD@10']:.4f}; exposure Gini {base['ExposureGini@10']:.4f}.", '',
+    lines += ['', (f"Baseline targets: genre KL {base['GenreMiscalibration@10']:.4f}; "
+                   f"popularity JS {base['UPD@10']:.4f}; exposure Gini {base['ExposureGini@10']:.4f}."), '',
               '**Discussion**', '']
     discussion = (
         'We compare both orders using the corrected six-component Ridge hybrid, the same 943 users, '
@@ -114,6 +171,9 @@ def verify(out, results):
         raise ValueError('Expected all 38 predefined evaluations')
     if len({(r['partition'], r['name']) for r in rows}) != 38:
         raise ValueError('Duplicate evaluations')
+    verify_summary_csv(out / 'metrics.csv', rows)
+    baselines = {p: next(r['NDCG@10'] for r in rows if r['partition'] == p and r['order'] == 'baseline')
+                 for p in ('valid', 'test')}
     masks = {p: bundle.mask(p) for p in ('valid', 'test')}
     pools = {p: read(out / f'{p}-pool.json') for p in masks}
     ui, ii = {u: n for n, u in enumerate(bundle.users)}, {i: n for n, i in enumerate(bundle.items)}
@@ -133,21 +193,16 @@ def verify(out, results):
             if not set(items) <= set(pools[p][user]): raise ValueError('Recommendation outside fixed pool')
             if not all(masks[p][ui[user], ii[i]] for i in items): raise ValueError('History item recommended')
         acc = evaluate_accuracy(ranked, relevant, 10)
-        saved = read(folder / 'metrics.json')
         if read(folder / 'per_user_metrics.json') != acc['per_user']:
             raise ValueError('Per-user accuracy differs')
         beyond = evaluate_beyond_accuracy(ranked, stats, acc['per_user'], 10)
-        for k, v in {**acc['aggregate'], **beyond['aggregate']}.items():
-            error = abs(v - row[k]); max_error = max(max_error, error)
-            if error > 1e-12: raise ValueError(f'{p}/{row["name"]}: {k} differs')
-        for k, v in independent_targets(ranked, stats).items():
-            error = abs(v - row[k]); max_error = max(max_error, error)
-            if error > 1e-12: raise ValueError('Independent target calculation differs')
+        target = selection['target_metrics'].get(row['method'])
+        max_error = max(max_error, verify_saved_metrics(folder, row, acc, beyond, baselines[p], target),
+                        verify_metric_values(row, independent_targets(ranked, stats), 'Independent targets'))
         if row['strength'] == 0:
             if ranked != originals[p]: raise ValueError('Zero-strength control differs')
             zero_controls += 1
         list_count += len(ranked)
-    targets = selection['target_metrics']
     for label, chosen in selection['choices'].items():
         method, order = label.split('/')
         candidates = [r for r in rows if r['partition'] == 'valid' and r['method'] == method and r['order'] == order]

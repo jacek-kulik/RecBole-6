@@ -5,14 +5,19 @@ import json
 from pathlib import Path
 
 from project.recsys.artifacts import fingerprint, write_json
-from project.recsys.component_cache import file_hash
 from project.recsys.comparisons import compare_runs
+from project.recsys.component_cache import file_hash
 from project.recsys.hybrid_bundle import HybridBundle
 from project.recsys.metrics.accuracy import evaluate_accuracy
 from project.recsys.metrics.beyond_accuracy import evaluate_beyond_accuracy
 from project.recsys.rerank import select_strength
 from project.scripts.run_switching_orders import prepare, read
-from project.scripts.verify_reranking_orders import independent_targets
+from project.scripts.verify_reranking_orders import (
+    independent_targets,
+    verify_metric_values,
+    verify_saved_metrics,
+    verify_summary_csv,
+)
 
 
 def verify(out, results):
@@ -30,6 +35,9 @@ def verify(out, results):
     selection=read(out/'selection.json'); rows=read(out/'metrics.json')
     if len(rows)!=38 or len({(r['partition'],r['name']) for r in rows})!=38:
         raise ValueError('Expected 38 distinct evaluations')
+    verify_summary_csv(out/'metrics.csv', rows)
+    baselines={p:next(r['NDCG@10'] for r in rows if r['partition']==p and r['order']=='baseline')
+               for p in ('valid','test')}
     pools={p:read(out/f'{p}-pool.json') for p in ('valid','test')}
     masks={p:bundle.mask(p,'warm') for p in pools}
     ui={u:n for n,u in enumerate(bundle.users)}; ii={i:n for n,i in enumerate(bundle.items)}
@@ -50,9 +58,9 @@ def verify(out, results):
         acc=evaluate_accuracy(ranked,relevant,10)
         if acc['per_user']!=read(folder/'per_user_metrics.json'): raise ValueError('Per-user metrics changed')
         beyond=evaluate_beyond_accuracy(ranked,stats,acc['per_user'],10)
-        for k,v in {**acc['aggregate'],**beyond['aggregate'],**independent_targets(ranked,stats)}.items():
-            error=abs(v-row[k]);max_error=max(max_error,error)
-            if error>1e-12: raise ValueError(f'Metric mismatch {row["name"]}/{k}')
+        target=selection['target_metrics'].get(row['method'])
+        max_error=max(max_error,verify_saved_metrics(folder,row,acc,beyond,baselines[part],target),
+                      verify_metric_values(row,independent_targets(ranked,stats),'Independent targets'))
         if row['strength']==0 and ranked!=originals[part]: raise ValueError('Zero strength changes switch')
         stored[(part,row['name'])]=ranked;list_count+=len(ranked)
     for label,chosen in selection['choices'].items():
