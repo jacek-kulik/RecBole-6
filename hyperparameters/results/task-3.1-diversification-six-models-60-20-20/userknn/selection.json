@@ -1,0 +1,117 @@
+{
+  "baseline_ndcg": 0.2838246669868189,
+  "identity": {
+    "checkpoint_sha256": "99402969e856167ff148bad3ac130117aaf658808325908f497b7f8df2148a19",
+    "code_sha256": "52b4d781d9609197e0ec9791e2753c014232bb0f554a3123a894ac318f77381d",
+    "data_sha256": {
+      "inter": "d4832a77576cb5a480517a9554eef1872331f1ba780ddcd3f4bf956d562ccfc2",
+      "item": "d464074b022a10862d32e8885d298ad09464733be6effaf4bd26761995afea38",
+      "user": "94005f99b329506e0c6da740267d2bc41dc7d22425ce2096d9a892e42bd499f0"
+    },
+    "dataset": "ml-100k",
+    "label": "userknn",
+    "model": "ItemKNN",
+    "scores_sha256": {
+      "test": "f15bdf3883805e1d8242ecd1234c78773d041a49f262e238826e02301e41754c",
+      "valid": "671ddb1a66c7b9d723a1de238bc32444ee4b66759afe5f4f31864299557c8b44"
+    },
+    "seed": 42,
+    "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb"
+  },
+  "kind": "reranker-selection",
+  "methods": {
+    "coverage_diversification": {
+      "direction": "maximize",
+      "owner": "Gabriel",
+      "selected": {
+        "evaluation": "coverage_diversification-0.75",
+        "ndcg": 0.27731958443159604,
+        "strength": 0.75,
+        "target": 0.21105826397146255
+      },
+      "status": "complete",
+      "target_metric": "CatalogueCoverage@10"
+    },
+    "diversification": {
+      "direction": "maximize",
+      "owner": "Gabriel",
+      "selected": {
+        "evaluation": "diversification-0.5",
+        "ndcg": 0.2784493654674063,
+        "strength": 0.5,
+        "target": 0.8566428206725125
+      },
+      "status": "complete",
+      "target_metric": "ILD@10"
+    },
+    "genre_calibration": {
+      "direction": "minimize",
+      "owner": "Jacek",
+      "selected": {
+        "evaluation": "genre_calibration-0.5",
+        "ndcg": 0.2740478351606372,
+        "strength": 0.5,
+        "target": 0.4736335427583726
+      },
+      "status": "complete",
+      "target_metric": "GenreMiscalibration@10"
+    },
+    "item_fairness": {
+      "direction": "minimize",
+      "owner": "Jacek",
+      "selected": {
+        "evaluation": "item_fairness-0.75",
+        "ndcg": 0.27037963131788667,
+        "strength": 0.75,
+        "target": 0.9156410107405114
+      },
+      "status": "complete",
+      "target_metric": "ExposureGini@10"
+    },
+    "popularity_calibration": {
+      "direction": "minimize",
+      "owner": "Jacek",
+      "selected": {
+        "evaluation": "popularity_calibration-0.75",
+        "ndcg": 0.27361518297047893,
+        "strength": 0.75,
+        "target": 0.2073901451619636
+      },
+      "status": "complete",
+      "target_metric": "UPD@10"
+    },
+    "popularity_diversification": {
+      "direction": "maximize",
+      "owner": "Gabriel",
+      "selected": {
+        "evaluation": "popularity_diversification-0.25",
+        "ndcg": 0.28467347638124224,
+        "strength": 0.25,
+        "target": 8.257025140561444
+      },
+      "status": "complete",
+      "target_metric": "MeanSelfInformation@10"
+    },
+    "user_fairness": {
+      "direction": "minimize",
+      "owner": "Victor",
+      "reason": "Victor: implement user-side fairness reranking.",
+      "status": "pending",
+      "target_metric": "GRU"
+    }
+  },
+  "partition": "valid",
+  "settings": {
+    "candidate_count": 50,
+    "k": 10,
+    "max_relative_ndcg_loss": 0.05
+  },
+  "status": "complete",
+  "strengths": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ]
+}

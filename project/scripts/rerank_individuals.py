@@ -7,7 +7,7 @@ from pathlib import Path
 
 from project.recsys.artifacts import REPO_ROOT, new_run, provenance, write_json
 from project.recsys.comparisons import compare_runs
-from project.recsys.rerank import run_reranking
+from project.recsys.rerank import METHODS, run_reranking
 
 MODELS = ("itemknn", "userknn", "bpr", "slimelastic", "ease", "fism")
 
@@ -18,7 +18,9 @@ def run(run_suffix: str, output: Path, source_root: Path) -> Path:
     manifest = {**provenance(), "kind": "six-model-reranking", "status": "running", "models": list(MODELS),
                 "source_root": str(source_root.resolve()), "run_suffix": run_suffix,
                 "k": 10, "candidate_count": 50, "strengths": [0, .25, .5, .75, 1],
-                "selection": "Minimum target metric with at most 5% relative validation NDCG loss"}
+                "selection": "Best method-specific target with at most 5% relative validation NDCG loss",
+                "method_targets": {name: {"metric": metric, "direction": direction}
+                                   for name, (_, _, metric, direction) in METHODS.items()}}
     started = time.monotonic()
     try:
         for partition in ("valid", "test"):

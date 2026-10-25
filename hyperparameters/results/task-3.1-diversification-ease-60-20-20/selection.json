@@ -1,0 +1,117 @@
+{
+  "baseline_ndcg": 0.2980991100486171,
+  "identity": {
+    "checkpoint_sha256": "99cc39dbdf4d25e662e1aa245f9b5784b8a739f00ea0fdf4e408d2b7ba59f534",
+    "code_sha256": "52d0f6d0a8283bd2ff57b5172892c58a189da8d92a923a40b21bbc1c227cc629",
+    "data_sha256": {
+      "inter": "d4832a77576cb5a480517a9554eef1872331f1ba780ddcd3f4bf956d562ccfc2",
+      "item": "d464074b022a10862d32e8885d298ad09464733be6effaf4bd26761995afea38",
+      "user": "94005f99b329506e0c6da740267d2bc41dc7d22425ce2096d9a892e42bd499f0"
+    },
+    "dataset": "ml-100k",
+    "label": "ease",
+    "model": "EASE",
+    "scores_sha256": {
+      "test": "633220f6672ea17dfa5d937862470cf94ccac955b520d7d9ccd7312215ef7ee7",
+      "valid": "a27fd7c864f9e1bcb7214362b2c19f1510f7fd8aaa15b163a095df96cdd21656"
+    },
+    "seed": 42,
+    "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb"
+  },
+  "kind": "reranker-selection",
+  "methods": {
+    "coverage_diversification": {
+      "direction": "maximize",
+      "owner": "Gabriel",
+      "selected": {
+        "evaluation": "coverage_diversification-0.75",
+        "ndcg": 0.2916145943716116,
+        "strength": 0.75,
+        "target": 0.3412604042806183
+      },
+      "status": "complete",
+      "target_metric": "CatalogueCoverage@10"
+    },
+    "diversification": {
+      "direction": "maximize",
+      "owner": "Gabriel",
+      "selected": {
+        "evaluation": "diversification-0.5",
+        "ndcg": 0.2922010482108888,
+        "strength": 0.5,
+        "target": 0.8549305941299573
+      },
+      "status": "complete",
+      "target_metric": "ILD@10"
+    },
+    "genre_calibration": {
+      "direction": "minimize",
+      "owner": "Jacek",
+      "selected": {
+        "evaluation": "genre_calibration-0.5",
+        "ndcg": 0.2876793204587967,
+        "strength": 0.5,
+        "target": 0.4350711916218756
+      },
+      "status": "complete",
+      "target_metric": "GenreMiscalibration@10"
+    },
+    "item_fairness": {
+      "direction": "minimize",
+      "owner": "Jacek",
+      "selected": {
+        "evaluation": "item_fairness-0.5",
+        "ndcg": 0.28846123993939576,
+        "strength": 0.5,
+        "target": 0.9052754869619176
+      },
+      "status": "complete",
+      "target_metric": "ExposureGini@10"
+    },
+    "popularity_calibration": {
+      "direction": "minimize",
+      "owner": "Jacek",
+      "selected": {
+        "evaluation": "popularity_calibration-0.75",
+        "ndcg": 0.2888935083861863,
+        "strength": 0.75,
+        "target": 0.15742741685311235
+      },
+      "status": "complete",
+      "target_metric": "UPD@10"
+    },
+    "popularity_diversification": {
+      "direction": "maximize",
+      "owner": "Gabriel",
+      "selected": {
+        "evaluation": "popularity_diversification-0.25",
+        "ndcg": 0.2991109535501456,
+        "strength": 0.25,
+        "target": 8.441069925537976
+      },
+      "status": "complete",
+      "target_metric": "MeanSelfInformation@10"
+    },
+    "user_fairness": {
+      "direction": "minimize",
+      "owner": "Victor",
+      "reason": "Victor: implement user-side fairness reranking.",
+      "status": "pending",
+      "target_metric": "GRU"
+    }
+  },
+  "partition": "valid",
+  "settings": {
+    "candidate_count": 50,
+    "k": 10,
+    "max_relative_ndcg_loss": 0.05
+  },
+  "status": "complete",
+  "strengths": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ]
+}

@@ -17,6 +17,17 @@ from project.recsys.rerank import candidate_pool, run_reranking, select_strength
 
 
 class SelectionTests(unittest.TestCase):
+    def test_maximizing_target_respects_budget_and_tie_breaks(self) -> None:
+        rows = [{"strength": s, "ndcg": n, "target": t}
+                for s, n, t in ((0, .4, .2), (.25, .39, .6), (.5, .38, .8), (.75, .37, 1))]
+        self.assertEqual(select_strength(rows, .4, "maximize")["strength"], .5)
+        rows[1]["target"] = .8
+        self.assertEqual(select_strength(rows, .4, "maximize")["strength"], .25)
+        rows[0].update(ndcg=.39, target=.8)
+        self.assertEqual(select_strength(rows, .4, "maximize")["strength"], 0)
+        with self.assertRaisesRegex(ValueError, "direction"):
+            select_strength(rows, .4, "invalid")
+
     def test_relative_budget_and_tie_breaks_keep_the_original_as_fallback(self) -> None:
         rows = [{"strength": strength, "ndcg": ndcg, "target": target}
                 for strength, ndcg, target in ((0, .4, .8), (.25, .39, .6), (.5, .38, .4), (.75, .379, .1))]
@@ -113,7 +124,10 @@ class RerankRunTests(unittest.TestCase):
         self.assertEqual(result["status"], "complete")
         self.assertEqual(result["methods"]["item_fairness"]["selected"], selection["methods"]["item_fairness"]["selected"])
         rows = json.loads((test / "summary.json").read_text())
-        self.assertEqual(len(rows), 4)
+        expected_methods = {"original", "genre_calibration", "popularity_calibration", "item_fairness",
+                            "diversification", "popularity_diversification", "coverage_diversification"}
+        self.assertEqual({row["method"] for row in rows}, expected_methods)
+        self.assertEqual(len(rows), len(expected_methods))
         for row in rows:
             rankings = json.loads((test / row["evaluation"] / "rankings.json").read_text())
             self.assertTrue(all(set(items) == {"a", "b"} for items in rankings.values()))
@@ -124,6 +138,46 @@ class RerankRunTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "requires a validation selection"):
             run_reranking(self.source, self.root / "test", partition="test")
         self.loader.assert_not_called()
+
+    def test_test_skips_methods_absent_from_frozen_selection_without_reselection(self) -> None:
+        self.validate()
+        selection = self.output / "selection.json"
+        frozen = json.loads(selection.read_text())
+        omitted = ("popularity_diversification", "coverage_diversification")
+        for name in omitted:
+            del frozen["methods"][name]
+        selection.write_text(json.dumps(frozen))
+        frozen_bytes = selection.read_bytes()
+        with patch("project.recsys.rerank.select_strength", side_effect=AssertionError("Test must not select")):
+            output = run_reranking(self.source, self.root / "test", partition="test", k=2, candidate_count=3,
+                                    selection=selection)
+        manifest = json.loads((output / "manifest.json").read_text())
+        self.assertEqual(manifest["status"], "complete")
+        for name in omitted:
+            self.assertEqual(manifest["methods"][name]["status"], "unavailable")
+            self.assertIn("frozen validation selection", manifest["methods"][name]["reason"])
+            self.assertFalse(any(output.glob(f"{name}-*")))
+        rows = json.loads((output / "summary.json").read_text())
+        expected = {"original"} | {name for name, method in frozen["methods"].items()
+                                  if method["status"] == "complete"}
+        self.assertEqual({row["method"] for row in rows}, expected)
+        for row in rows:
+            if row["method"] != "original":
+                self.assertEqual(row["strength"], frozen["methods"][row["method"]]["selected"]["strength"])
+        self.assertEqual(selection.read_bytes(), frozen_bytes)
+
+    def test_changed_code_identity_is_rejected_before_loading_a_checkpoint(self) -> None:
+        self.validate()
+        selection = self.output / "selection.json"
+        frozen = json.loads(selection.read_text())
+        frozen["identity"]["code_sha256"] = "different-code-version"
+        selection.write_text(json.dumps(frozen))
+        self.loader.reset_mock()
+        with self.assertRaisesRegex(ValueError, "identity/settings"):
+            run_reranking(self.source, self.root / "test", partition="test", k=2, candidate_count=3,
+                            selection=selection)
+        self.loader.assert_not_called()
+        self.assertFalse((self.root / "test").exists())
 
     def test_test_accuracy_loss_is_reported_without_reselection(self) -> None:
         self.validate()
@@ -211,17 +265,19 @@ class RerankRunTests(unittest.TestCase):
                              selection=selection)
         manifest = json.loads((test / "manifest.json").read_text())
         self.assertEqual(manifest["status"], "complete")
-        method = manifest["methods"]["genre_calibration"]
-        self.assertEqual(method["status"], "unavailable")
-        self.assertIn("item d", method["reason"])
-        self.assertEqual(method["selected"], frozen["methods"]["genre_calibration"]["selected"])
-        for name in ("popularity_calibration", "item_fairness"):
+        for name in ("genre_calibration", "diversification"):
+            method = manifest["methods"][name]
+            self.assertEqual(method["status"], "unavailable")
+            self.assertIn("item d", method["reason"])
+            self.assertEqual(method["selected"], frozen["methods"][name]["selected"])
+        for name in ("popularity_calibration", "item_fairness", "popularity_diversification", "coverage_diversification"):
             self.assertEqual(manifest["methods"][name]["status"], "complete")
             self.assertEqual(manifest["methods"][name]["selected"], frozen["methods"][name]["selected"])
         self.assertEqual(selection.read_bytes(), frozen_bytes)
         comparison = json.loads((test / "comparison/comparison.json").read_text())
         self.assertEqual({row["label"] for row in comparison},
-                         {"userknn-original", "userknn-popularity_calibration", "userknn-item_fairness"})
+                         {"userknn-original", "userknn-popularity_calibration", "userknn-item_fairness",
+                          "userknn-popularity_diversification", "userknn-coverage_diversification"})
 
     def test_nearby_strengths_use_distinct_evaluation_folders(self) -> None:
         strengths = [0.25000001, 0.25000002]

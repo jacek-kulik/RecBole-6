@@ -64,6 +64,11 @@ code, K and candidate count. Changed inputs/settings require a new validation
 sweep. Hashing the test export verifies identity; its outcomes do not determine
 the validation choice. A test command cannot supply a strength grid.
 
+Methods absent from an otherwise valid frozen selection are reported as
+unavailable and skipped on test. They do not receive a default strength or a
+new test-based selection. The source-code identity check still applies; a
+selection created with different code requires a new validation sweep.
+
 The 5% limit applies to validation. Test losses can be larger: they are recorded
 as `exceeds_5_percent_loss`, without changing the frozen strength.
 

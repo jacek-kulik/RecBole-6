@@ -29,6 +29,10 @@ METHODS = {
     "popularity_calibration": ("Jacek", partial(calibration.rerank, attribute="popularity"), "UPD", "minimize"),
     "item_fairness": ("Jacek", item_fairness.rerank, "ExposureGini", "minimize"),
     "diversification": ("Gabriel", diversification.rerank, "ILD", "maximize"),
+    "popularity_diversification": ("Gabriel", partial(diversification.rerank, attribute="popularity"),
+                                   "MeanSelfInformation", "maximize"),
+    "coverage_diversification": ("Gabriel", partial(diversification.rerank, attribute="coverage"),
+                                 "CatalogueCoverage", "maximize"),
     "user_fairness": ("Victor", user_fairness.rerank, "GRU", "minimize"),
 }
 
@@ -97,6 +101,8 @@ def verify_candidates(table: ScoreTable, run_dir: Path, source: dict[str, Any],
 def select_strength(rows: Sequence[dict[str, Any]], baseline_ndcg: float,
                     direction: str = "minimize") -> dict[str, Any]:
     """The 5% constraint applies to validation, never to test-based selection."""
+    if direction not in ("minimize", "maximize"):
+        raise ValueError("Selection direction must be minimize or maximize")
     eligible = [row for row in rows if row["target"] is not None and isfinite(row["target"])
                 and row["ndcg"] >= (1 - MAX_RELATIVE_LOSS) * baseline_ndcg]
     if not eligible:
@@ -120,6 +126,10 @@ def _save_evaluation(output: Path, rankings: Rankings, relevant: dict[str, set[s
                 "score_normalization": "Per-user min-max over the candidate pool; constant scores map to zero",
                 "reranker_ties": "Objective, original score, external item ID",
                 "exposure_order": "Rank rounds, sorted external user IDs; reset each experiment"}
+    if method in METHODS:
+        _, _, target, direction = METHODS[method]
+        manifest.update(target_metric=f"{target}@{common['k']}" if target != "GRU" else "GRU",
+                        target_direction=direction)
     try:
         accuracy, beyond, groups = write_ranking_results(output, rankings, relevant, statistics, common["k"])
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
@@ -197,7 +207,8 @@ def run_reranking(run_dir: str | PathLike[str], output: str | PathLike[str],
                                       predictions.catalogue)
         context = RerankContext(item_features=statistics.item_features, user_profiles=statistics.genre_profiles,
                                 popularity_profiles=statistics.popularity_profiles,
-                                user_groups=statistics.gender_groups, item_groups=statistics.item_groups)
+                                user_groups=statistics.gender_groups, item_groups=statistics.item_groups,
+                                item_counts=statistics.item_counts)
         common = {**evaluation_manifest(source, run_dir, partition, k, batch_size),
                   "label": source.get("label", source["model"]), "input_identity": identity}
         baseline = _save_evaluation(output / "original", pool.top_k(k), predictions.relevant, statistics,
@@ -207,6 +218,10 @@ def run_reranking(run_dir: str | PathLike[str], output: str | PathLike[str],
         for name, (owner, reranker, metric, direction) in METHODS.items():
             target_key = "GRU" if metric == "GRU" else f"{metric}@{k}"
             method = {"owner": owner, "target_metric": target_key, "direction": direction}
+            if frozen is not None and name not in frozen["methods"]:
+                methods[name] = {**method, "status": "unavailable",
+                                 "reason": "Method was not included in the frozen validation selection"}
+                continue
             if frozen is not None and frozen["methods"][name]["status"] != "complete":
                 methods[name] = frozen["methods"][name]
                 continue
