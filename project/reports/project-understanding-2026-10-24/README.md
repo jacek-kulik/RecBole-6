@@ -1,26 +1,34 @@
 # Project understanding study pack
 
-Start with `report.md`, or attempt `self-test.html` closed-book to establish a baseline first. The assessment opens directly in a browser and works offline. Keep `answer-key.md` closed until you have attempted it.
+Updated 25 October 2026. Start with the illustrated delivery `report.html`, or attempt `self-test.html` closed-book first. Keep the answer key closed until after the attempt.
 
-- `report.md`: approximately 9,500 substantive words, split exactly equally between Jacek's assigned work and the other/shared contributions. Each half contains 4,773 words and three annotated figures. It includes important concepts, code structure, decisions, worked examples, results, open PRs, and remaining limitations.
-- `self-test.html`: 30 questions worth 100 points, split 50/50. Twenty objective items are graded automatically; ten explanations use explicit self-assessment rubrics. Answers lock when grading starts. Export the attempt before closing or reloading the page.
-- `answer-key.md`: every question, objective solutions, explanation models, point-by-point rubrics, and retesting guidance. This also serves as a printable question bank.
-- `verification.json`: inspected source heads, checks actually performed, measured word allocation, saved-result audits, and the limits of those checks.
-- `figures/`: the two original reranking plots plus four new visualizations of recorded popularity, tuning, hybrid and ablation evidence, with source hashes and plotted values in `manifest.json`. Each report caption explains the axes, result, and limits of its interpretation. Click an image to view it at full size.
-- `build_visualizations.py`: reproduces the figure assets from existing experiment records, without training or rerunning evaluations. New charts have both SVG and PNG copies; existing reranking PNGs are copied without alteration.
+The report describes synced master `1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf`. PR #24 (your calibration/exposure delivery) and PR #27 (hybrid/reranker orders and independent weighted reconstruction) are merged. PR #28, inspected at `87321da05b01eaf825420371d44899a4583f0fa2`, merged during this refresh and its diversification code and six-model evidence are on master. The remaining open PR is #26 at `a3a55153f426727afd20091a33f39050c02cf815`, inspected without merging it. User fairness, group integration, and the explanatory entrypoint retain their actual status.
 
-The report describes master `54e60bffb`, open reranker PR #24 at `580bfaa63`, and open group-analysis PR #26 at `67be0b246`. The PRs were inspected without merging them. Pending algorithms and cross-PR integration work remain explicit. This pack changes documentation and the standalone assessment only.
+- `report.md`: 11,888 substantive words, exactly 5,944 in each ownership half. Twelve figures are divided six/six. The update adds information-flow and greedy-objective examples, shared exposure state, merged order experiments, reconstruction limits, and all three diversification objectives and plots.
+- `self-test.html`: 30 questions and 100 points, split 50/50. Twenty objective items are graded automatically; ten explanations use five one-point self-assessment criteria each. The updated questions cover score-preserving conversion, local versus cohort-dependent order behavior, diversification objectives, and the current group PR.
+- `answer-key.md`: the complete question bank, answers, rubrics, scoring guidance and retesting advice. It is generated from the assessment bank to keep answers synchronized.
+- `verification.json`: exact source heads, measured allocations, fresh and historical checks, and what those checks establish.
+- `figures/`: four unchanged original plots, four new views of recorded results, and four illustrative diagrams. `manifest.json` records source hashes, asset hashes and plotted values. The numerical examples are illustrations rather than new experimental observations.
+- `build_visualizations.py`: recreates figures from saved evidence, without training or evaluation. New charts/diagrams have SVG and PNG versions. Original experiment plots are copied unchanged.
+- `build_study_pack.py`: generates the answer key, readable HTML, landing page, checksums and offline ZIP using Python-Markdown.
 
-For the assessment, allow 75–90 minutes. Answer with the report closed, grade the objective portion, then award explanation points only when the locked answer demonstrates the corresponding criterion. A blank explanation scores zero. The page distinguishes automatic and self-assessed scores and withholds a final combined score until the rubric is assessed. Study bands are diagnostic guidance, not validated proficiency thresholds.
+Allow 75–90 minutes for the assessment. Answers lock when grading starts. Award explanation points only when your locked answer demonstrates the criterion; blank explanations score zero. The combined score remains provisional until every rubric criterion is assessed. These study bands are diagnostic guidance, not validated proficiency thresholds. Export before closing or reloading; answers are not saved across reloads. The export also exposes JSON text if file downloads are restricted. No account or network submission is used.
 
-No installation is needed to open the HTML file. If a browser restricts file downloads, the export button also exposes the full attempt JSON as text for saving manually. Response data stays in the page; no account or network submission is used.
+The delivery includes printable `report.html` and `answer-key.html`, plus `index.html`. Generated HTML and the ZIP live in the ignored local artifact directory instead of duplicating the committed report. Extract the entire ZIP before opening `index.html` so the figures remain alongside it.
 
-The delivery copy additionally contains readable, printable `report.html` and `answer-key.html`, plus an `index.html` entrypoint. These are generated from the Markdown for convenience and kept with the ignored local delivery artifacts rather than committed alongside duplicate report content.
+## Rebuild
 
-To rebuild the figures, use Python with NumPy and Matplotlib installed. The exact local reranking bundle is required for the two original graphs and training-only popularity statistics; other inputs are committed in `hyperparameters/results/`:
+Use Python with NumPy and Matplotlib for figures and Python-Markdown for the study pack. Run from the report branch's repository root. The saved local reranking bundle supplies the original calibration/exposure plots and training counts; other older numerical evidence is committed under `hyperparameters/results/`.
 
 ```sh
-MPLCONFIGDIR=/tmp/recbole-study-matplotlib python \
+MPLCONFIGDIR=/tmp/recbole-study-matplotlib python -W error \
   project/reports/project-understanding-2026-10-24/build_visualizations.py \
   --reranking-bundle /home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001
+
+python project/reports/project-understanding-2026-10-24/build_study_pack.py \
+  --output /home/senteran/programming/RecBole_DSAIT4335/project/artifacts/project-understanding-2026-10-24
 ```
+
+The figure generator retains and verifies the packaged PR #28 plots by default. To recopy them from the inspected source, add `--diversification-source /path/to/checkout-at-87321da05` to the figure command. The checked-in summary, figure-data JSON and source manifest support portable inspection. The JSON source hash recorded on Windows uses CRLF; the committed LF content matches after restoring CRLF. Original PNG/PDF hashes match byte-for-byte.
+
+A fresh clone does not include the ignored large experiment runs or checkpoints. Rendering the already committed figures and assessment into HTML requires no model runtime and no original training bundle. This pack does not change recommendation runtime code.

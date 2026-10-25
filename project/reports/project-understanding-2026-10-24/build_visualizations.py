@@ -9,6 +9,7 @@ import csv
 import hashlib
 import json
 import shutil
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -16,6 +17,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 import numpy as np
 
 REPORT_DIR = Path(__file__).resolve().parent
@@ -243,10 +245,185 @@ def ablation_figure(results, output):
     return save_figure(fig, output, "coefficient-ablation", [fit_path, rows_path], data)
 
 
+def diagram_canvas(title, subtitle, height=5.4):
+    figure, axis = plt.subplots(figsize=(12, height), layout="constrained")
+    axis.set(xlim=(0, 12), ylim=(0, 6))
+    axis.axis("off")
+    figure.suptitle(title, fontsize=15, weight="bold")
+    figure.supxlabel(subtitle, fontsize=10, color="#475569")
+    return figure, axis
+
+
+def box(axis, x, y, width, height, text, color=BLUE, fontsize=11):
+    axis.add_patch(FancyBboxPatch((x, y), width, height,
+                                 boxstyle="round,pad=0.03,rounding_size=0.12",
+                                 facecolor=color + "12", edgecolor=color, linewidth=1.3))
+    axis.text(x + width / 2, y + height / 2, text,
+              ha="center", va="center", fontsize=fontsize, linespacing=1.5, color="#172A3A")
+
+
+def arrow(axis, start, end, color="#64748B"):
+    axis.add_patch(FancyArrowPatch(start, end, arrowstyle="-|>",
+                                  mutation_scale=16, linewidth=1.4, color=color))
+
+
+def conceptual_record(figure, output, name, sources, data):
+    record = save_figure(figure, output, name, sources, data)
+    record["kind"] = "illustrative explanation of implemented behavior; not an experimental measurement"
+    return record
+
+
+def evaluation_flow(output):
+    figure, axis = diagram_canvas(
+        "A4 · Which information may influence each decision?",
+        "Conceptual map. Validation history joins the test mask; it does not refit the recorded training model.",
+        height=6.2)
+    rows = [(4.35, GREEN, "TRAIN", ["Training interactions\n+ static metadata", "Fit model parameters\nBuild profiles / counts", "Model scores\n+ training-only context"]),
+            (2.45, BLUE, "VALIDATE", ["Held-out validation\nlabels + predictions", "Measure NDCG\nand method target", "Choose checkpoint\nand operating strength"]),
+            (.55, ORANGE, "TEST", ["Frozen model, context\nand selected settings", "Mask train + valid\nApply frozen pipeline", "Test labels measure\nthe final saved lists"])]
+    for y, color, label, texts in rows:
+        axis.text(.1, y + .58, label, ha="left", va="center", color=color, weight="bold", fontsize=10)
+        for x, text in zip((1.45, 5.0, 8.55), texts):
+            box(axis, x, y, 3.15, 1.2, text, color)
+        arrow(axis, (4.65, y + .6), (4.95, y + .6), color)
+        arrow(axis, (8.2, y + .6), (8.5, y + .6), color)
+    axis.text(6.55, 2.08, "FREEZE the selected checkpoint, settings and input identity before final test",
+              ha="center", fontsize=10, weight="bold", color=ORANGE)
+    return conceptual_record(figure, output, "evaluation-flow",
+                             [REPO_ROOT / "project/recsys/rerank.py", REPO_ROOT / "project/recsys/recbole_adapter.py"],
+                             {"training_context_uses": "training interactions and static metadata",
+                              "selection_uses": "validation outcomes", "final_measurement_uses": "test outcomes",
+                              "test_history_mask": "training plus validation", "test_reselection": False})
+
+
+def calibration_step(output):
+    profile = np.array([.75, .25])
+    appended = [np.array([1., 0.]), np.array([.5, .5])]
+    smoothed = [.99 * distribution + .01 * profile for distribution in appended]
+    divergences = [float(np.sum(profile * np.log(profile / distribution))) for distribution in smoothed]
+    objectives = [.5 * relevance - .5 * divergence for relevance, divergence in zip((1., .8), divergences)]
+    figure, axes = plt.subplots(1, 3, figsize=(12, 5), layout="constrained")
+    titles = ["User's training profile", "Append A-only candidate x", "Append B-only candidate y"]
+    for axis, values, title in zip(axes, [profile] + appended, titles):
+        bars = axis.bar([0, 1], values, color=[BLUE, ORANGE], width=.55)
+        axis.bar_label(bars, labels=[f"{value:.0%}" for value in values], padding=4)
+        axis.set(xticks=[0, 1], xticklabels=["Genre A", "Genre B"], ylim=(0, 1.15),
+                 ylabel="Fractional genre mass", title=title)
+        axis.grid(axis="y", alpha=.15)
+    axes[0].set_xlabel("Growing list already contains one A-only item", fontsize=9)
+    for i, axis in enumerate(axes[1:]):
+        axis.set_xlabel(f"Relevance: {1. if i == 0 else .8:.1f}   |   smoothed KL: {divergences[i]:.6f}\n"
+                        f"Objective at strength 0.5: {objectives[i]:.6f}" + ("  → CHOOSE y" if i else ""),
+                        fontsize=9, color=GREEN if i else "#334155")
+    figure.suptitle("A5 · One greedy calibration decision: profile fit can outweigh relevance", fontsize=14, weight="bold")
+    figure.supxlabel("Toy example, not a measured MovieLens result. Objectives use already-normalized pool relevance and natural-log KL.", fontsize=9)
+    return conceptual_record(figure, output, "calibration-step", [REPO_ROOT / "project/recsys/rerankers/calibration.py"],
+                             {"profile": profile.tolist(), "candidate_distributions": [d.tolist() for d in appended],
+                              "smoothed_distributions": [d.tolist() for d in smoothed],
+                              "smoothed_kl": divergences, "strength": .5, "objectives": objectives, "chosen": "y"})
+
+
+def exposure_round(output):
+    figure, axis = diagram_canvas(
+        "A6 · One user's recommendation changes the next user's choice",
+        "Toy example: K=1, strength=1, both users prefer a to b. At strength=0 both receive a.")
+    steps = [(0.25, "START", "Exposure (a, b) = (0, 0)\nBonuses: a=1, b=1\nNo item has been recommended"),
+             (4.3, "USER 1 PICKS a", "Bonuses tie; original score wins\nExposure becomes (1, 0)\nRank-one increment = 1"),
+             (8.35, "USER 2 PICKS b", "Bonus a=1/2; bonus b=1\nExposure becomes (1, 1)\nShared state changes the choice")]
+    for x, label, text in steps:
+        axis.text(x + 1.7, 5.1, label, ha="center", weight="bold", color=BLUE, fontsize=11)
+        box(axis, x, 2.45, 3.4, 2.1, text, GREEN if x > 8 else BLUE, fontsize=10)
+    arrow(axis, (3.75, 3.5), (4.2, 3.5))
+    arrow(axis, (7.8, 3.5), (8.25, 3.5))
+    axis.text(6, 1.45, "Real calls: rank rounds → sorted external user IDs → discounted exposure update",
+              ha="center", fontsize=11, weight="bold")
+    axis.text(6, .65, "A new call starts a new exposure map. Coverage instead tracks an ever-recommended set.",
+              ha="center", fontsize=10, color="#475569")
+    return conceptual_record(figure, output, "exposure-round", [REPO_ROOT / "project/recsys/rerankers/item_fairness.py"],
+                             {"k": 1, "strength": 1, "original_preference": ["a", "b"],
+                              "exposure_states": [[0, 0], [1, 0], [1, 1]], "chosen_items": ["a", "b"]})
+
+
+def pipeline_orders(output):
+    figure, axis = diagram_canvas(
+        "B4 · The order experiment changes one controlled operation",
+        "Conceptual weighted-hybrid paths. Fixed routing replaces score fusion in the separate switching experiment.", height=6.1)
+    box(axis, .6, 4.8, 10.8, .85,
+        "Shared start: full eligible-candidate z-scores → unchanged hybrid chooses the same top-50 pool",
+        GREEN, fontsize=11)
+    axis.text(.2, 3.55, "PRE", color=BLUE, weight="bold")
+    for x, text in [(1.15, "Rerank each of the\nsix component lists"),
+                    (4.75, "Promote prefix; assign\noriginal sorted scores"),
+                    (8.35, "Frozen Ridge fusion\n→ hybrid top 10")]:
+        box(axis, x, 2.9, 3.25, 1.25, text, BLUE, fontsize=10.5)
+    arrow(axis, (4.45, 3.52), (4.7, 3.52))
+    arrow(axis, (8.05, 3.52), (8.3, 3.52))
+    axis.text(.2, 1.55, "POST", color=ORANGE, weight="bold")
+    for x, text in [(1.15, "Original standardized\ncomponent scores"),
+                    (4.75, "Frozen Ridge fusion\n(no second normalization)"),
+                    (8.35, "Rerank hybrid once\n→ hybrid top 10")]:
+        box(axis, x, .9, 3.25, 1.25, text, ORANGE, fontsize=10.5)
+    arrow(axis, (4.45, 1.52), (4.7, 1.52))
+    arrow(axis, (8.05, 1.52), (8.3, 1.52))
+    axis.text(6.3, .25, "Same pool, fits, profiles and relevance denominator; select each method/order on validation, then freeze.",
+              ha="center", fontsize=9.5, color="#475569")
+    return conceptual_record(figure, output, "pipeline-orders", [REPO_ROOT / "project/recsys/experiments/task3.py"],
+                             {"candidate_count": 50, "k": 10, "pre_score_conversion": "score-preserving permutation",
+                              "pre_strength": "one shared strength for all six components", "second_normalization": False})
+
+
+def diversification_figures(source_root, output):
+    previous = output / "manifest.json"
+    if source_root is None:
+        if not previous.exists():
+            raise ValueError("Pass --diversification-source with an inspected PR #28 checkout")
+        retained = read_json(previous)
+        records = {name: retained["figures"][name] for name in
+                   ("diversification-validation-tradeoffs", "diversification-test-effects")}
+        for record in records.values():
+            for name, digest in record["files"].items():
+                if sha256(output / name) != digest:
+                    raise ValueError(f"Retained PR #28 figure changed: {name}")
+        for name, record in retained["diversification_supporting_files"].items():
+            if sha256(output / name) != record["sha256"]:
+                raise ValueError(f"Retained PR #28 supporting data changed: {name}")
+        return records, retained["diversification_supporting_files"]
+    relative_root = Path("hyperparameters/results/task-3.1-diversification-six-models-60-20-20")
+    root = source_root / relative_root
+    head = subprocess.check_output(["git", "-C", str(source_root), "rev-parse", "HEAD"], text=True).strip()
+    if head != "87321da05b01eaf825420371d44899a4583f0fa2":
+        raise ValueError("The source checkout differs from the report's inspected PR #28 head")
+    recorded = read_json(root / "manifest.json")
+    records = {}
+    for name in ("validation-tradeoffs", "test-effects"):
+        source = root / "figures" / f"{name}.png"
+        if sha256(source) != recorded["figure_sha256"][source.name]:
+            raise ValueError(f"Original PR #28 plot failed its recorded hash: {source.name}")
+        destination = output / f"diversification-{source.name}"
+        shutil.copyfile(source, destination)
+        records[f"diversification-{name}"] = {
+            "kind": "existing project figure copied without alteration", "source_ref": head,
+            "sources": [{"path": (relative_root / "figures" / source.name).as_posix(), "sha256": sha256(source)}],
+            "files": {destination.name: sha256(destination)},
+            "source_code": "PR28: project/scripts/plot_diversification.py"}
+    supporting = {}
+    for relative, name in (("summary.csv", "diversification-summary.csv"),
+                           ("figures/figure-data.json", "diversification-figure-data.json"),
+                           ("manifest.json", "diversification-source-manifest.json")):
+        shutil.copyfile(root / relative, output / name)
+        supporting[name] = {"sha256": sha256(output / name), "source_ref": head,
+                            "source_path": (relative_root / relative).as_posix()}
+    supporting["diversification-figure-data.json"]["line_endings"] = (
+        "Committed checkout uses LF; source manifest records the equivalent Windows CRLF bytes")
+    return records, supporting
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reranking-bundle", type=Path, default=REPO_ROOT / "project/artifacts/reranking-20261022-001")
     parser.add_argument("--results-root", type=Path, default=REPO_ROOT / "hyperparameters/results")
+    parser.add_argument("--diversification-source", type=Path,
+                        help="Inspected PR #28 checkout; omit to retain already verified packaged PR figures")
     parser.add_argument("--output", type=Path, default=REPORT_DIR / "figures")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -265,9 +442,15 @@ def main():
                                     ("hybrid-comparisons", hybrid_figure, args.results_root),
                                     ("coefficient-ablation", ablation_figure, args.results_root)):
         figures[name] = generate(inputs, args.output)
-    manifest = {"kind": "report figure provenance", "report_source_snapshot": "54e60bffb",
+    for name, generate in (("evaluation-flow", evaluation_flow), ("calibration-step", calibration_step),
+                            ("exposure-round", exposure_round), ("pipeline-orders", pipeline_orders)):
+        figures[name] = generate(args.output)
+    diversification, supporting = diversification_figures(args.diversification_source, args.output)
+    figures.update(diversification)
+    manifest = {"kind": "report figure provenance", "report_source_snapshot": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
                 "generator_sha256": sha256(Path(__file__)),
-                "training_or_selection_performed": False, "figures": figures}
+                "training_or_selection_performed": False, "figures": figures,
+                "diversification_supporting_files": supporting}
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"Prepared {len(figures)} figures in {args.output}")
 

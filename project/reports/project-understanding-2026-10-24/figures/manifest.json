@@ -1,7 +1,7 @@
 {
   "kind": "report figure provenance",
-  "report_source_snapshot": "54e60bffb",
-  "generator_sha256": "7680c45107727e6eb6a6ea5102a46c543402747d40101a48a31e69a02ce1841d",
+  "report_source_snapshot": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
+  "generator_sha256": "4aa2d32a5c85eed8019704d492cfac028639bde2804815266fc37ca73b74af17",
   "training_or_selection_performed": false,
   "figures": {
     "validation-tradeoffs": {
@@ -560,6 +560,184 @@
         "coefficient-ablation.svg": "2d30edd19cb00a5f5e90a24df7d3f367964d8b081f1cfe6d87335efc5b9c6a64",
         "coefficient-ablation.png": "ce73d4053f9de721314d91e19fb928c969fc3da26b1ecde2838ef0e0f9260818"
       }
+    },
+    "evaluation-flow": {
+      "kind": "illustrative explanation of implemented behavior; not an experimental measurement",
+      "sources": [
+        {
+          "path": "project/recsys/rerank.py",
+          "sha256": "21e3752c48c378d027fa7b7c9669d6ed44812d52f13580d34dcc697253efe5cb"
+        },
+        {
+          "path": "project/recsys/recbole_adapter.py",
+          "sha256": "f091d4d2140a2a89629511ad67a7a2a0b615258384f8507ed5d909cbc5e79578"
+        }
+      ],
+      "plotted_data": {
+        "training_context_uses": "training interactions and static metadata",
+        "selection_uses": "validation outcomes",
+        "final_measurement_uses": "test outcomes",
+        "test_history_mask": "training plus validation",
+        "test_reselection": false
+      },
+      "files": {
+        "evaluation-flow.svg": "38f685ebf1bcc176f4fa15d57f700a7f6f31fc16d9d2e32f69ec70ac9e59596b",
+        "evaluation-flow.png": "2c5360a003ad871a880cff4b5b9bc4709e2ea8a3b7a6f8a8647cfed44a6525c5"
+      }
+    },
+    "calibration-step": {
+      "kind": "illustrative explanation of implemented behavior; not an experimental measurement",
+      "sources": [
+        {
+          "path": "project/recsys/rerankers/calibration.py",
+          "sha256": "87c7b5708c066caa0e7e94389ae45103a89b61525b4152217eeff9f1b99266f7"
+        }
+      ],
+      "plotted_data": {
+        "profile": [
+          0.75,
+          0.25
+        ],
+        "candidate_distributions": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.5,
+            0.5
+          ]
+        ],
+        "smoothed_distributions": [
+          [
+            0.9974999999999999,
+            0.0025
+          ],
+          [
+            0.5025,
+            0.4975
+          ]
+        ],
+        "smoothed_kl": [
+          0.9374083398217763,
+          0.12832451526374372
+        ],
+        "strength": 0.5,
+        "objectives": [
+          0.031295830089111853,
+          0.33583774236812813
+        ],
+        "chosen": "y"
+      },
+      "files": {
+        "calibration-step.svg": "73964eb636318fe78abb9cbdeab1c71ff788b7a58768c845167bbacf2569c6e9",
+        "calibration-step.png": "14e064c52b357aabb721c4efbfd89924fdaf2700c054ae4b3d346522d83bbedb"
+      }
+    },
+    "exposure-round": {
+      "kind": "illustrative explanation of implemented behavior; not an experimental measurement",
+      "sources": [
+        {
+          "path": "project/recsys/rerankers/item_fairness.py",
+          "sha256": "1d045eb706a93127b8f1426ad6d8c1cbd0ff5fd0654afc244af00e4797d04004"
+        }
+      ],
+      "plotted_data": {
+        "k": 1,
+        "strength": 1,
+        "original_preference": [
+          "a",
+          "b"
+        ],
+        "exposure_states": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "chosen_items": [
+          "a",
+          "b"
+        ]
+      },
+      "files": {
+        "exposure-round.svg": "53a684bd4f54edc617cd556930e54d235772df6644ff446ea1829ec50d6d798a",
+        "exposure-round.png": "525ab2e9f84b4ef6b907edf66878f703575a88c25f6811a2cdbec3f387aabcbb"
+      }
+    },
+    "pipeline-orders": {
+      "kind": "illustrative explanation of implemented behavior; not an experimental measurement",
+      "sources": [
+        {
+          "path": "project/recsys/experiments/task3.py",
+          "sha256": "dc9e0d31a6e58ccf84f39759f0fe646ee90d6ae1a81128d6165d43c73bb10f8b"
+        }
+      ],
+      "plotted_data": {
+        "candidate_count": 50,
+        "k": 10,
+        "pre_score_conversion": "score-preserving permutation",
+        "pre_strength": "one shared strength for all six components",
+        "second_normalization": false
+      },
+      "files": {
+        "pipeline-orders.svg": "5fed522728f28a374fcc7af9328c247606e73f969c5db3dc951ee4dd34b9411f",
+        "pipeline-orders.png": "28bdf019e0aea17b5ac337ae9c0e9cf2291316637fd51d066f28ab41786f871d"
+      }
+    },
+    "diversification-validation-tradeoffs": {
+      "kind": "existing project figure copied without alteration",
+      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "sources": [
+        {
+          "path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/figures/validation-tradeoffs.png",
+          "sha256": "04edb730f86ee373e1639237d417ab3a099523a7713361c55803bdeffbfd548e"
+        }
+      ],
+      "files": {
+        "diversification-validation-tradeoffs.png": "04edb730f86ee373e1639237d417ab3a099523a7713361c55803bdeffbfd548e"
+      },
+      "source_code": "PR28: project/scripts/plot_diversification.py"
+    },
+    "diversification-test-effects": {
+      "kind": "existing project figure copied without alteration",
+      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "sources": [
+        {
+          "path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/figures/test-effects.png",
+          "sha256": "eb9212835562696c07cf525babf0ef9806cd1baf973decb64a959a3b1db3b38a"
+        }
+      ],
+      "files": {
+        "diversification-test-effects.png": "eb9212835562696c07cf525babf0ef9806cd1baf973decb64a959a3b1db3b38a"
+      },
+      "source_code": "PR28: project/scripts/plot_diversification.py"
+    }
+  },
+  "diversification_supporting_files": {
+    "diversification-summary.csv": {
+      "sha256": "83be4105604c520aa42e8c826f5f6bc5349358e35b82d1f4da1f1f5e6a61ffea",
+      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "source_path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/summary.csv"
+    },
+    "diversification-figure-data.json": {
+      "sha256": "0c844092689f47fe464ba47c478353af81edd1453703b23cca47afd9a0f7385d",
+      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "source_path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/figures/figure-data.json",
+      "line_endings": "Committed checkout uses LF; source manifest records the equivalent Windows CRLF bytes"
+    },
+    "diversification-source-manifest.json": {
+      "sha256": "bb94b1f33b7045541d2ca08aba172ad404c0a47934129eb26a5763f045a22ab1",
+      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "source_path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/manifest.json"
     }
   }
 }

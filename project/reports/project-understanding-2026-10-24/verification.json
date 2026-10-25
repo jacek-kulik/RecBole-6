@@ -1,127 +1,228 @@
 {
-  "inspected_date": "2026-10-24",
-  "master_before_sync": "94d3610ef",
-  "master_synced": "54e60bffb07d0cf8ed538935b9c7b609be28f856",
-  "commits_fast_forwarded": 43,
-  "open_prs": [
+  "inspected_date": "2026-10-25",
+  "master_before_sync": "b0eb9781a",
+  "master_synced": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
+  "commits_fast_forwarded": 12,
+  "merged_prs": [
     {
       "number": 24,
       "head": "580bfaa63de4b176b2018e6e2a5108e8f9e390c7"
     },
     {
+      "number": 27,
+      "head": "77012e4e3c2b924542465f732e5234d94259abc2"
+    },
+    {
+      "number": 28,
+      "head": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "merged_at": "2026-10-25T14:50:44Z"
+    }
+  ],
+  "open_prs": [
+    {
       "number": 26,
-      "head": "67be0b2464a362124b29bfbbb1f91f8f72d0bc2a"
+      "head": "a3a55153f426727afd20091a33f39050c02cf815"
     }
   ],
   "report_words": {
-    "jacek": 4773,
-    "other_and_shared": 4773
+    "jacek": 5944,
+    "other_and_shared": 5944
   },
   "word_count_rule": "Regex word tokens within each substantive Part after stripping HTML tags; includes figure explanations, tables and code identifiers; excludes front matter, evidence/navigation section and source definitions.",
   "master_tests": {
-    "run": 151,
-    "skipped": 0,
-    "status": "passed",
-    "warnings_as_errors": true
-  },
-  "pr24_tests": {
-    "run": 149,
+    "run": 196,
+    "passed": 195,
     "skipped": 1,
-    "skip_reason": "Matplotlib unavailable for one plotting test",
     "status": "passed",
-    "warnings_as_errors": true
+    "warnings_as_errors": true,
+    "skip_reason": "Matplotlib unavailable in project runtime for one plotting test",
+    "command": ".venv/bin/python -W error -m unittest discover -s project/tests -v",
+    "source_head": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf"
   },
-  "reranking_saved_result_audit": {
-    "checked_ranking_lists": 113160,
-    "comparison_per_user_rows": 22632,
-    "evaluations": 120,
-    "models": 6,
+  "pr28_tests": {
+    "run": 196,
+    "passed": 195,
+    "skipped": 1,
     "status": "passed",
-    "test_cases_exceeding_validation_loss_budget": [
-      "itemknn/genre_calibration",
-      "userknn/genre_calibration",
-      "userknn/item_fairness",
-      "slimelastic/genre_calibration",
-      "ease/genre_calibration",
-      "ease/item_fairness"
-    ],
-    "test_comparison_rows": 24,
-    "validation_selections": 18
+    "warnings_as_errors": true,
+    "skip_reason": "Matplotlib unavailable in project runtime for one plotting test",
+    "source_head": "87321da05b01eaf825420371d44899a4583f0fa2"
   },
-  "reranking_artifact_checksums": {
-    "checked": 1237,
-    "status": "passed"
-  },
-  "portable_hybrid_replay": {
+  "weighted_reconstruction_saved_list_audit": {
     "status": "passed",
-    "portable_model_file_hashes": 33,
-    "replayed_evaluations": 57,
-    "checked_lists": 53751,
-    "maximum_metric_error": 0.0
+    "scope": "Current refresh recomputed saved accuracy and independent target arithmetic, candidate masks, full relevance and validation choices",
+    "evaluations": 38,
+    "recommendation_lists": 35834,
+    "frozen_choices": 6,
+    "maximum_target_recomputation_error": 1.6653345369377348e-15,
+    "new_training_performed": false
+  },
+  "pr28_compact_evidence_audit": {
+    "status": "passed",
+    "scope": "Compact saved numerical evidence; no access to all six models original raw ranking folders",
+    "validation_rows": 186,
+    "frozen_choices_checked": 36,
+    "final_comparison_rows": 42,
+    "diversification_summary_rows": 18,
+    "original_figure_hashes": {
+      "figure-data.json": "Recorded Windows CRLF hash matches after restoring CRLF; checked-out JSON has LF",
+      "test-effects.pdf": "byte-identical to recorded source hash",
+      "test-effects.png": "byte-identical to recorded source hash",
+      "validation-tradeoffs.pdf": "byte-identical to recorded source hash",
+      "validation-tradeoffs.png": "byte-identical to recorded source hash"
+    }
   },
   "pr26_saved_ranking_smoke": {
-    "status": "completed",
-    "input": "Saved original ItemKNN test rankings from reranking-20261022-001",
+    "status": "passed",
     "n_users": 943,
-    "activity_boundaries": [
-      26,
-      69
-    ],
     "activity_counts": {
       "low": 321,
       "medium": 310,
       "high": 312
     },
-    "recorded_gender_counts": {
+    "gender_counts": {
       "F": 273,
-      "M": 670
+      "M": 670,
+      "unknown": 0
     },
-    "full_pr26_suite_run": false
+    "minimum_group_size": 30,
+    "full_pr_suite_executed": false
   },
   "cross_pr_integration": {
-    "merged_for_report": false,
-    "merge_tree_conflicts": [
+    "open_prs_merged_for_report": false,
+    "master_pr26_merge_tree_conflicts": [
       "project/recsys/evaluation.py"
     ],
-    "additional_api_handoff": "PR24 shared writer/reranker consumers need the PR26 group report signature and schema."
+    "additional_api_handoff": "Master includes PR28 maximizing directions and training-count context. The shared writer and reranker consumers still need a coherent PR26 compare_groups signature and complete/pending schema.",
+    "combined_runtime_tested": false
+  },
+  "scope": "No model training or tuning in this refresh. Independently recomputed available weighted reconstruction lists and checked latest PR28 compact evidence. Original PR28 all-model raw lists were unavailable locally; its reported 228-evaluation/215004-list verification is a source claim, not a fresh full replay.",
+  "historical_checks_2026_10_24": {
+    "source_master": "54e60bffb07d0cf8ed538935b9c7b609be28f856",
+    "pr24_head": "580bfaa63de4b176b2018e6e2a5108e8f9e390c7",
+    "master_tests": {
+      "run": 151,
+      "skipped": 0,
+      "status": "passed",
+      "warnings_as_errors": true
+    },
+    "pr24_tests": {
+      "run": 149,
+      "skipped": 1,
+      "skip_reason": "Matplotlib unavailable for one plotting test",
+      "status": "passed",
+      "warnings_as_errors": true
+    },
+    "reranking_saved_result_audit": {
+      "checked_ranking_lists": 113160,
+      "comparison_per_user_rows": 22632,
+      "evaluations": 120,
+      "models": 6,
+      "status": "passed",
+      "test_cases_exceeding_validation_loss_budget": [
+        "itemknn/genre_calibration",
+        "userknn/genre_calibration",
+        "userknn/item_fairness",
+        "slimelastic/genre_calibration",
+        "ease/genre_calibration",
+        "ease/item_fairness"
+      ],
+      "test_comparison_rows": 24,
+      "validation_selections": 18
+    },
+    "reranking_artifact_checksums": {
+      "checked": 1237,
+      "status": "passed"
+    },
+    "portable_hybrid_replay": {
+      "status": "passed",
+      "portable_model_file_hashes": 33,
+      "replayed_evaluations": 57,
+      "checked_lists": 53751,
+      "maximum_metric_error": 0.0
+    },
+    "note": "Checks completed for the earlier report and preserved with their date; not repeated in full for the refresh."
   },
   "assessment": {
+    "bank_version": "2026-10-25.1",
     "questions": 30,
     "automatic_questions": 20,
     "written_questions": 10,
     "points": 100,
     "jacek_points": 50,
     "other_and_shared_points": 50,
-    "grading_logic_checks": "Passed known correct answers, blanks, exact-set scoring, fraction parsing, invalid inputs and balanced weights.",
-    "written_answers": "Self-assessed against five one-point criteria per answer.",
+    "written_answers": "Self-assessed against five one-point criteria per answer; blank explanations score zero.",
+    "updated_topics": [
+      "Merged calibration, exposure and diversification status",
+      "Score-preserving pre-rerank conversion",
+      "Switching commutation and cohort state",
+      "Diversification objectives",
+      "Latest PR26 documentation, tests and schema"
+    ],
+    "grading_logic_checks": "Passed all 20 objective correct answers and blanks, exact-set order/partial cases, fractions, invalid numeric inputs, 50/50 weights, pending/final rubric scoring and readiness gates.",
     "browser_dom_checks": {
       "status": "passed",
-      "observed": "Question rendering, radio choice, fraction input, objective scoring, disabled answered fields, pending-to-final rubric transition, blank explanation zeros, JSON export readback, and reset.",
-      "download_event": "Browser automation did not report a download event; the JSON text export was verified as a fallback.",
-      "screenshots": "Screenshot capture timed out in the browser tool; visual screenshots were not verified."
+      "observed": [
+        "30 questions rendered",
+        "Radio selection and 1/3 fraction accepted",
+        "Three correct objective answers yielded 7.5/50",
+        "All 30 response fieldsets locked on grading",
+        "Blank explanations automatically zero",
+        "Combined result stayed pending until the five nonblank rubric criteria were scored",
+        "Final combined score equaled 12.5/100 for the synthetic attempt",
+        "Exported JSON appeared in the visible textarea with final source identities and scores"
+      ],
+      "file_download": "JSON text export was verified; a browser file-download event was not asserted",
+      "reset_check": "The fresh export-read/reset follow-up timed out in the browser tool. Reset was verified in the prior report; its implementation is unchanged."
     }
   },
-  "scope": "Models were not retrained. Saved reranking arithmetic and portable hybrid predictions were rechecked; some other numeric evidence was source-inspected from committed experiment records.",
-  "figure_extension": {
-    "figures": 6,
-    "jacek_figures": 3,
-    "other_and_shared_figures": 3,
-    "original_figures_copied_without_alteration": 2,
+  "figures": {
+    "count": 12,
+    "jacek": 6,
+    "other_and_shared": 6,
+    "copied_unchanged_project_plots": 4,
     "new_views_of_recorded_results": 4,
-    "new_training_or_selection": false,
+    "illustrative_diagrams": 4,
+    "training_or_selection_performed": false,
     "provenance": "figures/manifest.json",
-    "validation": "All source and asset checksums verified; original PNG bytes matched; training item/interaction counts conserved; plotted ablation deltas independently subtracted from saved metrics; word and figure allocation checked.",
-    "visual_review": "All six figure PNGs inspected for legibility and layout.",
-    "generator": "build_visualizations.py ran successfully with warnings as errors.",
+    "generator": "build_visualizations.py passed with warnings as errors",
+    "visual_review": "Four new conceptual PNGs inspected for legibility and layout; two PR28 original plots inspected; six retained figures had been inspected in the earlier report.",
     "browser_rendering": {
-      "embedded_figures_loaded": 6,
-      "figures_fit_containers": 6,
-      "jacek_figures": 3,
-      "other_and_shared_figures": 3,
-      "contents_links": 29
+      "status": "passed",
+      "embedded_figures_loaded": 12,
+      "figures_fit_containers": 12,
+      "jacek_figures": 6,
+      "other_and_shared_figures": 6,
+      "contents_links": 34,
+      "horizontal_page_overflow": false
+    }
+  },
+  "packaging": {
+    "status": "passed",
+    "builder": "build_study_pack.py",
+    "checks": [
+      "Source and figure checksums",
+      "Four unchanged original PNG plots",
+      "All twelve image references",
+      "All local HTML targets and anchors",
+      "SHA256SUMS",
+      "ZIP CRC and every archived file byte-for-byte against delivery"
+    ],
+    "local_links": 126,
+    "checksummed_files": 34,
+    "zip_files": 35
+  },
+  "master_sync_history": [
+    {
+      "from": "b0eb9781a",
+      "to": "b744066a2",
+      "commits": 7
     },
-    "project_suite_rerun": false,
-    "project_suite_note": "No recommendation runtime modules or assessment logic changed; the earlier project suites are preserved above. This extension ran figure generation with warnings as errors, source/data checks, image inspection, browser rendering and packaging checks.",
-    "svg_cleanup": "Removed exporter trailing whitespace; normalized SVG element geometry/text is unchanged, every PNG is byte-identical, and plotted data is unchanged."
-  }
+    {
+      "from": "b744066a2",
+      "to": "1dc9587d2",
+      "commits": 5,
+      "reason": "PR28 merged during refresh"
+    }
+  ]
 }

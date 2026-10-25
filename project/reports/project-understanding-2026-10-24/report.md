@@ -1,14 +1,24 @@
 # Understanding our recommender-system project
 
-Study report for Jacek · inspected 24 October 2026
+Study report for Jacek · refreshed 25 October 2026
 
 This report explains what the project does, how the implementation works, why its decisions matter, and what the evidence supports. It is a learning document, rather than the space-limited course submission. Read it alongside the scored assessment in `self-test.html`; keep `answer-key.md` closed until you have attempted the questions.
 
 The substantive report has two equally weighted halves. **Part A covers your assigned work: independent metrics, reranker integration, calibration, item fairness, and reranker evaluation. Part B covers the other contributions and the shared system.** The ownership source is the current [work distribution][assignments], including its scope correction: implementing metric formulas does not transfer ownership of metadata preparation or subgroup interpretation to you.
 
-The reference snapshot is merged `master` at **54e60bffb07d0cf8ed538935b9c7b609be28f856**. Local `master` was fast-forwarded from `94d3610ef` and matched `origin/master`. Two open PRs are included separately: [#24, your rerankers][pr24], head **580bfaa63**, and [#26, Victor's group analysis][pr26], head **67be0b246**. Neither was merged for this report. A PR description is useful context; code and saved artifacts take precedence when they disagree.
+The refreshed source snapshot is merged `master` at **1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf**. The clean local checkout was fast-forwarded from `b0eb9781a` and matched `origin/master`. Your reranker [PR #24][pr24], Bogdan's order-comparison [PR #27][pr27], and [Gabriel's diversification, #28][pr28] are now merged. PR #28 merged during this refresh, so its code and results are included on master. The remaining open work is [Victor's group analysis, #26][pr26], inspected at **a3a55153f** without merging it into the report checkout.
 
-The six annotated figures follow the same balance: A1–A3 explain your work; B1–B3 explain the other contributions. The two saved reranking plots are reused unchanged. Four additional charts visualize recorded data and results without rerunning experiments. Select any figure to open its full-size image.
+The twelve annotated figures follow the same balance: A1–A6 explain your work; B1–B6 explain the other contributions. Four empirical plots are copied unchanged from saved project results. Other figures show recorded numerical evidence or explicitly labeled conceptual examples. Select any image to view it at full size.
+
+| Change since the previous report | Current interpretation |
+| --- | --- |
+| Calibration and item-exposure rerankers merged | Their implementation and native evaluation commands are available on master. |
+| Weighted/switching order comparison merged | Task 3.3 has real implementations and measured results, despite the generic task runner retaining an old placeholder message. |
+| New weighted reconstruction recorded | The same split/folds and qualitative conclusions are reproduced closely; the rebuilt predictions are not numerically identical. |
+| Diversification merged with six-model evidence | Genre variety, novelty, and catalogue reach are separate implemented objectives on master through PR #28. |
+| Group PR updated | Some definition text and tests changed; the shared evaluator integration still needs resolution. |
+
+“Merged,” “implemented in an open PR,” and “supported by saved evidence” are separate claims throughout this report. Historical result tables keep their original experiment identities instead of being relabeled as measurements of today's source.
 
 ## Part A — Your work: measuring and changing recommendations
 
@@ -20,7 +30,7 @@ The common thread is turning model scores into defensible statements about recom
 
 There are three distinct responsibilities. A **metric** describes an already produced ranking. A **reranker** constructs another ranking using model scores and permitted context. An **experiment runner** chooses settings on validation and records their later test performance. Keeping those roles separate makes the implementation understandable: changing a metric does not silently change the algorithm, and evaluation relevance labels do not become reranker inputs.
 
-Merged master contains your independent metrics and validation/test evaluation. Your calibration and exposure implementations remain in PR #24. The master reranker files still contain explicit `NotImplementedError` placeholders. PR #24 registers the two teammate methods, but registration does not implement them: diversification and user fairness remain pending in that snapshot. Therefore, the PR delivers three evaluated variants across two of the four assigned families: genre calibration, popularity calibration, and item exposure.
+Merged master now contains your independent metrics, shared validation/test writer, genre/popularity calibration, and item-exposure reranking. These are the three evaluated variants delivered through PR #24. Bogdan's two-order experiments and Gabriel's three diversification variants with six-model evidence are also merged. Master therefore has six implemented reranking variants. User-side fairness remains an explicit placeholder. Four assigned method families do not translate into four finished functions: calibration and diversification each have multiple distinct variants, while another family is still pending.
 
 The important interface is `rerank(scores, context, k, strength) -> Rankings`. The input `ScoreTable` contains eligible item scores; `RerankContext` supplies training-derived profiles and metadata; the output is an ordered list of external item IDs for every evaluation user. That contract lets the same independent metric functions score original and modified rankings. [Sources: assignments][assignments], [metric runner][evaluation], [PR implementation][rerank].
 
@@ -109,7 +119,7 @@ The right panel makes the denominator difference visible. The 60 head movies are
 
 ### A6. Calibration reranking: a greedy construction of a balanced list
 
-PR #24 implements both genre and popularity calibration in `rerankers/calibration.py`. A keyword-only `attribute` chooses which profile and divergence to use. The default is genres. Both variants build a list one position at a time and select the remaining candidate maximizing a combination of relevance and profile agreement.
+The merged implementation from PR #24 provides genre and popularity calibration in `rerankers/calibration.py`. A keyword-only `attribute` chooses which profile and divergence to use. The default is genres. Both variants build a list one position at a time and select the remaining candidate maximizing a combination of relevance and profile agreement.
 
 For genre calibration, the objective is `(1-lambda)*normalized_relevance - lambda*smoothed_KL(p,q_after_addition)`. Popularity calibration uses the same shape with base-two Jensen–Shannon divergence. The algorithm evaluates the distribution of the **growing list including the candidate**, rather than rewarding each item independently. An individually relevant drama can become less desirable when the list already overrepresents drama relative to the user's history.
 
@@ -171,15 +181,15 @@ The six-model script completes every validation sweep before starting test evalu
 
 This is a practical separation of algorithm, orchestration, and evidence. The pure reranker returns lists. The runner checks inputs and writes one experiment. The batch script coordinates models. The plotting script visualizes saved summaries without loading checkpoints, while `verify_reranking.py` independently recalculates accuracy, Gini, and coverage from saved lists and checks selections and masks.
 
-The audit run during preparation of this report passed **120 evaluations, 113,160 recommendation lists, 18 validation selections, 24 final comparison rows, and 22,632 per-user comparison rows**. All **1,237 artifact checksums** also matched. The six original configurations were trained in the saved 22 October run; this report did not retrain them.
+The earlier 24 October audit of the 22 October bundle passed **120 evaluations, 113,160 recommendation lists, 18 validation selections, 24 final comparison rows, and 22,632 per-user comparison rows**. All **1,237 artifact checksums** matched. These remain historical checks of that specific bundle. The current refresh additionally rechecks the locally saved weighted reconstruction and the new diversification selections, with the exact scope recorded in `verification.json`. Updating a document does not retroactively rerun its old experiments.
 
 These checks support the integrity and arithmetic of the saved experiment. They do not establish online user satisfaction, statistical significance, fairness under another definition, or an untouched test design. Similarly, `status: complete` for one evaluation folder means that process finished; `project_evaluation_complete: false` correctly preserves outstanding project work.
 
-There is an integration boundary to understand before the PRs are combined. PR #26 changes group reporting from a per-user-metric input to `(rankings,relevant,statistics,k)`, while PR #24 extracts a shared ranking-results writer and still expects the pending report's `reason`. A read-only merge-tree check finds conflicts in `evaluation.py`. The reranker manifest also needs to understand the new report shape. Both PRs can work individually without already constituting a working combined system. [Sources: runner][rerank], [saved-result verifier][rerank-audit], [PR #26][pr26].
+There is still an integration boundary around open PR #26. Master now uses `write_ranking_results` from the merged reranker work, while the group branch introduces `compare_groups(rankings,relevant,statistics,k)` through an older evaluator layout. Its complete report lacks the pending report's top-level `reason`, which existing reranker consumers expect. A read-only merge-tree check confirms an evaluator conflict. Resolving it requires updating the shared writer and its consumers consistently; passing tests on each branch separately does not prove the combined system works. The maximizing directions and expanded context merged through PR #28 must survive that integration. [Sources: runner][rerank], [shared writer][evaluation], [PR #26][pr26], [PR #28][pr28].
 
-### A10. Results you should be able to explain without overselling
+### A10. The recorded six-model calibration/exposure results
 
-The fresh PR #24 experiment uses seed 42, 943 users, 1,682 items, and 60,734/19,633/19,633 train/validation/test interactions. It retrains the six checked-in configurations without a new model-tuning search. Those configurations differ from some OOF and alternate-hybrid component fits discussed in Part B. Each reranked row must be compared with its own original model.
+The saved 22 October experiment uses seed 42, 943 users, 1,682 items, and 60,734/19,633/19,633 train/validation/test interactions. It retrains the six checked-in configurations without a new model-tuning search. Those configurations differ from some OOF and alternate-hybrid component fits discussed in Part B. Each reranked row must be compared with its own original model.
 
 | Model | Original test NDCG | Genre strength / test loss | Popularity strength / test loss | Exposure strength / test loss |
 | --- | ---: | ---: | ---: | ---: |
@@ -211,6 +221,50 @@ The dashed horizontal line at −5% is a reference to the validation budget, not
 Panel heights and tick ranges differ. Colored reductions use different target metrics, and the bars have no uncertainty intervals. Their size cannot establish significance, equal benefits for user groups, or improved satisfaction. The accompanying coverage example also matters: reaching more distinct movies can coexist with a high remaining Gini.
 
 **Origin.** This is the existing `test-effects.png` from the same fresh experiment, copied without alteration. Its underlying lists and selections passed the saved-result audit described in A9.
+
+### A11. Follow the information flow before judging a result
+
+<figure class="report-figure" id="figure-a4"><a href="figures/evaluation-flow.svg"><img src="figures/evaluation-flow.svg" alt="Training data builds models and profiles; validation measures and selects settings; a freeze separates development from final test measurement, with no test-label feedback arrow."></a></figure>
+
+**Figure A4 — A map of permitted information.** The green training lane supplies fitted model parameters, training histories, popularity counts, and user profiles. The validation lane measures candidate rankings and selects checkpoints or operating parameters. The final lane uses frozen choices to measure test outcomes. The picture describes responsibilities and information use; it does not claim that every stage is one Python function or that all algorithms train in the same way.
+
+Think through one user. Their training interactions help the model learn scores and provide evidence for the calibration profile. Their validation interactions tell us how well a proposed setting ranks held-out items. They may select a checkpoint or strength, but they do not get added to that training profile in the recorded experiments. When evaluating test, those validation items join the history mask so they cannot be recommended again. That masking change is not a train-plus-validation model refit.
+
+The same distinction explains why exporting test scores can be acceptable while selecting a setting using test NDCG is not. A score file contains model predictions. Selection needs outcome information and a decision rule. The report must therefore establish which labels influenced a decision, rather than infer leakage merely from a filename or timestamp. Conversely, a manifest flag saying `test_evaluated: false` is not proof if another stage already used test outcomes.
+
+The freeze is concrete. For native reranking it is the completed validation selection bound to input/settings identity. For Task 3.3 it is the saved method/order choice made after all validation points and before test outputs. Hashes catch changed inputs; they cannot establish that a person never inspected earlier test results. That is why the reused-split limitation remains even when every file matches.
+
+Your integration review should follow the entire chain: source checkpoint and split, complete eligible candidates, training-only context, declared selection direction, frozen choice, and saved final lists. A metric value is trustworthy only for the task that chain actually implements. This is also why the shared writer is useful: native, reranked, and portable-hybrid rankings can use the same definitions while retaining different declared candidate scopes.
+
+### A12. A numerical calibration step makes the objective concrete
+
+<figure class="report-figure" id="figure-a5"><a href="figures/calibration-step.svg"><img src="figures/calibration-step.svg" alt="A toy user profile with 75 percent genre A and 25 percent genre B, comparing another A recommendation with a B recommendation; smoothed KL and the combined objective favor B at strength one half."></a></figure>
+
+**Figure A5 — A worked example, not a MovieLens result.** Suppose the user's training profile is 75% genre A and 25% genre B. The growing list already contains an A-only movie. We now compare another A-only candidate, x, with normalized relevance 1.0, against a B-only candidate, y, with relevance 0.8. Those relevance values are already normalized within the candidate pool; do not normalize just the two displayed alternatives again.
+
+Appending x gives recommendation proportions `(1,0)`. Appending y gives `(0.5,0.5)`. Neither exactly matches the profile, but the second avoids entirely omitting the minority genre. The smoothed recommendation distributions become `(0.9975,0.0025)` and `(0.5025,0.4975)` respectively. Using natural-log KL from the profile to those mixtures gives approximately **0.937408** for x and **0.128325** for y.
+
+At strength 0.5, x's objective is `0.5*1.0 - 0.5*0.937408 ≈ 0.031296`. Candidate y's is `0.5*0.8 - 0.5*0.128325 ≈ 0.335838`. The greedy step chooses y. It sacrifices some model relevance to make the list's composition closer to the user's history. This is the mechanism behind the aggregate mismatch reductions in A10, rather than a claim that genre B is always the right second recommendation.
+
+The calculation also clarifies several implementation choices. The divergence is computed for the growing list after adding a candidate. It is not an independent genre bonus attached permanently to each movie. The 0.01 profile mixture keeps missing profile genres from causing infinite KL. A multi-genre movie would divide its one unit of mass across its genres, so its contribution would have to be computed before forming the new list distribution.
+
+At zero strength, the explicit baseline branch returns the original top K. At greater strength, a changed order is intentional. Correctness therefore means reproducing the stated objective, tie rules, eligibility, and profile policy; it does not mean guaranteeing that NDCG rises. Finally, the arithmetic is one local greedy decision. It neither proves that the completed list is globally optimal nor establishes that preserving a historical profile is always desirable.
+
+### A13. Exposure fairness changes one user's answer through other users
+
+<figure class="report-figure" id="figure-a6"><a href="figures/exposure-round.svg"><img src="figures/exposure-round.svg" alt="Two users both prefer item a to b. With pure exposure bonus, user one picks a; accumulated exposure then makes user two pick b. Strength zero would recommend a to both."></a></figure>
+
+**Figure A6 — Trace the state, rather than just the formula.** Consider users `1` and `2`, each with candidates a and b, with a ranked higher by the original model. Set K=1 and strength=1. At the start, both items have exposure zero, so both have bonus one. User `1` chooses a through the original-score tie-break. Rank-one exposure adds one to a's counter.
+
+User `2` now sees bonus `1/(1+1)=0.5` for a and `1/(1+0)=1` for b, and chooses b. The final exposure vector is `(1,1)`. With strength zero, both users would receive a. The example shows how a cohort-level mechanism can change a recommendation even when that user's own scores and profile have not changed.
+
+Real runs use rank rounds: every user receives a rank-one choice before rank-two choices begin. Later exposure increments are discounted by `1/log2(rank+1)`. Original model scores and external item IDs resolve objective ties. Sorting external IDs means lexical string order, so identifiers such as `10` need not follow `2` numerically. Determinism makes the chosen policy reproducible; it does not make user ordering inconsequential.
+
+This state dependence is the key to understanding the new switching-order experiment in B11. Reranking two components independently maintains two exposure histories, including lists later discarded by routing. Reranking the final switched cohort maintains one history. Both can faithfully implement the exposure heuristic and still produce different lists. User-local calibration has no such cross-user counter, which permits exact equality under the recorded fixed-routing conditions.
+
+The same reasoning matters when reviewing Gabriel's merged coverage diversification. That method tracks whether an item has ever been recommended, rather than accumulating discounted exposure. Once a movie is in the covered set, another appearance no longer adds coverage; it can still add considerable exposure. A breadth objective and an equality objective therefore need separate implementations, selection targets, and interpretations.
+
+As the integration owner, check the operation being optimized as well as its direction. Your mismatch and Gini targets are minimized. PR #28's ILD, self-information, and coverage targets are maximized. A sign error could select a perfectly valid file with the wrong scientific meaning. The frozen-test path must also mark a newly introduced method unavailable when an older selection does not contain it; adding methods must never silently initiate test-time tuning. Review these contracts whenever a teammate extends the registry.
 
 ## Part B — The other contributions and the shared system
 
@@ -322,7 +376,7 @@ The Ridge objective trades squared rating error against squared coefficient magn
 
 An earlier data-loader behavior normalized ratings to 0–1 despite raw-rating descriptions. The correction recovers raw ratings by external user-item pairs. Multiplying normalized targets by four and adding one correspondingly scales coefficients and adjusts the intercept; the recorded correction verifies unchanged rankings for that affine unit transformation. The final report supersedes earlier alpha-100 and alpha-100000 provisional snapshots.
 
-The final corrected hybrid has validation NDCG **0.299155** and test NDCG **0.409095**; its retained SLIM component has test NDCG **0.401882** and corrected FISM **0.372549**. The test difference over that SLIM fit is about 1.80% relative. The hybrid does not lead SLIM on validation, and the report does not claim significance. The test split had already been inspected during earlier iterations, so this is a corrected result on a reused benchmark holdout, rather than a fresh untouched generalization estimate.
+The original final corrected hybrid has validation NDCG **0.299155** and test NDCG **0.409095**; its retained SLIM component has test NDCG **0.401882** and corrected FISM **0.372549**. The test difference over that SLIM fit is about 1.80% relative. These are the original frozen results, retained in the historical comparison figures. The newly committed independent reconstruction reaches **0.409041** test NDCG, discussed in B11. Close reconstruction is different from an exact replay. The hybrid does not lead SLIM on validation, and no significance is claimed. The test split had already been inspected during earlier iterations, so neither table is a fresh untouched generalization estimate.
 
 Known catalogue identities across folds make the design transductive. A rare item's identity can be known even when its fold-training interactions are absent. That is different from observing its held-out target, and different again from solving deployment cold start. [Sources: hybrid implementation][hybrids], [cross-fitting runner][oof], [final results][oof-results].
 
@@ -415,11 +469,11 @@ Caio's reference popularity baseline counts training interactions only; unseen-c
 
 Victor's PR #26 replaces pending group reports with activity, recorded-gender, and top-three-training-genre user cohorts, plus popularity and genre item groups. For each user cohort it recomputes the shared metrics, including cohort-wide exposure statistics. A minimum group size of thirty is reported as a flag; smaller groups are still calculated. Genre cohorts overlap, so their user counts must not be added as if they formed a partition.
 
-The item report distinguishes recommendation slots, relevant hits, held-out relevant occurrences, precision/recall, and audience metrics. Audience quality weights a user's whole-list metric by their recommendation occurrences in a group. It is not precision restricted to that group's items. Multi-genre movies count in multiple genre memberships, so genre shares describe membership occurrences rather than mutually exclusive movie slots.
+The item report distinguishes recommendation slots, relevant hits, held-out relevant occurrences, precision/recall, and audience metrics. Audience quality weights a user's whole-list metric by their recommendation occurrences in a group. It is not precision restricted to that group's items. Multi-genre movies count in multiple genre memberships, so genre shares describe membership occurrences rather than mutually exclusive movie slots. For example, an Action/Comedy movie contributes one occurrence to each genre group. That differs from the fractional per-movie genre mass used by calibration: the two reports answer different questions and should not be combined without checking denominators.
 
-A smoke run of PR #26 on the saved original ItemKNN test lists completed. It reproduced activity counts 321/310/312 and recorded-gender counts **273 F and 670 M**. That establishes basic operability on this input, not completed cross-model subgroup interpretation. The PR adds two changed files without dedicated new tests in its diff.
+A smoke run of the updated PR #26 on saved original ItemKNN test lists completes with activity counts 321/310/312 and recorded-gender counts **273 F and 670 M**. That establishes operability on this input, not completed cross-model subgroup interpretation. The current PR changes five files, including updates to the existing validation and beyond-accuracy tests. In particular, missing-gender groups and unavailable metadata retain explicit counts and nulls in the revised test expectations.
 
-There are concrete documentation/schema defects to account for. Activity descriptions hard-code 34/92 despite using the helper's actual 26/69 boundaries. User-genre membership is top three, while item genres are all supplied genres despite a top-one description. `pending_inputs` contains the catalogue tuple rather than pending-reason metadata. These do not invalidate every metric calculation, but make unqualified interpretation of the emitted definitions unsafe. The shared evaluator conflicts with PR #24 and needs a coherent group-report API before combined use. [Sources: comparisons][comparisons], [PR #26 group implementation][groups-pr].
+Definition text is partially corrected, not fully resolved. The emitted activity description now says 26/69, but uses strict inequalities that do not describe boundary users correctly; the helper actually uses `<=26` and `<=69`. The function docstring still mentions high activity above 92. User-genre membership is top three, while item genres are all supplied genres despite a top-one description. `pending_inputs` still contains the catalogue tuple instead of pending-reason metadata. These defects do not invalidate every numeric calculation, but make unqualified interpretation of emitted definitions unsafe. The evaluator still conflicts with current master and needs a consistent shared-writer API before combined use. [Sources: comparisons][comparisons], [updated group implementation][groups-pr].
 
 ### B10. Exploratory analysis, unfinished work, and the project's claim boundary
 
@@ -427,24 +481,101 @@ The repository also contains content-based experiments: genre cosine profiles, i
 
 The genre-only experiments perform poorly against popularity on their recorded validation comparison. IDF reaches roughly **0.0509 NDCG**, compared with popularity around **0.1807**. Per-user genre Ridge reaches roughly **0.0409**; adding the tested linear year feature falls to about **0.0244** despite reducing ties. These observations challenge those specific feature/objective choices, rather than establishing that content-based recommendation is impossible. The small zero-training-history item cohort is inadequate for a strong cold-start conclusion.
 
-At the inspected heads, required unfinished work remains: Gabriel's diversification, Victor's user-side fairness, Bogdan's two hybrid/reranker orders, and Victor's explanatory entrypoint. Task 3.3 cannot be claimed from having a cascade: it asks rerank-then-combine versus combine-then-rerank under matched conditions. Ordered lists need an explicit rank-to-score/fusion, truncation, and missing-candidate policy before they can replace full score tables in a hybrid.
+At the refreshed snapshot, user-side fairness and the explanatory entrypoint remain placeholders. Group reporting is implemented in open PR #26. Gabriel's diversification and its numerical evidence are now merged through PR #28. The two hybrid/reranker orders are also implemented on master through PR #27. A stale message in the generic `task3.run()` does not override those real entrypoints and scripts. Task 3.3 cannot be inferred from the older cascade alone: it requires the explicit order comparison described next.
 
 The strongest current conclusion is methodological: comparable candidates, explicit objectives, training-only context, validation selection, frozen tests, and inspectable saved predictions make the results defensible within their scope. The remaining uncertainty concerns robustness, pending algorithms and interpretation, integration of open work, and reuse of an already inspected single test split. Those limits should remain visible in the final project narrative. [Sources: exploratory code][content], [order interfaces][orders], [explanatory placeholder][explanations].
 
+### B11. The newly merged comparison of hybrid/reranker orders
+
+Task 3.3 is now concrete code and evidence in merged PR #27. It compares rerank-then-combine, called **pre**, with combine-then-rerank, called **post**, for the frozen weighted Ridge hybrid. A second experiment compares rerank-then-route with route-then-rerank for the existing UserKNN/BPR switch. Bogdan owns these implementations; your responsibility includes reviewing the interface, candidate controls, and interpretation.
+
+<figure class="report-figure" id="figure-b4"><a href="figures/pipeline-orders.svg"><img src="figures/pipeline-orders.svg" alt="Two controlled paths through the same frozen weighted hybrid: rerank each component then convert ranks back to scores and combine, or combine original component scores then rerank; both use the same hybrid-selected top fifty pool."></a></figure>
+
+**Figure B4 — What changes when order changes.** Both weighted paths begin with scores standardized over each user's full eligible candidates, then use the **same unchanged-hybrid-selected top fifty**. Profiles, coefficients, base fits, K, and validation policy stay fixed. Positives outside the pool remain in the relevance denominator. This prevents the result from quietly comparing two different retrieval policies.
+
+Pre-reranking needs a real list-to-score rule. The implementation promotes a component's reranked top-ten prefix, appends the unselected pool items in that component's original score order, and assigns its original descending standardized score values to those positions. For example, scores `{a:3,b:2,c:1}` and prefix `[c]` become `{c:3,a:2,b:1}`. The multiset of values is preserved; those values are not replaced with arbitrary reciprocal ranks. Frozen Ridge weights then combine the reassigned scores, without standardizing again.
+
+Post-reranking combines the original standardized scores first, then applies one reranker to the hybrid. Each method/order chooses one strength on validation under the inherited 5% relative NDCG-loss limit. Pre uses that same strength across all six components, rather than tuning six independent strengths. Zero strength must reproduce the unchanged hybrid in both paths.
+
+The original frozen results are:
+
+| Hybrid | Method and strength | Order | Test NDCG | Relative NDCG loss | Target reduction |
+| --- | --- | --- | ---: | ---: | ---: |
+| Weighted, full | Genre, 0.5 | Pre | 0.386796 | 5.45% | 27.41% |
+| Weighted, full | Genre, 0.5 | Post | 0.379720 | 7.18% | 37.15% |
+| Weighted, full | Popularity, 0.75 | Pre | 0.395378 | 3.35% | 31.68% |
+| Weighted, full | Popularity, 0.75 | Post | 0.391661 | 4.26% | 37.85% |
+| Weighted, full | Exposure, 0.5 | Pre | 0.399308 | 2.39% | 3.95% |
+| Weighted, full | Exposure, 0.5 | Post | 0.388479 | 5.04% | 5.86% |
+| Switch, warm | Genre, 0.5 | Pre = post | 0.352646 | 5.19% | 36.10% |
+| Switch, warm | Popularity, 0.75 | Pre = post | 0.357064 | 4.00% | 41.15% |
+| Switch, warm | Exposure, 0.5 | Pre | 0.364221 | 2.08% | 4.64% |
+| Switch, warm | Exposure, 0.5 | Post | 0.356549 | 4.14% | 5.27% |
+
+Changes use each hybrid's own baseline: weighted **0.409095** with 1,682 catalogue items; switching **0.371960** within its 1,615-item warm scope. Targets are genre KL, popularity JS, and exposure Gini. Their reduction percentages are not a shared unit of benefit.
+
+For the weighted system, post-reranking improves each designated target more, at a larger accuracy cost. The result is conditional on the stated score-preserving conversion; it does not prove that every form of pre-reranking is weaker. Equal original scores can also make some promoted rank changes invisible to the combiner.
+
+For switching, local genre/popularity reranking commutes with fixed routing: the selected component supplies the same user-specific pool, scores, profile, and strength in either path. The experiment checks exact list equality at every validation strength and at the frozen test choices. That is stronger evidence than merely finding equal mean NDCG. Exposure does not commute under the declared policy. Pre-reranking allocates exposure over all 943 potential users separately for each component, including lists later discarded; post uses the final mixed cohort. Test exposure lists differ for **747 users**. Routing remains frozen at 733 UserKNN and 210 BPR users.
+
+**New reproduction evidence.** The original Windows caches were unavailable locally, so a separate reconstruction rebuilt thirty OOF fits and six full-training fits, recovered raw targets, and independently reselected Ridge alpha 30,000. Its split and fold memberships match the recorded design. Baseline test NDCG is **0.409041**, compared with original 0.409095. The largest selected-test discrepancy is post-exposure, **0.386825 instead of 0.388479**. All six selected strengths and the qualitative pre/post conclusions agree.
+
+The reconstruction's saved 38 evaluations and 35,834 lists were audited; this report refresh also recomputed their saved metric arithmetic, masks, full relevance, and validation choices. It is close reproduction, not byte-identical replay. Different runtime versions and KNN neighbor tie handling are possible contributors, not a demonstrated causal explanation. The original and rebuilt result folders remain separate. Neither result removes the reused-test limitation. [Sources: order implementation][orders], [switching order code][switch-orders], [experiment protocol][order-protocol], [original combined results][order-results], [independent reconstruction][weighted-reproduction].
+
+### B12. Gabriel's newly merged diversification: three separate objectives
+
+Merged PR #28 implements three variants behind `diversification.rerank`, selected by `attribute="genre"`, `"popularity"`, or `"coverage"`. All share the existing candidate checks, deterministic tie-breaking, min-max relevance normalization, and exact strength-zero baseline. They are separate alternatives, not one method simultaneously optimizing all beyond-accuracy properties.
+
+| Variant | Bonus added to `(1-strength)*relevance` | Selection target |
+| --- | --- | --- |
+| Genre variety | Mean Jaccard distance to items already selected for that user | Maximize ILD@10. |
+| Long-tail discovery | Smoothed training self-information, min-max normalized within that user's pool | Maximize MeanSelfInformation@10. |
+| Catalogue reach | One if the item has not yet been recommended in this cohort call; otherwise zero | Maximize CatalogueCoverage@10. |
+
+Genre diversity rewards being different from the growing prefix. At its first position, that bonus is zero, so the original score and external ID resolve the choice. It does not compare against the user's historical genre proportions. That is the contrast with your genre calibration: a varied list and a historically proportionate list are not necessarily the same list.
+
+Long-tail discovery uses `-log2((count+1)/(training_interactions+catalogue_size))`. The context now includes `item_counts`, validated as nonnegative integer counts for external IDs. The additional normalization gives novelty a bounded within-pool scale before combining it with relevance. Your popularity calibration instead minimizes disagreement with a user's head/middle/tail profile. A user with a popular-history profile can receive a well-calibrated list that is not very novel.
+
+Coverage is cohort-dependent. It traverses rank rounds and sorted users with a fresh global covered-item set. Once an item appears, additional appearances receive no coverage bonus. Exposure fairness instead accumulates discounted appearances and continues distinguishing differently exposed movies. Neither objective guarantees the other, and neither can retrieve outside the supplied pool.
+
+The registry adds maximizing target directions and method-specific manifest fields. Compatible frozen selections that omit a newly registered method mark it unavailable rather than tuning it on test. Input and source identity checks remain in force; this rule does not make an old selection reusable after arbitrary code changes.
+
+<figure class="report-figure" id="figure-b5"><a href="figures/diversification-validation-tradeoffs.png"><img src="figures/diversification-validation-tradeoffs.png" alt="PR twenty eight validation curves for genre variety, novelty and catalogue coverage across six models; stars show the frozen choices and the five percent loss boundary is positive on the horizontal axis."></a></figure>
+
+**Figure B5 — Read the sign convention carefully.** Unlike A2's accuracy-change axis, the horizontal axis here is **NDCG loss**, so the feasible side of the +5% line is to the left. The three panels are different objectives; colors distinguish base models. Stars mark the highest available target within the validation constraint. Greater strengths can improve the target while imposing much larger accuracy costs, especially for novelty. The connecting segments are the declared discrete strength sweep, not a continuously estimated frontier.
+
+<figure class="report-figure" id="figure-b6"><a href="figures/diversification-test-effects.png"><img src="figures/diversification-test-effects.png" alt="Frozen test effects of the three diversification methods across six models, with grey accuracy changes, colored target gains and red outlines for losses greater than five percent."></a></figure>
+
+**Figure B6 — What the new six-model evidence supports.** The experiment covers ItemKNN, UserKNN, BPR, SLIMElastic, EASE, and FISM using checked-in configurations without another model-tuning search. Test ILD gains range from **4.66–12.11%**, novelty gains from **1.00–2.47%**, and catalogue-coverage gains from **44.55–143.20%**, relative to each model's own original value. Those three scales cannot be compared as interchangeable improvements in user benefit.
+
+Four of eighteen diversification cases exceed 5% test NDCG loss: FISM genre/novelty and SLIM/EASE coverage. The largest loss is EASE coverage, **7.15%**. Some novelty points improve NDCG too; no monotonic accuracy penalty is assumed. The frozen choices are retained without reselection.
+
+UserKNN coverage illustrates the relative/absolute distinction. Its catalogue fraction rises from about **10.05% to 24.44%**: roughly **143.20% relative gain**, but about **14.39 percentage points** and still far below covering the whole catalogue. A large coverage bar does not establish equal exposure or subgroup fairness. Panel ranges differ, and red outlines flag the test accuracy-budget overruns.
+
+Both figures are copied unchanged from PR #28's committed evidence, now on master. That evidence reports an audit of 228 evaluations and 215,004 lists. The present refresh independently checks the compact validation choices and final tables across all six models; it does not claim a new full replay of every original raw list. The evidence retains its generating runtime and source hashes, including generation before the final packaging commit. Merged source and generating experiment identity are therefore kept distinct. These remain single-seed results on the reused split. [Sources: diversification implementation][diversification], [six-model evidence][diversification-results], [plotting source][diversification-plots].
+
+To defend a diversification result, name the input pool, the bonus, its state, the target, and the frozen strength. Then trace one chosen item. This connects an attractive aggregate chart to a concrete algorithmic choice and makes it easier to detect accidental substitutions between novelty, calibration, coverage, and exposure.
+
 ## Evidence, navigation, and reproduction
 
-The two substantive halves each contain 4,773 words under the same word-count rule, including figure explanations. Each half has three annotated figures. Snapshot metadata, references, and this navigation section sit outside that allocation.
+The two substantive halves have equal word counts under the same rule, including figure explanations; the measured counts are in `verification.json`. Each half has six annotated figures. Snapshot metadata, references, and this navigation section sit outside that allocation.
 
 | Figure | Existing work shown | How to use it |
 | --- | --- | --- |
 | [A1: Training popularity](#figure-a1) | Saved training counts and item-band memberships | Separate catalogue share from interaction share. |
 | [A2: Validation trade-offs](#figure-a2) | Original six-model validation plot | Read feasible strengths and selected operating points. |
 | [A3: Frozen test effects](#figure-a3) | Original six-model test plot | Read gains, losses, and failures of budget transfer. |
+| [A4: Information flow](#figure-a4) | Illustrated training/selection/test responsibilities | Trace which labels can influence each decision. |
+| [A5: One calibration step](#figure-a5) | Numerical example of the implemented objective | Recalculate smoothing, KL and the greedy choice. |
+| [A6: Shared exposure](#figure-a6) | Two-user illustration of cohort state | Explain why one recommendation changes another user's result. |
 | [B1: Individual tuning](#figure-b1) | All 34 EASE/SLIM trial records | Assess regularization sensitivity and small selection gains. |
 | [B2: Hybrid comparisons](#figure-b2) | Final OOF and corrected alternative-hybrid results | Compare within experiment families using the proper controls. |
 | [B3: Coefficients and ablation](#figure-b3) | Frozen coefficients and recorded removal experiments | Distinguish regression weight from measured ranking utility. |
+| [B4: Hybrid/reranker orders](#figure-b4) | Illustrated pre/post paths on merged master | Identify the fixed controls and list-to-score conversion. |
+| [B5: Diversification validation](#figure-b5) | Original latest-PR six-model plot | Read maximizing targets and the positive loss axis. |
+| [B6: Diversification test](#figure-b6) | Original latest-PR frozen test plot | Separate relative target gains from percentage-point changes. |
 
-`figures/manifest.json` records source hashes, figure hashes, and the exact plotted data for the newly visualized results. The two original plots have byte-identical copies in this report. The four added views come from `build_visualizations.py`, which reads existing evidence and does not train models, tune parameters, or reevaluate recommendation lists.
+`figures/manifest.json` records source hashes, asset hashes, and plotted values. Four original plots are copied byte-for-byte; four views visualize saved measurements; four diagrams explain implemented behavior or toy arithmetic. The generator does not train models, tune parameters, or reevaluate recommendation lists. PR #28's figure-data JSON has LF line endings in Git; restoring CRLF reproduces its recorded Windows hash. Its PNG/PDF hashes match directly. The packaged summary and figure data preserve their own checked-out hashes.
 
 | What to inspect | Main entrypoints | Report sections |
 | --- | --- | --- |
@@ -458,9 +589,12 @@ The two substantive halves each contain 4,773 words under the same word-count ru
 | Portable replay | `hybrid_bundle.py`, `scripts/evaluate_alternate_bundle.py` | B2, B7 |
 | Contribution analysis | `analysis/coefficients.py`, `scripts/analyze_hybrid_coefficients.py` | B8 |
 | Final comparison and subgroup reporting | `comparisons.py`, PR #26 `analysis/groups.py` | B9 |
-| Required unfinished order analysis | `experiments/task3.py` | B10 |
+| Merged hybrid/reranker orders | `experiments/task3.py:score_preserving_permutation`, `switching_orders.py` | B11 |
+| Newly merged diversification | PR #28 `rerankers/diversification.py`, `rerank.py:METHODS` | A13, B12 |
 
-Verification performed for this report: merged master ran 151 tests successfully with warnings as errors. PR #24 ran 149 tests with one plotting test skipped because Matplotlib was unavailable. Its saved reranking audit and all 1,237 bundle checksums passed. The alternate-hybrid portable replay and PR #26 smoke check are recorded in `verification.json`. These checks did not retrain models or complete pending assignment tasks. The browser assessment was checked separately for input, grading, rubric, reset, and export behavior.
+Fresh verification: final merged master and PR #28 each ran **196 tests**, with one plotting test skipped because Matplotlib was unavailable in the project runtime. Warnings were treated as errors. The weighted reconstruction's 38 evaluations/35,834 lists were rechecked for accuracy, independent target arithmetic, masks, relevance, pool membership, baseline controls, and frozen choices. PR #28's compact evidence passed 36 selection checks, 42 final-row checks, 18 diversification summaries, and source-figure hashes. A real saved-cohort smoke run of updated PR #26 passed; its full suite and the combined PR integration were not run.
+
+The earlier report's original six-model reranking audit, 1,237 bundle checksums, and alternative-hybrid portable replay remain dated historical checks in `verification.json`. They are not relabeled as fresh runs. This refresh did not retrain models. Figure generation, image inspection, assessment checks, browser rendering, and portable packaging are verified separately.
 
 For the normal project suite, run from a checkout containing the desired source:
 
@@ -481,39 +615,49 @@ cd /home/senteran/programming/RecBole_DSAIT4335/project/artifacts/worktrees/jace
 
 The saved bundle is local and ignored by Git. A fresh clone can inspect the committed compact hybrid evidence and portable alternative weights; it does not automatically contain the large reranking checkpoints or historical OOF caches. Historical notes are useful for provenance, but use the final corrected reports linked above for current numbers. No generalization or causal claim is added merely because a reconstruction matches stored values.
 
-[assignments]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/work_distribution.md
-[accuracy]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/metrics/accuracy.py
-[metric-validation]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/metrics/_validation.py
-[contracts]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/contracts.py
-[evaluation]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/evaluation.py
-[beyond]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/metrics/beyond_accuracy.py
-[data]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/data.py
+[assignments]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/work_distribution.md
+[accuracy]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/metrics/accuracy.py
+[metric-validation]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/metrics/_validation.py
+[contracts]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/contracts.py
+[evaluation]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/evaluation.py
+[beyond]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/metrics/beyond_accuracy.py
+[data]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/data.py
 [pr24]: https://github.com/jacek-kulik/RecBole-6/pull/24
 [pr26]: https://github.com/jacek-kulik/RecBole-6/pull/26
-[rerank]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/recsys/rerank.py
-[calibration]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/recsys/rerankers/calibration.py
-[item-fairness]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/recsys/rerankers/item_fairness.py
-[rerank-common]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/recsys/rerankers/_common.py
-[rerank-audit]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/scripts/verify_reranking.py
-[protocol]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/configs/protocol.yaml
-[adapter]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/recbole_adapter.py
-[artifacts]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/artifacts.py
-[bundle]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/hybrid_bundle.py
-[model-configs]: https://github.com/jacek-kulik/RecBole-6/tree/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/configs/models
-[framework]: https://github.com/jacek-kulik/RecBole-6/tree/54e60bffb07d0cf8ed538935b9c7b609be28f856/recbole/model/general_recommender
-[fism]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/recbole/model/general_recommender/fism.py
-[retuning]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/reports/task-1.1-retuning-ease-slim.md
-[oof-doc]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/OOF_HYBRID.md
-[hybrids]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/hybrids.py
-[oof]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/oof_hybrid.py
-[oof-results]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/reports/task-1.3-final-results.md
-[alternatives]: https://github.com/jacek-kulik/RecBole-6/tree/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys
-[alternate-results]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/reports/task-1.4-corrected-hybrid-comparison.md
-[coefficients]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/analysis/coefficients.py
-[coefficient-results]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/reports/task-2.3-coefficient-analysis.md
-[comparisons]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/comparisons.py
-[groups-pr]: https://github.com/jacek-kulik/RecBole-6/blob/67be0b2464a362124b29bfbbb1f91f8f72d0bc2a/project/recsys/analysis/groups.py
-[content]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/content_based.py
-[orders]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/experiments/task3.py
-[explanations]: https://github.com/jacek-kulik/RecBole-6/blob/54e60bffb07d0cf8ed538935b9c7b609be28f856/project/recsys/analysis/explanations.py
+[rerank]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerank.py
+[calibration]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerankers/calibration.py
+[item-fairness]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerankers/item_fairness.py
+[rerank-common]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerankers/_common.py
+[rerank-audit]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/scripts/verify_reranking.py
+[protocol]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/configs/protocol.yaml
+[adapter]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/recbole_adapter.py
+[artifacts]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/artifacts.py
+[bundle]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/hybrid_bundle.py
+[model-configs]: https://github.com/jacek-kulik/RecBole-6/tree/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/configs/models
+[framework]: https://github.com/jacek-kulik/RecBole-6/tree/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/recbole/model/general_recommender
+[fism]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/recbole/model/general_recommender/fism.py
+[retuning]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-1.1-retuning-ease-slim.md
+[oof-doc]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/OOF_HYBRID.md
+[hybrids]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/hybrids.py
+[oof]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/oof_hybrid.py
+[oof-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-1.3-final-results.md
+[alternatives]: https://github.com/jacek-kulik/RecBole-6/tree/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys
+[alternate-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-1.4-corrected-hybrid-comparison.md
+[coefficients]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/analysis/coefficients.py
+[coefficient-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-2.3-coefficient-analysis.md
+[comparisons]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/comparisons.py
+[groups-pr]: https://github.com/jacek-kulik/RecBole-6/blob/a3a55153f426727afd20091a33f39050c02cf815/project/recsys/analysis/groups.py
+[content]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/content_based.py
+[orders]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/experiments/task3.py
+[explanations]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/analysis/explanations.py
 [rerank-plots]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/scripts/plot_reranking.py
+
+[pr27]: https://github.com/jacek-kulik/RecBole-6/pull/27
+[pr28]: https://github.com/jacek-kulik/RecBole-6/pull/28
+[switch-orders]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/experiments/switching_orders.py
+[order-protocol]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/RERANKING_ORDERS.md
+[order-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-3.3-reranking-orders.md
+[weighted-reproduction]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/hyperparameters/results/task-3.3-weighted-reproduction-2026-10-25/README.md
+[diversification]: https://github.com/jacek-kulik/RecBole-6/blob/87321da05b01eaf825420371d44899a4583f0fa2/project/recsys/rerankers/diversification.py
+[diversification-results]: https://github.com/jacek-kulik/RecBole-6/tree/87321da05b01eaf825420371d44899a4583f0fa2/hyperparameters/results/task-3.1-diversification-six-models-60-20-20
+[diversification-plots]: https://github.com/jacek-kulik/RecBole-6/blob/87321da05b01eaf825420371d44899a4583f0fa2/project/scripts/plot_diversification.py
