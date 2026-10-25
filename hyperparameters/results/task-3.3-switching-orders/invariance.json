@@ -1,0 +1,20 @@
+{
+  "test/exposure/selected": false,
+  "test/genre/selected": true,
+  "test/popularity/selected": true,
+  "valid/exposure/0": true,
+  "valid/exposure/0.25": false,
+  "valid/exposure/0.5": false,
+  "valid/exposure/0.75": false,
+  "valid/exposure/1": false,
+  "valid/genre/0": true,
+  "valid/genre/0.25": true,
+  "valid/genre/0.5": true,
+  "valid/genre/0.75": true,
+  "valid/genre/1": true,
+  "valid/popularity/0": true,
+  "valid/popularity/0.25": true,
+  "valid/popularity/0.5": true,
+  "valid/popularity/0.75": true,
+  "valid/popularity/1": true
+}

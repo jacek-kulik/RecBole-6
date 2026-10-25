@@ -1,0 +1,9 @@
+{
+  "command": ".venv/Scripts/python.exe -m unittest discover -s project/tests -q",
+  "exit_code": 0,
+  "new_order_tests": 5,
+  "passed": 176,
+  "skip_reason": "Plotting requires Matplotlib, which is unavailable",
+  "skipped": 1,
+  "tests_run": 177
+}

@@ -1,0 +1,13 @@
+{
+  "discussion_words": 175,
+  "renderer_sha256": "38ee1e94a5eb65d83b5b35f18490a1ee0373b987abeac6b5be4b338b3d98421a",
+  "report_sha256": "e9490bf890151c24c5fb3030b5a62b8d755aa003bb44fac1c5f2378bf878d466",
+  "source_sha256": {
+    "hyperparameters\\results\\task-3.3-reranking-orders\\metrics.json": "7ece363831ce66d92bf9533ce5a62edf9106de82e8b01a20399531a69e349d50",
+    "hyperparameters\\results\\task-3.3-reranking-orders\\selection.json": "9a755ad4d10589d5f34dc9429d974cb72d17658763f8f2cae1678e2a617f5722",
+    "hyperparameters\\results\\task-3.3-reranking-orders\\verification.json": "5f0d662b782c7e97c702dd4c2860ce126048c2aeced3e26d68cc1861ef8f9078",
+    "hyperparameters\\results\\task-3.3-switching-orders\\metrics.json": "01d65692c6e5aa8bc39d4a107c9fce24aba96d9cb4bafa47d0090e5463b2c2ad",
+    "hyperparameters\\results\\task-3.3-switching-orders\\selection.json": "e44d425be74063162969ef7081c6146302ce73a8923b7bb8917d10a0ed869e9f",
+    "hyperparameters\\results\\task-3.3-switching-orders\\verification.json": "9fcff222f4360db6c5c964a64d3a4d76e17f5d98bfc53a7ccbd08439d14a0e36"
+  }
+}

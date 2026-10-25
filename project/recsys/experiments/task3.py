@@ -1,18 +1,66 @@
-"""Task 3 order interfaces; an overall runner is optional."""
+"""Matched reranker orders for a frozen score-weighted hybrid.
+
+Inputs are already standardized on full eligible candidates, then restricted
+to one common candidate pool. Never standardize again after reranking.
+"""
+
+import numpy as np
+
+from ..contracts import ScoreTable, require_aligned
+
+
+def score_preserving_permutation(scores, ranked):
+    """Promote the reranked prefix; retain the exact original score multiset.
+
+    Append unselected items in original score order. Assign original descending
+    scores to the resulting positions. This explicit rank-to-score convention
+    conveys reranking to the fixed Ridge combiner without inventing score units.
+    """
+    scores.validate()
+    if ranked.keys() != scores.scores.keys():
+        raise ValueError('Reranked and scored users differ')
+    result = {}
+    for user, row in scores.scores.items():
+        prefix = ranked[user]
+        if not prefix or len(prefix) != len(set(prefix)) or not set(prefix) <= row.keys():
+            raise ValueError('Invalid reranked prefix')
+        original = sorted(row, key=lambda item: (-row[item], item))
+        selected = set(prefix)
+        order = list(prefix) + [item for item in original if item not in selected]
+        result[user] = dict(zip(order, (row[item] for item in original)))
+    return ScoreTable(scores.model, scores.split_id, scores.partition, result)
+
+
+def combine_standardized_scores(tables, fitted):
+    """Apply frozen coefficients directly to already standardized input scores."""
+    require_aligned(tables)
+    if [table.model for table in tables] != fitted['components']:
+        raise ValueError('Combiner component ordering differs')
+    weights = np.asarray(fitted['coefficients'], dtype=float)
+    if weights.shape != (len(tables),) or not np.isfinite(weights).all():
+        raise ValueError('Invalid combiner weights')
+    scores = {}
+    for user in sorted(tables[0].scores):
+        items = sorted(tables[0].scores[user])
+        x = np.array([[table.scores[user][i] for table in tables] for i in items], dtype=float)
+        values = x @ weights + fitted['intercept']
+        scores[user] = dict(zip(items, map(float, values)))
+    first = tables[0]
+    result = ScoreTable('ridge-hybrid', first.split_id, first.partition, scores)
+    result.validate()
+    return result
 
 
 def rerank_then_combine(component_scores, reranker, hybrid, context, settings):
-    # TODO Bogdan (3.3 order 1): rerank each individual model, then combine.
-    # Rerankers return ordered lists, while hybrids consume full candidate scores.
-    # Agree and record a rank-to-score/fusion rule, truncation depth, and missing
-    # candidate treatment. Do not accidentally combine the original score tables.
-    raise NotImplementedError("Bogdan: implement rerank-then-combine.")
+    require_aligned(component_scores)
+    transformed = [score_preserving_permutation(table, reranker(
+        table, context, settings['k'], settings['strength'])) for table in component_scores]
+    return combine_standardized_scores(transformed, hybrid).top_k(settings['k'])
 
 
 def combine_then_rerank(component_scores, reranker, hybrid, context, settings):
-    # TODO Bogdan (3.3 order 2): combine aligned component scores first, then
-    # rerank the hybrid. Match models, candidates, K, and strengths to order 1.
-    raise NotImplementedError("Bogdan: implement combine-then-rerank.")
+    return reranker(combine_standardized_scores(component_scores, hybrid), context,
+                   settings['k'], settings['strength'])
 
 
 def run():
