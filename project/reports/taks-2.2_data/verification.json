@@ -1,0 +1,166 @@
+{
+  "baseline_verification": {
+    "Popularity": {
+      "batch_sizes": [
+        1024,
+        128
+      ],
+      "distinct_rankings": 731,
+      "distinct_recommended_items": 49,
+      "exact_replay": true,
+      "training_counts_verified": true,
+      "training_interactions": 60734,
+      "users": 943
+    },
+    "Random": {
+      "batch_sizes": [
+        1024,
+        128
+      ],
+      "distinct_rankings": 943,
+      "distinct_recommended_items": 1675,
+      "exact_replay": true,
+      "users": 943
+    }
+  },
+  "command": [
+    "/tmp/recbole-pr29-fixes/project/scripts/reproduce_baseline_comparison.py",
+    "--output",
+    "project/artifacts/pr29-reproduction"
+  ],
+  "comparison_sha256": {
+    "comparison.csv": "5434ab1bef24fa891bfc2b0e55ab0228eafb9f3342c46a177791dc7e7a4d0323",
+    "comparison.json": "3214531b0058964acbecc9eca5a4d65f61e1bcfbc63d47c28240c35e5dad9f51",
+    "per_user.csv": "871779a5baa5db27d532c79985f21a626915687915fb25e5eb136dfc87db3c19"
+  },
+  "elapsed_seconds": 210.81,
+  "fresh_fits": 8,
+  "git_commit": "92a2c9461ddbc438eab0fc8da1959bb9b82893ba",
+  "git_dirty": false,
+  "python": "3.11.16 (main, Aug 27 2026, 06:18:40) [GCC 16.1.1 20260728]",
+  "runs": {
+    "BPR": {
+      "checkpoint_sha256": "d24e6dbd727e8500b39629ddcea47f46d2cdbefec4583fb4d7887d0353cb9513",
+      "config_sha256": "b74df8884dbbc868b35a30c02db66483ac23d1cdf170a604e4e88771eb4087b0",
+      "test_metrics": {
+        "F1@10": 0.19505310039468812,
+        "MAP@10": 0.1119342665505911,
+        "MRR@10": 0.5767787708932985,
+        "NDCG@10": 0.35449731485115304,
+        "Precision@10": 0.2987274655355243,
+        "Recall@10": 0.19391790836943082
+      },
+      "test_metrics_sha256": "2a5c7ccea7df9c67f4cc57720ceaa01877a7f3325000267064004276b905837b",
+      "test_rankings_sha256": "ce0c84cdd3bbe2e38912f6a839af0da9ebef5066a9060889597309f08f13cccb"
+    },
+    "EASE": {
+      "checkpoint_sha256": "ec9c5f77451c882d9f662097ad976e3ea66b76257fb708fef06fb8e9359641de",
+      "config_sha256": "3c5cc6d75f76575be3944e8bf5660a1e6b9bee04326c1c273640445fbb50a09c",
+      "test_metrics": {
+        "F1@10": 0.22415601658576392,
+        "MAP@10": 0.13807891189256116,
+        "MRR@10": 0.6420218317089998,
+        "NDCG@10": 0.40487163101494067,
+        "Precision@10": 0.3358430540827144,
+        "Recall@10": 0.226368176483727
+      },
+      "test_metrics_sha256": "02d632c1e4008a89c0e82a56a7046b900ff53985a5982c065dc44beaae72a083",
+      "test_rankings_sha256": "47b17092c130981ca1d48eba0da33e49f6ba60ae7fc8cb4f7e68a9b42d8c92a8"
+    },
+    "FISM": {
+      "checkpoint_sha256": "9608828cb6e236c5d49b3083c3f43231bba41ff8e50af99b8a6743d614a63968",
+      "config_sha256": "6e8e30f4db5ea90e7d8ec394678dcb108ca7e7f24636221c49b271df33e4ebb9",
+      "test_metrics": {
+        "F1@10": 0.20102406444270832,
+        "MAP@10": 0.11358377057146828,
+        "MRR@10": 0.5852640172364449,
+        "NDCG@10": 0.3487648455145245,
+        "Precision@10": 0.29024390243902376,
+        "Recall@10": 0.20421551239930338
+      },
+      "test_metrics_sha256": "e392f2931df0592b71a10dbc0771346da4be7cd82233e42e44c8faa3a2bc0c9a",
+      "test_rankings_sha256": "b3cdaf78e8c2c16879f348096794223a41213dc13cc838e61f33b5d43913c6ee"
+    },
+    "ItemKNN": {
+      "checkpoint_sha256": "edc483d2789a3ee2b0d65b9794f4fa741d116b306fe354316baa93e7f697865c",
+      "config_sha256": "8454146a18fd0a4f7e2e7f951be5ab5416763784eae6388f8f6ae1d1e4481767",
+      "test_metrics": {
+        "F1@10": 0.1998840923097608,
+        "MAP@10": 0.11909392421049811,
+        "MRR@10": 0.5950870238516046,
+        "NDCG@10": 0.363395745578905,
+        "Precision@10": 0.30031813361611825,
+        "Recall@10": 0.20252229960256582
+      },
+      "test_metrics_sha256": "1af22d6913c46402147c1ea90dc0c738df071ef1e87b8fa035b5154260c6c211",
+      "test_rankings_sha256": "da40c8a43cf681f53350391619b44ca953e89f001875c696af96bfbc77b46026"
+    },
+    "Popularity": {
+      "checkpoint_sha256": "2338dfbf263da1a9d5fd013eb78cc0fcc876cbaf2c58f9219c68ff1bd218e306",
+      "config_sha256": "5338de494a01f2d4181120adc041323b1df63646ab17f711fc24ca201d5de961",
+      "test_metrics": {
+        "F1@10": 0.11622841191519637,
+        "MAP@10": 0.05260920317655366,
+        "MRR@10": 0.4006362672322375,
+        "NDCG@10": 0.21172518026094336,
+        "Precision@10": 0.18430540827147338,
+        "Recall@10": 0.11322222196082406
+      },
+      "test_metrics_sha256": "2181aaca78ad4f4495421f4053f1c0c0ea25ff6c3a55b30be60b5bbdd612e63c",
+      "test_rankings_sha256": "d778c40b0a22c1cf6f2322679de19fe71de115562325d4ecccb4c785e5406a43"
+    },
+    "Random": {
+      "checkpoint_sha256": "9b7d54a84712a51314336f04c5306a117b512df0745801eac76ad42f5268eab4",
+      "config_sha256": "3f450a67505d55bc0a46a08371adef7c02748ce40d8f0a75d1a54f5ff176977b",
+      "test_metrics": {
+        "F1@10": 0.00692450081823743,
+        "MAP@10": 0.0017855243682675986,
+        "MRR@10": 0.039406066420912655,
+        "NDCG@10": 0.014493520121416742,
+        "Precision@10": 0.013573700954400823,
+        "Recall@10": 0.005945587711531324
+      },
+      "test_metrics_sha256": "4b9c7dd2ba05502ef6f0cd3200f3f01ce35a4f6b47a53e8b1d943b8c08f4d934",
+      "test_rankings_sha256": "2652a3acb24a64278821cf7af2d162f568a4dcb914c5e38783c686902985d0a2"
+    },
+    "SLIM": {
+      "checkpoint_sha256": "e6061212d2929c45fe9a91713aa820706f58a38a548dd917da047af421993497",
+      "config_sha256": "0bb8bcb4473c86fba6f8384514996d614c0fcf6d29ee42dcae232947dd80c9ae",
+      "test_metrics": {
+        "F1@10": 0.22321630611089796,
+        "MAP@10": 0.13651836585876778,
+        "MRR@10": 0.6430932181992625,
+        "NDCG@10": 0.403265733859095,
+        "Precision@10": 0.3354188759278897,
+        "Recall@10": 0.22464879859861986
+      },
+      "test_metrics_sha256": "f7b95e4411cc7ef8e946a9ec5d2223d000a3f4211c034bd63ae2540944b1e4e9",
+      "test_rankings_sha256": "2b3e1bea3cf0d865ee5849c651893602e694080cc1b78ddff2bc933b96b83bfc"
+    },
+    "UserKNN": {
+      "checkpoint_sha256": "5aecb23a308b52dd58d8dd8aea8360a221e212efa5d8a912de8e91dae7172064",
+      "config_sha256": "dfb513f68edabc644bb07281e4bff26b7d02b8a55fb2b9e9eb068ff179c42310",
+      "test_metrics": {
+        "F1@10": 0.20121679676170043,
+        "MAP@10": 0.12355754371133539,
+        "MRR@10": 0.6094337558282411,
+        "NDCG@10": 0.36865647141011576,
+        "Precision@10": 0.3022269353128309,
+        "Recall@10": 0.20343668527917652
+      },
+      "test_metrics_sha256": "8c384ff6207a7a07fd1fb44afa5e50af52660467459ae031c30f51053f340774",
+      "test_rankings_sha256": "8b941ad65b35af00f29b6c8b6264e4ceb3f726c938016bb6aabc01929ea716e8"
+    }
+  },
+  "source_sha256": {
+    "dataset/ml-100k/ml-100k.inter": "4edb74e2a81178c2ba9ff381495f754f996c4aea351b1272ca36b43da0935eff",
+    "dataset/ml-100k/ml-100k.item": "51d7cdf777ce5c0f5b32c1d947a4a81fe07d75e78abbe761e0cd4d0756064532",
+    "dataset/ml-100k/ml-100k.user": "4f670007d9cfbeb9807e757209af1555b9bcc186bde25e767f67cb67c6dd5972",
+    "project/configs/protocol.yaml": "7265035089269f6577903b0e4003a57c67115a540fdfa2ef67ad473f5fdea7af",
+    "project/scripts/reproduce_baseline_comparison.py": "009118b9fe7e86f81e53db53f6cf5ef94b6080d82f4369547796930bd898ed92",
+    "recbole/model/general_recommender/pop.py": "2fbae6ace47ae6d29f84a3ff1a6aeee737ca98b229330c790050a5685d89e99f",
+    "recbole/model/general_recommender/random.py": "c40a18b97fc1eede6b6d8112b3cd408d90ce4268fb0c9d8d214479426de36ee2"
+  },
+  "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb",
+  "status": "passed"
+}
