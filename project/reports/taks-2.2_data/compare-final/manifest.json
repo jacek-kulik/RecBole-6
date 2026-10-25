@@ -1,0 +1,118 @@
+{
+  "command": [
+    "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\recsys\\__main__.py",
+    "compare",
+    "--output",
+    "project/artifacts/compare-final",
+    "Random=project/artifacts/random-001-test",
+    "Popularity=project/artifacts/pop-001-test",
+    "BPR=project/artifacts/bpr-final-test",
+    "EASE=project/artifacts/ease-final-test",
+    "SLIM=project/artifacts/slim-final-test",
+    "ItemKNN=project/artifacts/itemknn-final-test",
+    "UserKNN=project/artifacts/userknn-final-test",
+    "FISM=project/artifacts/fism-final-test"
+  ],
+  "dataset": "ml-100k",
+  "git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+  "git_dirty": true,
+  "k": 10,
+  "kind": "model-comparison",
+  "partition": "test",
+  "pending_work": {
+    "group_analysis": "User/item group comparisons and reranker group analysis are not implemented"
+  },
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "runs": [
+    {
+      "checkpoint_sha256": "0ef74d616f50aa3971a5da11bd9c471594c3d07a4a8575773d7ad59e9bc6ca8d",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\random-001-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "baseline",
+      "label": "Random",
+      "model": "Random",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\random-001"
+    },
+    {
+      "checkpoint_sha256": "6131c2a5bf30de2e9b0af72a50c8d12645455bfa3a1cdb2b06bf6e4d66e1934f",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\pop-001-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "baseline",
+      "label": "Popularity",
+      "model": "Pop",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\pop-001"
+    },
+    {
+      "checkpoint_sha256": "3b961368e7f53224330b2155ffd34ac1779745f11bc2b2296cf9be4eb7ded32d",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\bpr-final-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "individual",
+      "label": "BPR",
+      "model": "BPR",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\bpr-final"
+    },
+    {
+      "checkpoint_sha256": "529b903b05f885d3831a48447f78d9408528026e139a9f922aa14a087a8cb0c5",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\ease-final-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "individual",
+      "label": "EASE",
+      "model": "EASE",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\ease-final"
+    },
+    {
+      "checkpoint_sha256": "927a36f87b0c394244c33b6e9e79d70b357bf1c9ce4e52ce3d326b0f6b610c25",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\slim-final-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "individual",
+      "label": "SLIM",
+      "model": "SLIMElastic",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\slim-final"
+    },
+    {
+      "checkpoint_sha256": "ca3aadd319d30312ac746b63c73d7d0a66422ae6f6520960ef5a75225c1503c6",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\itemknn-final-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "individual",
+      "label": "ItemKNN",
+      "model": "ItemKNN",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\itemknn-final"
+    },
+    {
+      "checkpoint_sha256": "4aac4f7bf1bea8864d0f9babc5a5f50db5738c12df971570b0b7191ab46a73ac",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\userknn-final-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "individual",
+      "label": "UserKNN",
+      "model": "ItemKNN",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\userknn-final"
+    },
+    {
+      "checkpoint_sha256": "015412cf654d844a6506fa79bd3a141f76c09b7440505ed84389e31573c7b5d5",
+      "evaluation_folder": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\fism-final-test",
+      "evaluation_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "kind": "individual",
+      "label": "FISM",
+      "model": "FISM",
+      "seed": 42,
+      "source_git_commit": "22b054e04331a9fb03650ae26e0e28a599eb2aa0",
+      "source_run": "C:\\Users\\Caio\\Documents\\GitHub\\RecBole-6\\project\\artifacts\\fism-final"
+    }
+  ],
+  "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb",
+  "status": "complete"
+}
