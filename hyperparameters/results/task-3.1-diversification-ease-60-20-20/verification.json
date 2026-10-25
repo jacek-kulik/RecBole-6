@@ -1,0 +1,14 @@
+{
+  "checked_ranking_lists": 35834,
+  "comparison_per_user_rows": 6601,
+  "evaluations": 38,
+  "models": 1,
+  "status": "passed",
+  "test_cases_exceeding_validation_loss_budget": [
+    "ease/genre_calibration",
+    "ease/item_fairness",
+    "ease/coverage_diversification"
+  ],
+  "test_comparison_rows": 7,
+  "validation_selections": 6
+}

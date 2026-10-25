@@ -1,0 +1,35 @@
+{
+  "input_identity": {
+    "checkpoint_sha256": "5902bd8198c9d6ed0621873d7e952bc53ea073749e305caa2e657c33211b1abf",
+    "code_sha256": "52b4d781d9609197e0ec9791e2753c014232bb0f554a3123a894ac318f77381d",
+    "data_sha256": {
+      "inter": "d4832a77576cb5a480517a9554eef1872331f1ba780ddcd3f4bf956d562ccfc2",
+      "item": "d464074b022a10862d32e8885d298ad09464733be6effaf4bd26761995afea38",
+      "user": "94005f99b329506e0c6da740267d2bc41dc7d22425ce2096d9a892e42bd499f0"
+    },
+    "dataset": "ml-100k",
+    "label": "ease",
+    "model": "EASE",
+    "scores_sha256": {
+      "test": "b9505c21fdf1f89fc2ce531b8b5e0f28d18916346d84a6480e656ff9f0ac64a1",
+      "valid": "a49cfbcbd8e71ff1a74f03e2ba2f4970b96b156a039c617c3f750a6c1c01d424"
+    },
+    "seed": 42,
+    "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb"
+  },
+  "manifest": {
+    "checkpoint": "checkpoints\\ml-100k-EASE-Oct-25-2026_13-33-40.pth",
+    "dataset": "ml-100k",
+    "label": "ease",
+    "model": "EASE",
+    "score_files": {
+      "test": "scores-test.json.gz",
+      "valid": "scores-valid.json.gz"
+    },
+    "seed": 42,
+    "split_id": "2502b22df7c34768e49e395a2b07640796ed20fbe081dec4a55d29eb7f61acbb",
+    "test_evaluated": false
+  },
+  "model_yaml": "# Selected by validation NDCG@10 on seed-42 60/20/20; load shared protocol after this.\nmodel: EASE\nreg_weight: 500.0\n",
+  "protocol_yaml": "# Jacek: 60/20/20 adopted on 14 Oct; definitions recorded in PROTOCOL.md.\n# Shared settings are loaded AFTER the model YAML to keep comparisons consistent.\ndataset: ml-100k\nseed: 42\nreproducibility: true\nuse_gpu: false\nshow_progress: false\nload_col:\n  inter: [user_id, item_id, rating, timestamp]\neval_args:\n  split: {RS: [0.6, 0.2, 0.2]}\n  group_by: user\n  order: RO\n  mode: full\n# All recorded interactions are implicit positive feedback.\n# Validation masks training history; final test also masks validation history.\n# These RecBole metrics are training diagnostics; final reports use independent code.\nmetrics: [Recall, MRR, NDCG]\ntopk: [10]\n# Primary selection metric shared with the alternate-hybrid comparisons.\nvalid_metric: NDCG@10\nvalid_metric_bigger: true\nsave_dataset: false\nsave_dataloaders: false\n"
+}

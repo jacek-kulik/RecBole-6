@@ -73,3 +73,5 @@ class RerankContext:
     user_groups: Mapping[str, str] = field(default_factory=dict)
     item_groups: Mapping[str, str] = field(default_factory=dict)
     popularity_profiles: Mapping[str, Mapping[str, float]] = field(default_factory=dict)
+    # Full catalogue counts from training, including explicit zero-count items.
+    item_counts: Mapping[str, int] = field(default_factory=dict)
