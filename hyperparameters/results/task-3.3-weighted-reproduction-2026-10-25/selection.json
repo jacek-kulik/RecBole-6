@@ -1,0 +1,49 @@
+{
+  "choices": {
+    "exposure/post": {
+      "name": "exposure-post-0.5",
+      "ndcg": 0.28928588545022804,
+      "strength": 0.5,
+      "target": 0.9083043379329674
+    },
+    "exposure/pre": {
+      "name": "exposure-pre-0.5",
+      "ndcg": 0.29616313761019863,
+      "strength": 0.5,
+      "target": 0.9240699494859884
+    },
+    "genre/post": {
+      "name": "genre-post-0.5",
+      "ndcg": 0.2852416419371327,
+      "strength": 0.5,
+      "target": 0.43858640654995984
+    },
+    "genre/pre": {
+      "name": "genre-pre-0.5",
+      "ndcg": 0.2869944214943631,
+      "strength": 0.5,
+      "target": 0.5059805781311423
+    },
+    "popularity/post": {
+      "name": "popularity-post-0.75",
+      "ndcg": 0.29051167012058804,
+      "strength": 0.75,
+      "target": 0.15620593716844436
+    },
+    "popularity/pre": {
+      "name": "popularity-pre-0.75",
+      "ndcg": 0.2940482144295956,
+      "strength": 0.75,
+      "target": 0.17348506169072675
+    }
+  },
+  "identity": "3ea91a5cb360179d84b01e49037dd714d26c49c6c99118390d77c123c30e8261",
+  "partition": "valid",
+  "status": "complete",
+  "target_metrics": {
+    "exposure": "ExposureGini@10",
+    "genre": "GenreMiscalibration@10",
+    "popularity": "UPD@10"
+  },
+  "test_evaluated": false
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "model": "itemknn",
+    "reported_ndcg": 0.27289118500045956,
+    "fresh_ndcg": 0.27284021726454327,
+    "difference": -5.096773591628523e-05
+  },
+  {
+    "model": "userknn",
+    "reported_ndcg": 0.2748411204855965,
+    "fresh_ndcg": 0.2747364695195927,
+    "difference": -0.0001046509660038164
+  },
+  {
+    "model": "bpr",
+    "reported_ndcg": 0.2692919841678785,
+    "fresh_ndcg": 0.2692919841678785,
+    "difference": 0.0
+  },
+  {
+    "model": "slimelastic",
+    "reported_ndcg": 0.3001539144387765,
+    "fresh_ndcg": 0.3001539144387765,
+    "difference": 0.0
+  },
+  {
+    "model": "ease",
+    "reported_ndcg": 0.2978659115193076,
+    "fresh_ndcg": 0.2978659115193076,
+    "difference": 0.0
+  },
+  {
+    "model": "fism",
+    "reported_ndcg": 0.2794974181638789,
+    "fresh_ndcg": 0.2794974181638789,
+    "difference": 0.0
+  }
+]

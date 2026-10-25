@@ -1,0 +1,19 @@
+{
+  "all_six_choices_reproduced_from_validation": true,
+  "all_validation_precedes_test": true,
+  "evaluations": 38,
+  "exposure_test_users_with_different_lists": 747,
+  "full_warm_relevance_and_history_masks_checked": true,
+  "local_calibration_lists_identical": true,
+  "local_order_equalities_checked": 12,
+  "max_metric_error": 1.3322676295501878e-15,
+  "recommendation_lists": 35834,
+  "relevant_positives": {
+    "test": 19588,
+    "valid": 19590
+  },
+  "routes_unchanged": true,
+  "status": "passed",
+  "verifier_sha256": "0faed2cabb0bbc1e852dd86670e95b48faefda5b871d6a36b2577e3e9f432148",
+  "warm_items": 1615
+}

@@ -26,6 +26,15 @@ def main() -> None: # :)
     compare.add_argument("evaluations", nargs="+", help="evaluate (test) output folders to compare; optionally Label=folder")
     compare.add_argument("--k", type=int, default=10, help="Cutoff every evaluation must use")
     compare.add_argument("--output", required=True, help="New comparison artifact directory (must not exist)")
+    rerank = commands.add_parser("rerank", help="Sweep validation strengths or evaluate frozen choices on test")
+    rerank.add_argument("--run", required=True, help="Completed training run with full score exports")
+    rerank.add_argument("--output", required=True, help="New reranker artifact directory")
+    rerank.add_argument("--partition", choices=("valid", "test"), default="valid")
+    rerank.add_argument("--k", type=int, default=10)
+    rerank.add_argument("--candidate-count", type=int, default=50)
+    rerank.add_argument("--strengths", type=float, nargs="+", help="Validation-only grid; default: 0 .25 .5 .75 1")
+    rerank.add_argument("--selection", help="Validation selection.json; required for test")
+    rerank.add_argument("--batch-size", type=int, default=256)
     for name in ("task1", "task2", "task3"):
         commands.add_parser(name, help="TODO: project experiment orchestration")
     args = parser.parse_args()
@@ -46,6 +55,12 @@ def main() -> None: # :)
             from .evaluate import evaluate_training_run
             output = evaluate_training_run(args.run, args.output, k=args.k, batch_size=args.batch_size)
             print(f"Final test evaluation saved to {output}; see metrics.json, beyond_accuracy.json, and group_metrics.json")
+        elif args.command == "rerank":
+            from .rerank import run_reranking
+            output = run_reranking(args.run, args.output, partition=args.partition, k=args.k,
+                                    candidate_count=args.candidate_count, strengths=args.strengths,
+                                    selection=args.selection, batch_size=args.batch_size)
+            print(f"Reranking saved to {output}; see summary.csv and manifest.json")
         elif args.command == "compare":
             from .comparisons import compare_runs
             output = compare_runs(args.evaluations, args.output, k=args.k)
