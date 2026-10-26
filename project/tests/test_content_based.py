@@ -1,11 +1,16 @@
 """Known-answer content scores, candidate masks, cold-item and fallback checks."""
 
 import math
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 
-from project.recsys.content_based import cohort_metrics, read_training_ratings, score_content, score_v1
+from project.recsys.content_based import (
+    cohort_metrics,
+    read_training_ratings,
+    score_content,
+    score_v1,
+)
 from project.recsys.contracts import ScoreTable
 
 

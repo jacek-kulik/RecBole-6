@@ -12,7 +12,7 @@ from .artifacts import new_run, write_json
 from .component_cache import file_hash
 from .contracts import ScoreTable, require_aligned
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def read_history(path):
@@ -153,18 +153,18 @@ def run(source, output, ks=(10, 20, 40, 50, 80, 160, 320)):
     write_json(output / 'metrics.json', metrics)
     write_json(output / 'selected.json', selected)
     lines = ['# BPR embeddings -> UserKNN: validation', '',
-             'Frozen BPR user vectors define cosine neighbours. Neighbours vote using binary training interactions. '
-             'No metadata or BPR predictions enter the hybrid scorer. Only positive similarities are retained; self is excluded.', '',
-             f'Scope: {len(users)} users, {len(items)} catalogue items, exact original candidate masks. '
-             'All validation interactions are relevant under the existing protocol. Test split is not read or evaluated.', '',
+             ('Frozen BPR user vectors define cosine neighbours. Neighbours vote using binary training interactions. '
+             'No metadata or BPR predictions enter the hybrid scorer. Only positive similarities are retained; self is excluded.'), '',
+             (f'Scope: {len(users)} users, {len(items)} catalogue items, exact original candidate masks. '
+             'All validation interactions are relevant under the existing protocol. Test split is not read or evaluated.'), '',
              '| Model | Selected k | Recall@10 | MRR@10 | NDCG@10 |', '|---|---:|---:|---:|---:|']
     for name, result in metrics.items():
         k = selected[name]['k'] if name in selected else (manifest['component_parameters']['userknn']['k'] if name == 'userknn' else '-')
         lines.append(f'| {name} | {k} | ' + ' | '.join(f'{result["aggregate"][m+"@10"]:.6f}' for m in ('Recall', 'MRR', 'NDCG')) + ' |')
-    lines += ['', 'The interaction-cosine control uses the identical scorer, tie handling and k grid; '
+    lines += ['', ('The interaction-cosine control uses the identical scorer, tie handling and k grid; '
               'only the user representation changes. Cached UserKNN uses its original RecBole implementation. '
               'Each new model selects k independently using validation NDCG@10. These are development results, '
-              'not independent evidence of generalization. No retraining or embedding-dimension search was performed.']
+              'not independent evidence of generalization. No retraining or embedding-dimension search was performed.')]
     (output / 'validation.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     proof.update(status='complete', candidate_alignment_verified=True, selected=selected)
     write_json(output / 'manifest.json', proof)

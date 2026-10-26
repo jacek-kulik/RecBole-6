@@ -1,9 +1,9 @@
 """Small verified, atomic stage cache for expensive OOF component training."""
 
-from contextlib import contextmanager
 import hashlib
 import json
 import os
+from contextlib import contextmanager
 from pathlib import Path
 
 import numpy as np

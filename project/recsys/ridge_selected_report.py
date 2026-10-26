@@ -13,7 +13,7 @@ from .contracts import require_aligned
 from .hybrid_report import read_pairs, test_candidates
 from .hybrids import fit_oof_regression, predict_weighted_hybrid
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def report(run, selected):

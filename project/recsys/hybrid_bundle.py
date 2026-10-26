@@ -58,6 +58,7 @@ class HybridBundle:
             values = load_npz(self.root / spec['file']).toarray() @ self.train.astype(np.float64)
         elif kind == 'mlp':
             import torch
+
             from .feature_combination import PairMLP
             from .residual_combination import ResidualMLP
 

@@ -1,8 +1,9 @@
 import unittest
+
 import numpy as np
 
-from project.recsys.genre_ridge import fit_user, score_ridge, year_feature
 from project.recsys.contracts import ScoreTable
+from project.recsys.genre_ridge import fit_user, score_ridge, year_feature
 
 
 class GenreRidgeTests(unittest.TestCase):

@@ -1,12 +1,14 @@
 """Known-answer rank conversion and matched-order controls for Task 3.3."""
 
-from copy import deepcopy
 import unittest
+from copy import deepcopy
 
-from project.recsys.contracts import ScoreTable, RerankContext
+from project.recsys.contracts import RerankContext, ScoreTable
 from project.recsys.experiments.task3 import (
-    score_preserving_permutation, combine_standardized_scores,
-    rerank_then_combine, combine_then_rerank,
+    combine_standardized_scores,
+    combine_then_rerank,
+    rerank_then_combine,
+    score_preserving_permutation,
 )
 from project.recsys.rerankers import calibration, item_fairness
 

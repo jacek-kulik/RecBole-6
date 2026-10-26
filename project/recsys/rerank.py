@@ -132,10 +132,14 @@ def _save_evaluation(output: Path, rankings: Rankings, relevant: dict[str, set[s
                         target_direction=direction)
     try:
         accuracy, beyond, groups = write_ranking_results(output, rankings, relevant, statistics, common["k"])
+        pending_work = dict(statistics.pending)
+        if groups["pending"]:
+            pending_work["group_analysis"] = "; ".join(
+                f"{section}: {reason}" for section, reason in sorted(groups["pending"].items()))
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
                         n_catalogue_items=len(statistics.catalogue), n_training_interactions=statistics.n_interactions,
                         activity_boundaries=list(statistics.activity_boundaries), project_evaluation_complete=False,
-                        pending_work={**statistics.pending, "group_analysis": groups["reason"]})
+                        pending_work=pending_work)
     except Exception as error:
         manifest.update(status="failed", error=str(error))
         raise

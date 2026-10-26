@@ -8,7 +8,7 @@ import torch
 
 from project.recsys.contracts import ScoreTable
 from project.recsys.hybrid_candidates import test_candidates
-from project.recsys.recbole_adapter import export_scores, load_scores, _write_scores
+from project.recsys.recbole_adapter import _write_scores, export_scores, load_scores
 
 
 class HybridExportTests(unittest.TestCase):

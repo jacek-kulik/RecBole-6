@@ -18,7 +18,7 @@ from torch.nn import functional as F
 
 from .artifacts import REPO_ROOT, new_run, write_json
 from .component_cache import file_hash
-from .content_based import read_history, read_genres
+from .content_based import read_genres, read_history
 from .genre_ridge import read_years, year_feature
 from .metrics.accuracy import evaluate_accuracy
 from .recbole_adapter import load_scores

@@ -17,9 +17,9 @@ from types import SimpleNamespace
 import numpy as np
 
 from .artifacts import REPO_ROOT, fingerprint, new_run, provenance, write_json
+from .component_cache import atomic_json, file_hash, load_fold, run_lock, save_fold
 from .hybrids import candidate_features, fit_oof_regression, predict_weighted_hybrid
-from .recbole_adapter import _export_splits, export_scores, _write_scores, load_scores
-from .component_cache import file_hash, atomic_json, save_fold, load_fold, run_lock
+from .recbole_adapter import _export_splits, _write_scores, export_scores, load_scores
 
 COMPONENTS = ("itemknn", "userknn", "bpr", "slimelastic", "ease", "fism")
 

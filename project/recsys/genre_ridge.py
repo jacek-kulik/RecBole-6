@@ -1,20 +1,24 @@
 """Per-user Ridge genre rating predictors; validation-only alpha selection."""
 
 import argparse
-from collections import Counter
 import csv
 import json
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
 
 from .artifacts import REPO_ROOT, new_run, write_json
 from .component_cache import file_hash
-from .content_based import read_history, read_genres, read_training_ratings, cohort_metrics
+from .content_based import (
+    cohort_metrics,
+    read_genres,
+    read_history,
+    read_training_ratings,
+)
 from .contracts import ScoreTable, require_aligned
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
-
+from .recbole_adapter import _write_scores, load_scores
 
 ALPHAS = (0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0)
 
@@ -179,9 +183,9 @@ def run(source, output, include_year=False):
         diagnostics["year_scaler"] = fitted["year_scaler"]
     write_json(output / "diagnostics.json", diagnostics)
     lines = [f"# Regularized {'genre + year' if include_year else 'genre'} rating predictor: validation", "",
-             f"Per-user Ridge; {feature_description}; unpenalized intercept; selected alpha {alpha:g} "
+             (f"Per-user Ridge; {feature_description}; unpenalized intercept; selected alpha {alpha:g} "
              "by validation NDCG@10. Scores are predicted ratings, without cosine or clipping. "
-             "Profiles use raw training ratings only. No IDF or external metadata. Test split not read.", "",
+             "Profiles use raw training ratings only. No IDF or external metadata. Test split not read."), "",
              "| Model | Recall@10 | MRR@10 | NDCG@10 |", "|---|---:|---:|---:|"]
     for name, result in results.items():
         row = result["accuracy"]["aggregate"]
@@ -189,14 +193,14 @@ def run(source, output, include_year=False):
     lines += ["", "## Alpha search", "", "| Alpha | Validation NDCG@10 |", "|---:|---:|"]
     lines += [f"| {row['alpha']:g} | {row['NDCG@10']:.6f} |" for row in trials]
     cold = results["ridge"]["item_history_cohorts"]["zero"]
-    lines += ["", f"Cold-item retrieval: {cold['hits']}/{cold['positive_interactions']} held-out interactions. "
-              "This small random-split cohort does not establish cold-start effectiveness.", "",
-              f"Distinct genre patterns: {diagnostics['genre_patterns']}. Users with exact ties crossing top-10: "
+    lines += ["", (f"Cold-item retrieval: {cold['hits']}/{cold['positive_interactions']} held-out interactions. "
+              "This small random-split cohort does not establish cold-start effectiveness."), "",
+              (f"Distinct genre patterns: {diagnostics['genre_patterns']}. Users with exact ties crossing top-10: "
               f"{diagnostics['users_with_ties_crossing_top10']}/{len(relevant)}. "
-              "Identical input feature vectors necessarily receive identical predictions for a user.", "",
-              "These are development results used to select alpha, not an independent final evaluation. "
+              "Identical input feature vectors necessarily receive identical predictions for a user."), "",
+              ("These are development results used to select alpha, not an independent final evaluation. "
               "Failure of a genre-only rating predictor cannot establish that content-based recommendation is impossible. "
-              "The evaluation target is held-out interactions; Ridge optimizes explicit rating error, a different objective."]
+              "The evaluation target is held-out interactions; Ridge optimizes explicit rating error, a different objective.")]
     (output / "validation.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     proof.update(status="complete", selected_alpha=alpha, candidate_alignment_verified=True,
                  training_rating_pairs=len(ratings))

@@ -1,8 +1,14 @@
 import unittest
+
 import numpy as np
 
 from project.recsys.contracts import ScoreTable
-from project.recsys.switching import training_features, use_userknn, warm_tables, select_rule
+from project.recsys.switching import (
+    select_rule,
+    training_features,
+    use_userknn,
+    warm_tables,
+)
 
 
 class SwitchingTests(unittest.TestCase):

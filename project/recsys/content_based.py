@@ -4,9 +4,9 @@ Validation only. Reuses the exact candidate sets of an existing component run.
 """
 
 import argparse
-from collections import Counter
 import csv
 import json
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -15,7 +15,7 @@ from .artifacts import REPO_ROOT, new_run, write_json
 from .component_cache import file_hash
 from .contracts import ScoreTable, require_aligned
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def read_history(path):
@@ -73,11 +73,12 @@ def score_content(training, genres, reference, variant="v1", ratings=None):
     """
     if variant not in {"v1", "v2", "v3", "v4"}:
         raise ValueError("Unknown content variant")
-    if variant == "v4":
-        if ratings is None or any((u, i) not in ratings or not np.isfinite(ratings[u, i])
-                                  or not 1 <= ratings[u, i] <= 5
-                                  for u, seen in training.items() for i in seen):
-            raise ValueError("V4 requires raw 1-5 ratings for every training pair")
+    if variant == "v4" and (
+        ratings is None or any((u, i) not in ratings or not np.isfinite(ratings[u, i])
+                               or not 1 <= ratings[u, i] <= 5
+                               for u, seen in training.items() for i in seen)
+    ):
+        raise ValueError("V4 requires raw 1-5 ratings for every training pair")
     reference.validate()
     if reference.partition != "valid":
         raise ValueError("This runner accepts validation candidates only")
@@ -222,11 +223,11 @@ def run(source, metadata, output, k=10, variant="v1", baseline=None):
     }[variant]
     lines = [f"# Content-based {variant.upper()} validation", "",
              description + " Cosine scoring; no validation-fitted parameters.", "",
-             "Exact saved 60/20/20 split and ItemKNN validation candidate masks. All held-out "
+             ("Exact saved 60/20/20 split and ItemKNN validation candidate masks. All held-out "
              "interactions are relevant. Top-K ties use external item IDs. Test split was not read; "
-             "held-out ratings are not used in profiles or evaluation relevance.", "",
-             f"Users: {len(relevant)}. Catalogue: {diagnostics['catalogue_items']}. "
-             f"Genres: {len(diagnostics['genres'])}. Popularity fallback users: {len(diagnostics['fallback_users'])}.", "",
+             "held-out ratings are not used in profiles or evaluation relevance."), "",
+             (f"Users: {len(relevant)}. Catalogue: {diagnostics['catalogue_items']}. "
+             f"Genres: {len(diagnostics['genres'])}. Popularity fallback users: {len(diagnostics['fallback_users'])}."), "",
              "| Model | Precision@10 | Recall@10 | MRR@10 | NDCG@10 | MAP@10 |",
              "|---|---:|---:|---:|---:|---:|"]
     # Column labels use the actual requested cutoff.
@@ -236,9 +237,9 @@ def run(source, metadata, output, k=10, variant="v1", baseline=None):
         lines.append("| " + name + " | " + " | ".join(f"{values[f'{m}@{k}']:.4f}"
                      for m in ("Precision", "Recall", "MRR", "NDCG", "MAP")) + " |")
     lines += ["", "## Item-history diagnostics", "",
-              "Bins are descriptive, fixed before inspecting results; they are not switching thresholds. "
+              ("Bins are descriptive, fixed before inspecting results; they are not switching thresholds. "
               "Recall below counts only positives in the bin, using the unchanged full-catalogue rankings. "
-              "The denominator is the number of validation interactions in that bin.", "",
+              "The denominator is the number of validation interactions in that bin."), "",
               f"| Training count | Users | Positive interactions | Items | {variant.upper()} hits | {variant.upper()} micro recall | Popularity micro recall | ItemKNN micro recall |",
               "|---|---:|---:|---:|---:|---:|---:|---:|"]
     for cohort, row in results[f"content-{variant}"]["item_history_cohorts"].items():
@@ -247,10 +248,10 @@ def run(source, metadata, output, k=10, variant="v1", baseline=None):
         lines.append(f"| {cohort} | {row['users']} | {row['positive_interactions']} | "
                      f"{row['distinct_positive_items']} | {row['hits']} | "
                      + " | ".join("n/a" if v is None else f"{v:.4f}" for v in recalls) + " |")
-    lines += ["", "These are single-split development results, not evidence of statistical significance. "
+    lines += ["", ("These are single-split development results, not evidence of statistical significance. "
               "A random interaction split is not a dedicated item cold-start experiment. "
               "The model can score unseen items, but any cold-start claim requires sufficient item-held-out evidence. "
-              "Genre-only items can tie exactly; the fixed ID tie-break can affect top-K results."]
+              "Genre-only items can tie exactly; the fixed ID tie-break can affect top-K results.")]
     (output / "validation.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     proof.update(status="complete", diagnostics=diagnostics, candidate_alignment_verified=True)
     write_json(output / "manifest.json", proof)

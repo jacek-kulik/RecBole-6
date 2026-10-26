@@ -8,16 +8,16 @@ from pathlib import Path
 from .artifacts import new_run, write_json
 from .component_cache import file_hash
 from .contracts import require_aligned
-from .feature_augmentation import read_pairs, load_component
+from .feature_augmentation import load_component, read_pairs
 from .hybrid_candidates import test_candidates
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def report(runs, output):
     # Freeze every supplied experiment before loading test labels. No fitting.
     experiments = []
-    for directory in map(lambda p: Path(p).resolve(), runs):
+    for directory in (Path(p).resolve() for p in runs):
         manifest_path = directory / "manifest.json"
         manifest = json.loads(manifest_path.read_text())
         if manifest["status"] != "complete":
@@ -95,9 +95,9 @@ def report(runs, output):
             writer.writerow({"Model": name, **result["aggregate"]})
     lines = ["# Frozen feature-augmentation test results", "",
              "MovieLens 100K; seed 42; per-user 60/20/20; 943 users. Binary relevance.", "",
-             "All completed variants are reported without test-based selection or parameter changes. "
+             ("All completed variants are reported without test-based selection or parameter changes. "
              "Models, added-entry matrices and training histories are frozen. Test candidates "
-             "exclude train and validation interactions. The equal-weight variant has not been run.", "",
+             "exclude train and validation interactions. The equal-weight variant has not been run."), "",
              "| Model | " + " | ".join(columns) + " |",
              "| --- | " + " | ".join(["---:"] * len(columns)) + " |"]
     for name, result in metrics.items():

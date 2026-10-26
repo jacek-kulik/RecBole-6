@@ -1,11 +1,13 @@
 """Switching commutes with local calibration, but not cohort exposure allocation."""
 
-from functools import partial
 import unittest
+from functools import partial
 
-from project.recsys.contracts import ScoreTable, RerankContext
+from project.recsys.contracts import RerankContext, ScoreTable
 from project.recsys.experiments.switching_orders import (
-    switch_scores, rerank_then_switch, switch_then_rerank,
+    rerank_then_switch,
+    switch_scores,
+    switch_then_rerank,
 )
 from project.recsys.rerankers import calibration, item_fairness
 

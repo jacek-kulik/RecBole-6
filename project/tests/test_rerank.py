@@ -133,6 +133,21 @@ class RerankRunTests(unittest.TestCase):
             self.assertTrue(all(set(items) == {"a", "b"} for items in rankings.values()))
         comparison = json.loads((test / "comparison/comparison.json").read_text())
         self.assertTrue(all(row["label"].startswith("userknn-") for row in comparison))
+        original = json.loads((test / "original/manifest.json").read_text())
+        self.assertEqual(original["pending_work"], {})
+        groups = json.loads((test / "original/group_metrics.json").read_text())
+        self.assertEqual(groups["status"], "complete")
+
+    def test_missing_gender_metadata_remains_pending_in_reranked_evaluations(self) -> None:
+        (self.item_file.parent / "fixture.user").unlink()
+        self.validate()
+        original = self.output / "original"
+        manifest = json.loads((original / "manifest.json").read_text())
+        groups = json.loads((original / "group_metrics.json").read_text())
+        self.assertIn("metadata", manifest["pending_work"])
+        self.assertEqual(manifest["pending_work"]["group_analysis"],
+                         f"gender: {groups['pending']['gender']}")
+        self.assertEqual(groups["user_groups"]["gender"]["unknown"]["n_users"], 2)
 
     def test_test_requires_selection_before_loading_a_checkpoint(self) -> None:
         with self.assertRaisesRegex(ValueError, "requires a validation selection"):

@@ -3,9 +3,9 @@
 import argparse
 import csv
 import json
-from pathlib import Path
 import time
 import warnings
+from pathlib import Path
 
 import numpy as np
 from scipy.linalg import cho_factor, cho_solve
@@ -14,7 +14,7 @@ from .artifacts import new_run, write_json
 from .component_cache import file_hash
 from .contracts import ScoreTable, require_aligned
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def read_pairs(path):
@@ -81,8 +81,8 @@ def load_component(source, name):
 def fit_slim(x, targets, alpha, l1_ratio):
     """Nonnegative elastic-net columns, hiding each target's input column."""
     from scipy.sparse import csc_matrix
-    from sklearn.linear_model import ElasticNet
     from sklearn.exceptions import ConvergenceWarning
+    from sklearn.linear_model import ElasticNet
 
     if (x.shape != targets.shape or not np.isfinite(x).all()
             or not np.isfinite(targets).all() or alpha <= 0

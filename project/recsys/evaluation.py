@@ -8,7 +8,7 @@ from os import PathLike
 from pathlib import Path
 from typing import Any, Literal, TypedDict
 
-from .analysis.groups import PendingGroupAnalysis, compare_groups, group_definitions
+from .analysis.groups import GroupComparison, compare_groups, group_definitions
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
 from .contracts import Rankings
 from .data import TrainingStatistics, prepare_metadata, read_training_interactions
@@ -55,14 +55,18 @@ def evaluation_settings(partition: Literal['valid', 'test'], k: int, scope: str 
 def print_summary(
         accuracy: AccuracyResults,
         beyond: BeyondAccuracyResults,
-        group_report: PendingGroupAnalysis,
+        group_report: GroupComparison,
         k: int
 ) -> None:
     print(f"Users: {len(accuracy['per_user'])}; MRR@{k}: {accuracy['aggregate'][f'MRR@{k}']:.5f}; "
           f"NDCG@{k}: {accuracy['aggregate'][f'NDCG@{k}']:.5f}")
     if beyond["gender_fairness"]["reason"]:
         print(f"Gender fairness unavailable: {beyond['gender_fairness']['reason']}")
-    print(f"Group analysis {group_report['status']} ({group_report['owner']}): {group_report['reason']}")
+    for section, reason in sorted(group_report["pending"].items()):
+        print(f"Group analysis pending for {section}: {reason}")
+    n_user_groups = sum(len(cohorts) for cohorts in group_report["user_groups"].values())
+    print(f"Group analysis {group_report['status']}: {n_user_groups} user cohorts and "
+          f"{len(group_report['item_groups'])} item groups at k={group_report['k']}")
 
 
 def evaluation_manifest(source: dict[str, Any], run_dir: Path, partition: str,
@@ -82,11 +86,11 @@ def evaluation_manifest(source: dict[str, Any], run_dir: Path, partition: str,
 
 def write_ranking_results(output: Path, rankings: Rankings, relevant: dict[str, set[str]],
                           statistics: TrainingStatistics, k: int
-                          ) -> tuple[AccuracyResults, BeyondAccuracyResults, PendingGroupAnalysis]:
+                          ) -> tuple[AccuracyResults, BeyondAccuracyResults, GroupComparison]:
     """Evaluate supplied lists using the existing independent metric definitions."""
     accuracy = evaluate_accuracy(rankings, relevant, k)
     beyond = evaluate_beyond_accuracy(rankings, statistics, accuracy["per_user"], k)
-    group_report = compare_groups(accuracy["per_user"], beyond, statistics)
+    group_report = compare_groups(rankings, relevant, statistics, k)
     user = next((user for user in sorted(rankings) if accuracy["per_user"][user][f"Recall@{k}"] > 0), min(rankings))
     example = {
         "user": user, "relevant": sorted(relevant[user]), "k": k,
@@ -157,12 +161,17 @@ def run_evaluation(
                     }
         if partition == "valid":
             write_json(output / "comparison.json", comparison)
+        pending_work = dict(statistics.pending)
+        if group_report["pending"]:
+            pending_work["group_analysis"] = "; ".join(
+                f"{section}: {reason}" for section, reason in sorted(group_report["pending"].items()))
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
                         activity_boundaries=list(statistics.activity_boundaries),
                         n_training_interactions=statistics.n_interactions,
                         n_catalogue_items=len(statistics.catalogue),
+                        group_minimum_size=group_report["minimum_group_size"],
                         project_evaluation_complete=False,
-                        pending_work={**statistics.pending, "group_analysis": group_report["reason"]})
+                        pending_work=pending_work)
         print_summary(accuracy, beyond, group_report, k)
     except Exception as error:
         manifest.update(status="failed", error=str(error))

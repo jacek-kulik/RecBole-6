@@ -16,7 +16,7 @@ from .artifacts import REPO_ROOT
 from .component_cache import atomic_json, file_hash
 from .contracts import ScoreTable
 from .hybrids import fit_oof_regression
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def raw_targets(pairs, observed, source):

@@ -1,9 +1,9 @@
 """Validation-only UserKNN/BPR hard switch on users/items with training evidence."""
 
 import argparse
-from collections import Counter
 import itertools
 import json
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -14,8 +14,7 @@ from .component_cache import file_hash
 from .content_based import read_history
 from .contracts import ScoreTable, require_aligned
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
-
+from .recbole_adapter import _write_scores, load_scores
 
 OVERLAPS = (1, 2, 5, 10, 20)
 NEIGHBORS = (1, 5, 10, 20, 40, 51)
@@ -178,12 +177,12 @@ def run(source, output):
                 "ties": int(np.sum(values[0] == values[1]))}
     write_json(output / "diagnostics.json", coverage)
     lines = ["# UserKNN/BPR switching validation", "",
-             "Per-user hard switch; existing trained components are reused. Train-only routing features. "
-             "No blending or cross-model score calibration. Test split is not read or evaluated.", "",
-             f"Warm scope: {len(users)} users; {coverage['supported_items']}/{len(catalogue)} supported items; "
+             ("Per-user hard switch; existing trained components are reused. Train-only routing features. "
+             "No blending or cross-model score calibration. Test split is not read or evaluated."), "",
+             (f"Warm scope: {len(users)} users; {coverage['supported_items']}/{len(catalogue)} supported items; "
              f"{coverage['supported_validation_interactions']}/{coverage['all_validation_interactions']} validation positives. "
              "Unsupported items are removed from both candidates and relevance for all compared models. "
-             "These numbers are not directly comparable with previous full-catalogue evaluations.", "",
+             "These numbers are not directly comparable with previous full-catalogue evaluations."), "",
              "Selected rule:", "", "```json", json.dumps(selected, indent=2), "```", "",
              "| Model | Recall@10 | MRR@10 | NDCG@10 |", "|---|---:|---:|---:|"]
     for name, result in metrics.items():
@@ -191,13 +190,13 @@ def run(source, output):
         lines.append("| " + name + " | " + " | ".join(f"{row[m+'@10']:.6f}" for m in ("Recall", "MRR", "NDCG")) + " |")
     if mixed:
         lines += ["", "Best rule using both models (development diagnostic):", "", "```json", json.dumps(mixed[0], indent=2), "```"]
-    lines += ["", f"Searched {len(trials)} rules, including constant-model controls. "
+    lines += ["", (f"Searched {len(trials)} rules, including constant-model controls. "
               "All performance shown is development evidence used for threshold selection; "
               "gains are not independent evidence of generalization. Neighborhood support is a deterministic "
               "proxy reconstructed from binary training histories, not the cached model's exact tie-dependent neighbors. "
               "Cold-start coverage is explicitly excluded, not solved. Fixed fallback for short histories is UserKNN. "
               "NDCG@10 is the explicit selection criterion consistent with previous hybrid experiments; "
-              "the shared provisional YAML also lists MRR@10, reported here separately."]
+              "the shared provisional YAML also lists MRR@10, reported here separately.")]
     (output / "validation.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     proof.update(status="complete", selected_rule=selected, candidate_alignment_verified=True)
     write_json(output / "manifest.json", proof)

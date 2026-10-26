@@ -20,7 +20,7 @@ from .hybrids import predict_weighted_hybrid
 from .metrics.accuracy import evaluate_accuracy
 from .oof_hybrid import COMPONENTS
 from .raw_rating_target import restore_raw_rating_target
-from .recbole_adapter import load_scores, _write_scores
+from .recbole_adapter import _write_scores, load_scores
 
 
 def read_pairs(path):

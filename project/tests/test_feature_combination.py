@@ -3,7 +3,12 @@ import unittest
 import numpy as np
 import torch
 
-from project.recsys.feature_combination import PairMLP, evaluate, sample_negatives, standardize
+from project.recsys.feature_combination import (
+    PairMLP,
+    evaluate,
+    sample_negatives,
+    standardize,
+)
 
 
 class FeatureCombinationTests(unittest.TestCase):

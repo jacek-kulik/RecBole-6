@@ -8,9 +8,9 @@ import argparse
 import csv
 import itertools
 import json
-from pathlib import Path
 import sys
 import tempfile
+from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
@@ -21,11 +21,10 @@ from .contracts import ScoreTable, require_aligned
 from .metrics.accuracy import evaluate_accuracy
 from .recbole_adapter import _export_splits, _write_scores, load_scores
 
-
 SHORTLISTS = (10, 20, 50, 100, 200, 500, 1000, None)
-ITEM_GRID = [dict(k=k, shrink=s) for k, s in
+ITEM_GRID = [{"k": k, "shrink": s} for k, s in
              itertools.product((10, 20, 50, 100, 200), (0.0, 10.0, 100.0, 200.0))]
-BPR_GRID = [dict(embedding_size=d, learning_rate=lr, epochs=e, train_batch_size=512)
+BPR_GRID = [{"embedding_size": d, "learning_rate": lr, "epochs": e, "train_batch_size": 512}
             for d, lr, e in itertools.product((32, 64, 128), (0.0005, 0.0015), (20, 50))]
 
 
@@ -148,6 +147,7 @@ def fit_component(name, params, source, output, split_id, identity):
     from recbole.config import Config
     from recbole.data import create_dataset
     from recbole.utils import init_seed
+
     from .hybrid_training import train_and_score
 
     key = fingerprint({"name": name, "params": params, "identity": identity})
@@ -329,17 +329,17 @@ def _run(source, output):
     if file_hash(output / "frozen-selection.json") != frozen_hash:
         raise ValueError("Selection changed during test evaluation")
     lines = ["# ItemKNN to BPR cascade", "",
-             "Train-only independent component fits, selected jointly by final validation NDCG@10. "
+             ("Train-only independent component fits, selected jointly by final validation NDCG@10. "
              "MovieLens 100K, per-user 60/20/20, seed 42, full catalogue, binary relevance. "
-             "No score blending and no candidate-conditioned negative sampling.", "",
-             f"Search: {len(ITEM_GRID)} ItemKNN fits x {len(BPR_GRID)} BPR fits x {len(SHORTLISTS)} shortlist sizes "
+             "No score blending and no candidate-conditioned negative sampling."), "",
+             (f"Search: {len(ITEM_GRID)} ItemKNN fits x {len(BPR_GRID)} BPR fits x {len(SHORTLISTS)} shortlist sizes "
              f"= {len(trials)} validation trials. Every new configuration was fitted from scratch. "
              "BPR batch size is fixed at 512; its embedding dimension, learning rate and epoch budget vary. "
-             "This is a bounded grid, not an exhaustive optimization of all training settings.", "",
+             "This is a bounded grid, not an exhaustive optimization of all training settings."), "",
              "Frozen selection:", "", "```json", json.dumps(frozen, indent=2), "```", "",
-             "Full-catalogue shortlist is a BPR-only control and can win. A finite shortlist restricts "
+             ("Full-catalogue shortlist is a BPR-only control and can win. A finite shortlist restricts "
              "BPR to ItemKNN candidates. Shortlist sizes are capped by each user's eligible catalogue. "
-             "Shortlists are rebuilt after applying the test history mask."]
+             "Shortlists are rebuilt after applying the test history mask.")]
     for partition in ("valid", "test"):
         lines += ["", "## " + partition, "", "| Model | Recall@10 | MRR@10 | NDCG@10 |",
                   "|---|---:|---:|---:|"]
@@ -347,16 +347,16 @@ def _run(source, output):
             a = metric["aggregate"]
             lines.append(f"| {name} | {a['Recall@10']:.6f} | {a['MRR@10']:.6f} | {a['NDCG@10']:.6f} |")
         lines += ["", "Retrieval: " + json.dumps(diagnostics[partition])]
-    lines += ["", "Test was scored only after validation choices were frozen. Existing Task 1.3 test "
+    lines += ["", ("Test was scored only after validation choices were frozen. Existing Task 1.3 test "
               "results were already available; this is the same benchmark holdout, not a new untouched dataset. "
               "Standalone retuned controls use the same component grids, selected by validation NDCG@10. "
               "Validation gains reflect selection and are not independent generalization evidence. "
               "Single seed; no significance claim. Candidate fraction estimates BPR scoring volume only: "
               "the experiment caches full scores to reuse fits and does not measure production latency. "
               "All catalogue items remain eligible, including items without training evidence. "
-              "Validation selection uses NDCG@10; MRR@10 is also reported.", "",
-              "Reproduce: `.venv/Scripts/python.exe -m project.recsys.cascade "
-              "--output project/artifacts/cascade-itemknn-bpr --resume`."]
+              "Validation selection uses NDCG@10; MRR@10 is also reported."), "",
+              ("Reproduce: `.venv/Scripts/python.exe -m project.recsys.cascade "
+              "--output project/artifacts/cascade-itemknn-bpr --resume`.")]
     (output / "comparison.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     proof.update(status="complete", test_evaluated=True, selected=frozen,
                  frozen_selection_sha256=frozen_hash, independent_evaluation_verified=True)

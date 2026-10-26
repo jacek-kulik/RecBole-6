@@ -77,9 +77,18 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertIsNone(result["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
         self.assertEqual(result["aggregate"]["CatalogueCoverage@2"], 1)
         self.assertIsNotNone(result["aggregate"]["UPD@2"])
-        report = compare_groups(accuracy["per_user"], result, self.partial_statistics)
-        self.assertEqual((report["status"], report["owner"]), ("pending", "Victor"))
-        self.assertNotIn("overall", report)
+        report = compare_groups(self.rankings, self.relevant, self.partial_statistics, 2,
+                                minimum_group_size=1)
+        self.assertEqual((report["status"], report["owner"]), ("complete", "Victor"))
+        self.assertEqual(report["pending"], {"gender": self.partial_statistics.pending["metadata"]})
+        gender = report["user_groups"]["gender"]
+        self.assertEqual(gender["F"]["n_users"], 0)
+        self.assertEqual(gender["F"]["reason"], "No evaluation users in this group")
+        self.assertEqual(gender["unknown"]["n_users"], 3)
+        self.assertIsNone(gender["unknown"]["beyond_accuracy"]["ILD@2"])
+        self.assertEqual(gender["unknown"]["availability"]["ILD@2"]["n_users"], 0)
+        self.assertIsNotNone(report["overall"]["beyond_accuracy"]["MeanSelfInformation@2"])
+        json.dumps(report, allow_nan=False)
 
     def test_unavailable_profiles_and_single_item_diversity(self) -> None:
         rankings = {"cold": ["d"]}
@@ -92,7 +101,8 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertAlmostEqual(result["aggregate"]["MeanSelfInformation@1"], math.log2(7))
         definitions = group_definitions(self.statistics, rankings)
         self.assertEqual(definitions["activity"]["members"]["cold"], "low")
-        self.assertEqual(definitions["status"], "pending")
+        self.assertEqual(definitions["gender"]["members"]["cold"], "F")
+        self.assertEqual(definitions["status"], "complete")
 
     def test_metadata_loaded_from_atomic_files(self) -> None:
         features = {"a": ("Action", "Comedy"), "b": ("Drama",), "c": ("Comedy",), "d": ("unknown",)}

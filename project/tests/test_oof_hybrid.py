@@ -1,13 +1,19 @@
-import unittest
 import tempfile
+import unittest
 from pathlib import Path
+
 import numpy as np
 
-from project.recsys.contracts import ScoreTable
-from project.recsys.hybrids import candidate_features, fit_oof_regression, predict_weighted_hybrid, fit_weighted_hybrid
-from project.recsys.oof_hybrid import user_folds, ndcg_at_k, tuned_parameters
 from project.recsys.artifacts import REPO_ROOT
-from project.recsys.component_cache import save_fold, load_fold, run_lock
+from project.recsys.component_cache import load_fold, run_lock, save_fold
+from project.recsys.contracts import ScoreTable
+from project.recsys.hybrids import (
+    candidate_features,
+    fit_oof_regression,
+    fit_weighted_hybrid,
+    predict_weighted_hybrid,
+)
+from project.recsys.oof_hybrid import ndcg_at_k, tuned_parameters, user_folds
 
 
 class OOFHybridTests(unittest.TestCase):
@@ -51,10 +57,8 @@ class OOFHybridTests(unittest.TestCase):
 
     def test_only_one_cache_writer(self):
         with tempfile.TemporaryDirectory() as directory:
-            with run_lock(directory):
-                with self.assertRaises(ValueError):
-                    with run_lock(directory):
-                        pass
+            with run_lock(directory), self.assertRaises(ValueError), run_lock(directory):
+                pass
             self.assertFalse((Path(directory) / 'run.lock').exists())
 
     def test_pair_grouping_and_user_history_survives(self):

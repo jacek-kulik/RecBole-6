@@ -5,7 +5,11 @@ import unittest
 
 import numpy as np
 
-from project.recsys.analysis.coefficients import candidate_zscores, removal_fits, paired_summary
+from project.recsys.analysis.coefficients import (
+    candidate_zscores,
+    paired_summary,
+    removal_fits,
+)
 
 
 class CoefficientAnalysisTests(unittest.TestCase):

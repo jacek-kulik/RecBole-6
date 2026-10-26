@@ -13,8 +13,7 @@ from .component_cache import atomic_json, file_hash, run_lock
 from .contracts import ScoreTable
 from .hybrids import candidate_features, fit_oof_regression
 from .metrics.accuracy import evaluate_accuracy
-from .recbole_adapter import load_scores, _write_scores
-
+from .recbole_adapter import _write_scores, load_scores
 
 DEFAULT_ALPHAS = [100., 300., 1e3, 3e3, 1e4, 3e4, 1e5, 3e5, 1e6,
                   3e6, 1e7, 3e7, 1e8, 3e8, 1e9, 3e9, 1e10, 3e10, 1e11, 3e11, 1e12]

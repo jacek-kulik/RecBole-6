@@ -1,9 +1,9 @@
 """Frozen-source preparation must preserve byte identity across Git newline settings."""
 
 import hashlib
-from pathlib import Path
 import tempfile
 import unittest
+from pathlib import Path
 
 from project.scripts.prepare_oof_refresh import restore_recorded_bytes
 

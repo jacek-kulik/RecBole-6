@@ -1,9 +1,9 @@
 """Bogdan: Tasks 1.3-1.5; Gabriel reviews 1.3, Caio reviews 1.4/1.5."""
 
-from .contracts import ScoreTable, require_aligned
-
 import numpy as np
 from sklearn.linear_model import Ridge
+
+from .contracts import ScoreTable, require_aligned
 
 
 def candidate_features(tables):

@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 
-from project.recsys.meta_level import cosine, neighbour_weights, score_table
 from project.recsys.contracts import ScoreTable
+from project.recsys.meta_level import cosine, neighbour_weights, score_table
 
 
 class MetaLevelTests(unittest.TestCase):
