@@ -93,7 +93,7 @@ class ValidateTests(unittest.TestCase):
         self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 1, "M": 1, "unknown": 0})
         self.assertIsNotNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
         self.assertNotIn("metadata", manifest["pending_work"])
-        self.assertIn("group_analysis", manifest["pending_work"])
+        self.assertNotIn("group_analysis", manifest["pending_work"])
         self.assertFalse(manifest["project_evaluation_complete"])
 
         boundaries = self.read("groups.json")["activity"]["boundaries"]
