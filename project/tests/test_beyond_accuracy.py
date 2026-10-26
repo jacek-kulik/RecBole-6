@@ -77,9 +77,12 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertIsNone(result["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
         self.assertEqual(result["aggregate"]["CatalogueCoverage@2"], 1)
         self.assertIsNotNone(result["aggregate"]["UPD@2"])
-        report = compare_groups(accuracy["per_user"], result, self.partial_statistics)
-        self.assertEqual((report["status"], report["owner"]), ("pending", "Victor"))
-        self.assertNotIn("overall", report)
+        report = compare_groups(self.rankings, self.relevant, self.partial_statistics, 2)
+        self.assertEqual((report["status"], report["owner"]), ("complete", "Victor"))
+        self.assertIn("gender", report["pending"])
+        for cohort in report["user_groups"]["genre"].values():
+            self.assertEqual(cohort["n_users"], 0)
+            self.assertEqual(cohort["reason"], "No evaluation users in this group")
 
     def test_unavailable_profiles_and_single_item_diversity(self) -> None:
         rankings = {"cold": ["d"]}
@@ -92,7 +95,20 @@ class BeyondAccuracyTests(unittest.TestCase):
         self.assertAlmostEqual(result["aggregate"]["MeanSelfInformation@1"], math.log2(7))
         definitions = group_definitions(self.statistics, rankings)
         self.assertEqual(definitions["activity"]["members"]["cold"], "low")
-        self.assertEqual(definitions["status"], "pending")
+        self.assertEqual(definitions["status"], "complete")
+
+    def test_group_comparison_across_user_and_item_groups(self) -> None:
+        report = compare_groups(self.rankings, self.relevant, self.statistics, 2)
+        self.assertEqual((report["status"], report["owner"], report["k"]), ("complete", "Victor", 2))
+        self.assertEqual(report["overall"]["n_users"], 3)
+        for name in ("activity", "gender"):
+            self.assertEqual(sum(cohort["n_users"] for cohort in report["user_groups"][name].values()), 3)
+        drama = report["item_groups"]["Genre"]["Drama"]
+        self.assertEqual((drama["n_recommended"], drama["n_hits"], drama["n_relevant"]), (2, 1, 1))
+        comedy = report["item_groups"]["Genre"]["Comedy"]
+        self.assertEqual((comedy["n_recommended"], comedy["n_hits"], comedy["n_relevant"]), (3, 2, 3))
+        self.assertLessEqual(comedy["recommended_share"], 1)
+        json.dumps(report, allow_nan=False)
 
     def test_metadata_loaded_from_atomic_files(self) -> None:
         features = {"a": ("Action", "Comedy"), "b": ("Drama",), "c": ("Comedy",), "d": ("unknown",)}

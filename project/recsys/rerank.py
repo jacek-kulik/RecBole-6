@@ -135,7 +135,7 @@ def _save_evaluation(output: Path, rankings: Rankings, relevant: dict[str, set[s
         manifest.update(status="complete", n_users=len(rankings), splits_verified=True,
                         n_catalogue_items=len(statistics.catalogue), n_training_interactions=statistics.n_interactions,
                         activity_boundaries=list(statistics.activity_boundaries), project_evaluation_complete=False,
-                        pending_work={**statistics.pending, "group_analysis": groups["reason"]})
+                        pending_work={**statistics.pending, "group_analysis": groups["pending"] or None})
     except Exception as error:
         manifest.update(status="failed", error=str(error))
         raise

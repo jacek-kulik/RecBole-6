@@ -22,9 +22,12 @@ class ValidateTests(unittest.TestCase):
         stdout = patch("sys.stdout", new=io.StringIO())
         stdout.start()
         self.addCleanup(stdout.stop)
-        self.source = Path(self.directory.name) / "training"
+        # Resolve the temp root once: on macOS /var is a symlink to /private/var,
+        # and new_run() returns resolved paths, so unresolved paths would not compare equal.
+        root = Path(self.directory.name).resolve()
+        self.source = root / "training"
         self.source.mkdir()
-        self.output = Path(self.directory.name) / "validation"
+        self.output = root / "validation"
         self.manifest = {
             "kind": "recbole-training", "status": "complete", "checkpoint": "best.pth",
             "split_id": "split", "git_commit": "training-commit", "model": "BPR",
@@ -45,11 +48,11 @@ class ValidateTests(unittest.TestCase):
             writer = csv.writer(stream)
             writer.writerow(["user_id", "item_id"])
             writer.writerows([("miss", "b"), ("late", "b"), ("late", "b"), ("late", "b")])
-        data = Path(self.directory.name) / "dataset/fixture"
+        data = root / "dataset/fixture"
         data.mkdir(parents=True)
         (data / "fixture.item").write_text("item_id:token\tclass:token_seq\na\tComedy\nb\tDrama\nx\tDrama\ny\tComedy\n")
         (data / "fixture.user").write_text("user_id:token\tgender:token\nmiss\tF\nlate\tM\n")
-        root_patch = patch("project.recsys.evaluation.REPO_ROOT", Path(self.directory.name))
+        root_patch = patch("project.recsys.evaluation.REPO_ROOT", root)
         root_patch.start()
         self.addCleanup(root_patch.stop)
         self.predictions = patch("project.recsys.evaluation.partition_predictions",
@@ -87,7 +90,7 @@ class ValidateTests(unittest.TestCase):
         self.assertEqual(manifest["source_git_commit"], "training-commit")
         self.assertEqual(manifest["checkpoint_sha256"], hashlib.sha256(b"selected checkpoint").hexdigest())
         reports = self.read("group_metrics.json")
-        self.assertEqual((reports["status"], reports["owner"]), ("pending", "Victor"))
+        self.assertEqual((reports["status"], reports["owner"]), ("complete", "Victor"))
         beyond = self.read("beyond_accuracy.json")
         self.assertEqual(beyond["gender_fairness"]["counts"], {"F": 1, "M": 1, "unknown": 0})
         self.assertIsNotNone(beyond["gender_fairness"]["gaps"]["MRR@2"]["absolute"])
