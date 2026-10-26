@@ -1,0 +1,14 @@
+{
+  "clean_index_export": true,
+  "focused_unit_tests": 63,
+  "frozen_source_comparisons": 47,
+  "inherited_fit_dependencies_retrained": true,
+  "joint_cascade_settings_preserved": true,
+  "maximum_metric_error": 0.0,
+  "original_artifact_directories_present": false,
+  "portable_model_entries": 27,
+  "replayed_model_evaluations": 47,
+  "status": "passed",
+  "unit_test_failures": 0,
+  "validation_checkpoint_reloads": 24
+}

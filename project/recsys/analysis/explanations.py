@@ -1,8 +1,8 @@
 import csv
 from collections import Counter
+from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from statistics import correlation, fmean
-from typing import Iterable, Mapping, Sequence
 
 from ..data import ACTIVITY_GROUPS, activity_terciles, genre_distribution
 

@@ -1,10 +1,9 @@
 """Victor's Task 2.5 group comparisons (Task 3.4 reuses them), reviewed by Caio."""
 
 import math
-
 from collections import defaultdict
 from collections.abc import Callable, Iterable, Mapping
-from typing import TypedDict, Dict, Tuple
+from typing import TypedDict
 
 from ..contracts import Rankings
 from ..data import (
@@ -76,10 +75,10 @@ def _activity_group(statistics: TrainingStatistics, user: str) -> str:
     # Zero-history users join low, matching the manifest's group construction note.
     return statistics.activity_groups.get(user, ACTIVITY_GROUPS[0])
 
-def _item_popularity_groups(statistics: TrainingStatistics, item: str) -> Tuple[str, ...]:
+def _item_popularity_groups(statistics: TrainingStatistics, item: str) -> tuple[str, ...]:
     return (statistics.item_groups[item],)
 
-def _item_genre_groups(statistics: TrainingStatistics, item: str) -> Tuple[str, ...]:
+def _item_genre_groups(statistics: TrainingStatistics, item: str) -> tuple[str, ...]:
     return tuple(statistics.item_features.get(item, ("unknown",)))
 
 
@@ -135,7 +134,7 @@ def _item_group_accuracy_from_users(rows, per_user_accuracy, membership, k, grou
             sums[group][metric] / weights[group] if  weights[group] else None
             for metric in ACCURACY_METRICS}
         for group in groups
-        
+
     }
 
 def _item_group_accuracy_beyond_from_users(rows, per_user_accuracy, membership, k, groups, discounted=False) -> dict[str, dict[str, float | None]]:
@@ -218,8 +217,8 @@ def compare_groups(
 ) -> GroupComparison:
     """Compare accuracy and beyond-accuracy metrics across fixed training-derived groups.
 
-    User groups are training-count activity which Seperates users based on how 
-    many items it has ranked in the training data. High for items > 92 
+    User groups are training-count activity which Seperates users based on how
+    many items it has ranked in the training data. High for items > 92
     Medium for 26 < items < 69 and low for items < 26, recorded gender(F/M) and their top@n favorite genres. Item groups are in popularity bands (head/middle/tail).
     """
     if type(minimum_group_size) is not int or minimum_group_size < 1:

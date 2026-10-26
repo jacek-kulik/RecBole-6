@@ -1,0 +1,10 @@
+{
+  "fit_sha256": "fc170ef013a9d6fe460a47ad5cf43b090b7d8fbb3ca78a61da95ad78ba8825f4",
+  "original_local_fit_sha256": "d9a7e579465c2139b56c6c4e59ed2c7c77e8fbd6aec67013fc768aa003f9c3b7",
+  "original_local_selection_sha256": "882cea443dcbcbbb622e860fcf6accca1a2064a62144b0779322c7ee5a82c516",
+  "selection_sha256": "eb3db41e3d0f2fe4073400f8203072fdf6edf6f33516295e975d0f554385aa2c",
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "test_score_method": "Fixed training histories; additional validation mask; renormalize candidates",
+  "test_selection_performed": false,
+  "users": 943
+}

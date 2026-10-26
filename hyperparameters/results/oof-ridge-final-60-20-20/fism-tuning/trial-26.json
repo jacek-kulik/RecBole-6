@@ -1,0 +1,22 @@
+{
+  "fixed_epochs": 20,
+  "parameters": {
+    "alpha": 1.0,
+    "embedding_size": 128,
+    "reg_weights": [
+      1e-05,
+      1e-05
+    ]
+  },
+  "seconds": 116.11000000000058,
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "test_evaluated": false,
+  "validation": {
+    "F1@10": 0.14518574646955668,
+    "MAP@10": 0.07245775425580368,
+    "MRR@10": 0.44885581309229206,
+    "NDCG@10": 0.24611540435378135,
+    "Precision@10": 0.20827147401908708,
+    "Recall@10": 0.15102764488543868
+  }
+}

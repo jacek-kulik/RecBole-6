@@ -1,0 +1,9 @@
+{
+  "NDCG@10": 0.2849154235880113,
+  "bpr_users": 210,
+  "kind": "switch",
+  "min_bpr_history": 40,
+  "min_overlap": 20,
+  "min_reliable_neighbors": 40,
+  "userknn_users": 733
+}

@@ -1,0 +1,23 @@
+{
+  "alpha": 30000.0,
+  "coefficients": [
+    0.046981944015687775,
+    0.007685000032488336,
+    0.021174594796012445,
+    0.028161647445918005,
+    0.026038854176392765,
+    0.041261957834896
+  ],
+  "components": [
+    "itemknn",
+    "userknn",
+    "bpr",
+    "slimelastic",
+    "ease",
+    "fism"
+  ],
+  "intercept": 3.226642488243063,
+  "target": "raw held-out rating",
+  "training_rows": 60734,
+  "transform": "per-user candidate z-score"
+}

@@ -1,0 +1,52 @@
+{
+  "ease-strength-0.25/test": {
+    "eligible_score_max_absolute_error": 1.6653345369377348e-16,
+    "existing_model": "aug-ease-weak",
+    "metric_error": 0.0
+  },
+  "ease-strength-0.25/valid": {
+    "eligible_score_max_absolute_error": 1.6653345369377348e-16,
+    "existing_model": "aug-ease-weak",
+    "metric_error": 0.0
+  },
+  "ease-strength-0/test": {
+    "eligible_score_max_absolute_error": 7.994863510107919e-07,
+    "existing_model": "ease",
+    "metric_error": 0.0
+  },
+  "ease-strength-0/valid": {
+    "eligible_score_max_absolute_error": 7.994863510107919e-07,
+    "existing_model": "ease",
+    "metric_error": 0.0
+  },
+  "slim-strength-0.25/test": {
+    "eligible_score_max_absolute_error": 0.0,
+    "existing_model": "aug-slim-weak",
+    "metric_error": 0.0
+  },
+  "slim-strength-0.25/valid": {
+    "eligible_score_max_absolute_error": 0.0,
+    "existing_model": "aug-slim-weak",
+    "metric_error": 0.0
+  },
+  "slim-strength-0/test": {
+    "eligible_score_max_absolute_error": 0.0,
+    "existing_model": "paired-slim",
+    "metric_error": 0.0
+  },
+  "slim-strength-0/valid": {
+    "eligible_score_max_absolute_error": 0.0,
+    "existing_model": "paired-slim",
+    "metric_error": 0.0
+  },
+  "slim-strength-1/test": {
+    "eligible_score_max_absolute_error": 0.0,
+    "existing_model": "aug-slim-comparable",
+    "metric_error": 0.0
+  },
+  "slim-strength-1/valid": {
+    "eligible_score_max_absolute_error": 0.0,
+    "existing_model": "aug-slim-comparable",
+    "metric_error": 0.0
+  }
+}

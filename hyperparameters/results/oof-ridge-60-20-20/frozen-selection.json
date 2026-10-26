@@ -1,0 +1,16 @@
+{
+  "component_scores_sha256": {
+    "bpr": "6083dab110e3194ace5da8cf7465f4968517defd9749de109d0c6848c1eb9d50",
+    "ease": "1ea760b50cdb6b7ca2df89ea7aa71a30fea5c006ee62e06fd955b5648dbe9e2b",
+    "fism": "2ec20001f229be85dfc65a72a242bb3415495bc1c52a017a8e49031ec1bb583a",
+    "itemknn": "b45e0d019b784dec81acf2bdbfa8eb9f26f225f23702119f7f55e1b24c0b48b1",
+    "slimelastic": "1fd7829f3afed6e57f291e86a1d6ca89bccb1e3357b320c5c6bb62fa94e99cfd",
+    "userknn": "e102d4e10b2f45d203fb46a456fe377b4fcddc57a2c4f967befd29e206c08fa8"
+  },
+  "oof_sha256": "1fd60f9f9f6e48ccfff30f5e088043a331a49ef87348ba44bb31347185ecc404",
+  "provisional_fism": true,
+  "selected_fit_sha256": "132a744cae3873e4e128d394483b45c5e8322cd5f33b3d5eba34b27e4bcc634e",
+  "selection_sha256": "60a63ab3b0f151ec624188a8b6b1365abd4063bba390d36f062e1c7adb4af9a5",
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "test_selection_performed": false
+}

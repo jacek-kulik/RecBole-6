@@ -1,0 +1,21 @@
+{
+  "all_candidates_and_full_relevance_checked": true,
+  "all_six_selections_reproduced_from_validation": true,
+  "all_validation_precedes_test": true,
+  "discussion_words": 167,
+  "evaluations": 38,
+  "independent_target_calculations": [
+    "fractional-genre KL",
+    "popularity JS",
+    "Lorenz-curve exposure Gini",
+    "coverage"
+  ],
+  "max_metric_error": 1.7763568394002505e-15,
+  "recommendation_lists": 35834,
+  "report_path": "project\\reports\\task-3.3-weighted-reranking-orders.md",
+  "report_sha256": "07bf3d3551348eac49c1bf890bca2cf8b6ce28dae4ef3b3d910ac01f272e205c",
+  "selection_unchanged_through_test": true,
+  "status": "passed",
+  "verifier_sha256": "f5630e16d12b7777de7404bdeb7281eeae3fe0bca64fc786ac52c7639c55aa75",
+  "zero_strength_controls": 8
+}

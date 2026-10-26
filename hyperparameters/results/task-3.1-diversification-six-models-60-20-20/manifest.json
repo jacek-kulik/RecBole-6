@@ -1,0 +1,81 @@
+{
+  "candidate_count": 50,
+  "command": [
+    "-"
+  ],
+  "comparison": "project/artifacts/task31-six-models-20261025/comparison/comparison.csv",
+  "configuration_policy": "Six checked-in individual configurations; no model retuning",
+  "diversification_choices": 18,
+  "figure_sha256": {
+    "figure-data.json": "171887ed2f0844e771fbc5ff27b029aaba44e4de53fa379198e0b6538bf62b56",
+    "test-effects.pdf": "6f9242b0a94451210d99aac14ff56b24b4555d8038bb90fdb13477591d22734d",
+    "test-effects.png": "eb9212835562696c07cf525babf0ef9806cd1baf973decb64a959a3b1db3b38a",
+    "validation-tradeoffs.pdf": "d5ca187c7636b6b8f96b21d413651f7f5aee1307a93086dff0e99c17786fdada",
+    "validation-tradeoffs.png": "04edb730f86ee373e1639237d417ab3a099523a7713361c55803bdeffbfd548e"
+  },
+  "git_commit": "854067733fb6daf85f70cda1b382392033f338c4",
+  "git_dirty": true,
+  "k": 10,
+  "kind": "compact-six-model-diversification-evidence",
+  "limitations": "Single seed and reused split; descriptive comparisons, not significance claims",
+  "method_targets": {
+    "coverage_diversification": {
+      "direction": "maximize",
+      "metric": "CatalogueCoverage"
+    },
+    "diversification": {
+      "direction": "maximize",
+      "metric": "ILD"
+    },
+    "genre_calibration": {
+      "direction": "minimize",
+      "metric": "GenreMiscalibration"
+    },
+    "item_fairness": {
+      "direction": "minimize",
+      "metric": "ExposureGini"
+    },
+    "popularity_calibration": {
+      "direction": "minimize",
+      "metric": "UPD"
+    },
+    "popularity_diversification": {
+      "direction": "maximize",
+      "metric": "MeanSelfInformation"
+    },
+    "user_fairness": {
+      "direction": "minimize",
+      "metric": "GRU"
+    }
+  },
+  "models": [
+    "itemknn",
+    "userknn",
+    "bpr",
+    "slimelastic",
+    "ease",
+    "fism"
+  ],
+  "plotting_source_sha256": "db47f4c6ffbddc545506cb7f28cddd5d7894838709ec9b4745ad9e3273d6eb32",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "run_suffix": "diversification-review-20261025",
+  "runtime": {
+    "matplotlib": "3.11.2",
+    "numpy": "2.4.6",
+    "python": "3.11.9",
+    "threads": 2,
+    "torch": "2.14.1+cpu"
+  },
+  "seconds": 283.9220000000023,
+  "selection": "Best method-specific target with at most 5% relative validation NDCG loss",
+  "source_root": "project/artifacts/task31-six-model-training-20261025",
+  "source_run": "project/artifacts/task31-six-models-20261025",
+  "status": "complete",
+  "strengths": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ]
+}

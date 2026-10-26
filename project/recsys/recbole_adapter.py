@@ -292,6 +292,7 @@ def export_scores(model, dataset, loader, split_id, partition, label=None, batch
 
 
 def _write_scores(table, path):
+    table.validate()
     with gzip.open(path, "wt", encoding="utf-8") as stream:
         json.dump(asdict(table), stream, sort_keys=True, allow_nan=False)
 

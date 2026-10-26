@@ -1,0 +1,77 @@
+{
+  "audit_fix_commit": "e4f45cb7f17317f801fe2467da1d0c61c4407a6e",
+  "checks": {
+    "audit_evaluations": 38,
+    "audit_recommendation_lists": 35834,
+    "corrupted_result_scenarios_rejected": 6,
+    "project_tests_passed": 185,
+    "project_tests_run": 186,
+    "project_tests_skipped": 1,
+    "test_skip_reason": "Matplotlib is unavailable in the project environment"
+  },
+  "component_hyperparameters": {
+    "bpr": {
+      "embedding_size": 64,
+      "learning_rate": 0.0015,
+      "train_batch_size": 512
+    },
+    "ease": {
+      "reg_weight": 250.0
+    },
+    "fism": {
+      "alpha": 0.5,
+      "embedding_size": 256,
+      "reg_weights": [
+        0.0001,
+        0.0001
+      ]
+    },
+    "itemknn": {
+      "k": 100,
+      "shrink": 100.0
+    },
+    "slimelastic": {
+      "alpha": 0.2,
+      "l1_ratio": 0.01
+    },
+    "userknn": {
+      "k": 50,
+      "shrink": 0.0
+    }
+  },
+  "component_settings": "hyperparameters/results/oof-ridge-final-60-20-20/component-selection.csv",
+  "component_settings_sha256": "b01aea07f13f73d7925ec91ea58c162d455616ece77ab7de18eb88a5ccdba674",
+  "corrected_fism_source_commit": "8ed2ff3b041df8460e45093351b4c5b86b1b2b32",
+  "cpu_numerical_threads": 2,
+  "csv_line_endings": "LF in this compact copy; numerical contents unchanged",
+  "environment": {
+    "numpy": "2.4.6",
+    "python": "3.11.16",
+    "torch": "2.13.0+rocm7.2"
+  },
+  "files_sha256": {
+    "README.md": "a1a408b785492323c9ec6c70d7c00efba2ac997fc39dcfe293e12d30565dcb5b",
+    "component-validation-comparison.json": "a5ccd6a9b52c20523391f32b0c3394e0d8776a4fd83aac3c738a919605eaab46",
+    "hybrid.json": "373fdaea85bb0d03d9bf2e8cb285609d61689d35f52de8a8d7b5fbc24e528b83",
+    "metrics.csv": "da95844299c000179cdf06492b271b8df2912e2faef86a218aa96a6ce5ba7dbb",
+    "selection.json": "fba4cd0a915ce476fb4330026ff705de1bd22c1b2b47c2e600f23525479c3335",
+    "split-and-fold-verification.json": "993c7d242c0642e06cef133824689abeffdbfd6367130e7c30177d5db181d187",
+    "verification.json": "b6779a3e3b410c5017b40fa790ad6a90b69a67b751d426c1b4913f8348e6997c"
+  },
+  "fism_48_trial_tuning_repeated": false,
+  "fresh_validation_best_alpha": 30000.0,
+  "full_training_fits": 6,
+  "kind": "fresh weighted-hybrid reconstruction and full saved-list audit",
+  "local_audit_working_directory": "project/artifacts/weighted-audit-reproduction-20261025/audit-workspace",
+  "local_commands_sha256": "c9e839159224adf6e3ae85de363cd6998867151a67e0b40fbc5828722fd5d606",
+  "local_full_metrics_csv_sha256": "048d0747af82cfa45d84f6d28cda4ec221b54b14be357398fde7057b0820d211",
+  "local_full_protocol_sha256": "f7ad06fedf5b5f6c945e387cfb5db69a835edd96d068e9872c2a2e9103bf2ca5",
+  "local_reproduction_script_sha256": "40fde75bc083f8fb5f6f62864eab916ca679eb3cae159cfb514e4fe74b1f2b9b",
+  "local_run": "project/artifacts/weighted-audit-reproduction-20261025",
+  "oof_fits": 30,
+  "ridge_penalties_checked": 24,
+  "test_selection_performed": false,
+  "training_source_base_commit": "5b62ff7be38693352ac837e3dd027c2a31fc8adc",
+  "training_source_record": "hyperparameters/results/oof-ridge-final-60-20-20/source-provenance.json",
+  "training_source_record_sha256": "4d59138768f3053d790e21feb371b46669e7ece85b59a6c32cc577cd9d2a49a0"
+}

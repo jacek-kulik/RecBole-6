@@ -1,0 +1,54 @@
+{
+  "evaluation_count": 38,
+  "identity": "bbaa44c42c43ed46318ceff2a41c0d3d2b391d73fb68901f841307e0fbdf0af5",
+  "local_run": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\task-3.3-reranking-orders-2026-10-24",
+  "metrics_sha256": "44809c7307c1bf4eac0051a0cd95eb556518e39b0b5c0bfc767e139117607976",
+  "protocol": {
+    "candidate_count": 50,
+    "candidate_retrieval": "frozen original Ridge top50 on eligible candidates; same pool for both orders",
+    "code_sha256": {
+      "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\scripts\\run_reranking_orders.py": "23a64ef99917cccbee56347ed7f363aa16641941fe65a69a36b73485b129c6f9",
+      "project\\recsys\\analysis\\coefficients.py": "58c1dcc43d2ab05827126e03e5254d9c651d8d8924e836c9979bb91e2b7a4919",
+      "project\\recsys\\contracts.py": "314122e6941f1f3087452a5f36921582e6483f82053f81432f0655c00c9dc7d9",
+      "project\\recsys\\data.py": "4eeb0d33941018f6890d55402fe40a1386aa9614b01d70a65ff8544594cd51a5",
+      "project\\recsys\\evaluation.py": "bfe2b5ac17394f771b14f4f17ffdc7dde71b5e2b774f26ca2e53f2f9951c7ca7",
+      "project\\recsys\\experiments\\task3.py": "dc9e0d31a6e58ccf84f39759f0fe646ee90d6ae1a81128d6165d43c73bb10f8b",
+      "project\\recsys\\metrics\\accuracy.py": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+      "project\\recsys\\metrics\\beyond_accuracy.py": "0b1edf3836b59afeda7bfa1a1767d546b6df848e118f8f6304fbb280ece98d3c",
+      "project\\recsys\\rerank.py": "3a7bd26f439e8b5b8a237c0dc82f22a1946e0a7de2e529e74d4ee5cd921e44b7",
+      "project\\recsys\\rerankers\\__init__.py": "236268d34b80a641ecf79a07860b5314ad3b9b40a182f0b8727d1c38ce218a47",
+      "project\\recsys\\rerankers\\_common.py": "761abf8a246141823f5c51cc3258d8c5315b8cc3d429db9f60072f23c04323c9",
+      "project\\recsys\\rerankers\\calibration.py": "87c7b5708c066caa0e7e94389ae45103a89b61525b4152217eeff9f1b99266f7",
+      "project\\recsys\\rerankers\\diversification.py": "c6816d0ba60b4dc414ed7ff618086b4eb78d49c9d0893ca40a093680ce490529",
+      "project\\recsys\\rerankers\\item_fairness.py": "1d045eb706a93127b8f1426ad6d8c1cbd0ff5fd0654afc244af00e4797d04004",
+      "project\\recsys\\rerankers\\user_fairness.py": "c8d3c7d66250e17e6b23faf03565c374d564e33c4c98ce5859c6686a5938ad83",
+      "project\\scripts\\analyze_hybrid_coefficients.py": "d501f9d931058decf52e248401ae78f5429006c8344eeb516c87ac8ea15dd660"
+    },
+    "k": 10,
+    "metadata_sha256": {
+      "item": "51d7cdf777ce5c0f5b32c1d947a4a81fe07d75e78abbe761e0cd4d0756064532",
+      "user": "4f670007d9cfbeb9807e757209af1555b9bcc186bde25e767f67cb67c6dd5972"
+    },
+    "rank_to_score": "reranked top10 + original-order remainder; assign original sorted z-scores to positions",
+    "reranker_parent": "580bfaa63de4b176b2018e6e2a5108e8f9e390c7",
+    "score_normalization": "component z-scores over full eligible catalogue, before truncation; reranker minmax over pool",
+    "seed": 42,
+    "selection": "minimize target on validation subject to NDCG >= 0.95*baseline; tie higher NDCG then lower strength",
+    "shared_strength_across_components": true,
+    "source": "project\\artifacts\\hybrid-60-20-20-fism-self-excluded\\final",
+    "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+    "strengths": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "test_previously_inspected": true,
+    "test_selection_performed": false,
+    "weighted_inputs_sha256": "1d3f5a8ff87c5b48e51d550bc62b636bb18efec77ba5f707c7ffa9867da53458"
+  },
+  "selection_sha256": "9a755ad4d10589d5f34dc9429d974cb72d17658763f8f2cae1678e2a617f5722",
+  "status": "complete",
+  "test_selection_performed": false
+}

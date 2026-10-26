@@ -1,0 +1,73 @@
+{
+  "evaluations": 38,
+  "identity": "c87908e55707a2c35b913352b850bc3239128caf1fc844b2d762ea23b9eaffb0",
+  "local_run": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\task-3.3-switching-orders-2026-10-25",
+  "metrics_sha256": "7928e6700ee841df245d96fab1fa12b7c9f61c2b5a4af44596526eb74ddeb96c",
+  "protocol": {
+    "bpr_users": 210,
+    "candidate_count": 50,
+    "candidate_retrieval": "original switched score top50 warm eligible candidates; same pool for both orders",
+    "catalogue_items": 1615,
+    "code_sha256": {
+      "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\scripts\\run_switching_orders.py": "9b52f43fe6607b0a9531dcf7d262249140ea7eb4b3fa9e7792f6736f39482831",
+      "project\\recsys\\contracts.py": "314122e6941f1f3087452a5f36921582e6483f82053f81432f0655c00c9dc7d9",
+      "project\\recsys\\data.py": "4eeb0d33941018f6890d55402fe40a1386aa9614b01d70a65ff8544594cd51a5",
+      "project\\recsys\\evaluation.py": "bfe2b5ac17394f771b14f4f17ffdc7dde71b5e2b774f26ca2e53f2f9951c7ca7",
+      "project\\recsys\\experiments\\switching_orders.py": "a87cbe14798e6ab1597035af441dff0080b875aba688cb80effbf378c6f19c6e",
+      "project\\recsys\\hybrid_bundle.py": "011e0513950d76c7ca930318b6c444d3874421f5460a1f65d92d399c7b5fa386",
+      "project\\recsys\\metrics\\accuracy.py": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8",
+      "project\\recsys\\metrics\\beyond_accuracy.py": "0b1edf3836b59afeda7bfa1a1767d546b6df848e118f8f6304fbb280ece98d3c",
+      "project\\recsys\\rerank.py": "3a7bd26f439e8b5b8a237c0dc82f22a1946e0a7de2e529e74d4ee5cd921e44b7",
+      "project\\recsys\\rerankers\\__init__.py": "236268d34b80a641ecf79a07860b5314ad3b9b40a182f0b8727d1c38ce218a47",
+      "project\\recsys\\rerankers\\_common.py": "761abf8a246141823f5c51cc3258d8c5315b8cc3d429db9f60072f23c04323c9",
+      "project\\recsys\\rerankers\\calibration.py": "87c7b5708c066caa0e7e94389ae45103a89b61525b4152217eeff9f1b99266f7",
+      "project\\recsys\\rerankers\\diversification.py": "c6816d0ba60b4dc414ed7ff618086b4eb78d49c9d0893ca40a093680ce490529",
+      "project\\recsys\\rerankers\\item_fairness.py": "1d045eb706a93127b8f1426ad6d8c1cbd0ff5fd0654afc244af00e4797d04004",
+      "project\\recsys\\rerankers\\user_fairness.py": "c8d3c7d66250e17e6b23faf03565c374d564e33c4c98ce5859c6686a5938ad83",
+      "project\\scripts\\run_reranking_orders.py": "23a64ef99917cccbee56347ed7f363aa16641941fe65a69a36b73485b129c6f9"
+    },
+    "components": [
+      "userknn",
+      "bpr-inherited"
+    ],
+    "hybrid": "switching",
+    "k": 10,
+    "max_relative_validation_ndcg_loss": 0.05,
+    "metadata_sha256": {
+      "item": "51d7cdf777ce5c0f5b32c1d947a4a81fe07d75e78abbe761e0cd4d0756064532",
+      "user": "4f670007d9cfbeb9807e757209af1555b9bcc186bde25e767f67cb67c6dd5972"
+    },
+    "package_sha256": "e3296e434125de074d7277e5959e711d580f7634aff04ac29d99ade0f755ab2a",
+    "post_exposure_cohort": "one counter across the 943 final switched user rows",
+    "pre_exposure_cohort": "each component reranks all 943 users independently before frozen routing",
+    "routes_sha256": "1e53f9786a0e0025a9b987d7314ba66d2aeb368214c3cdeac3bf254d81ee8361",
+    "routing_frozen": true,
+    "routing_rule": {
+      "NDCG@10": 0.2849154235880113,
+      "bpr_users": 210,
+      "kind": "switch",
+      "min_bpr_history": 40,
+      "min_overlap": 20,
+      "min_reliable_neighbors": 40,
+      "userknn_users": 733
+    },
+    "scope": "warm",
+    "seed": 42,
+    "shared_component_strength": true,
+    "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+    "strengths": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "test_previously_inspected": true,
+    "test_selection_performed": false,
+    "userknn_users": 733,
+    "users": 943
+  },
+  "selection_sha256": "e44d425be74063162969ef7081c6146302ce73a8923b7bb8917d10a0ed869e9f",
+  "status": "complete",
+  "test_selection_performed": false
+}

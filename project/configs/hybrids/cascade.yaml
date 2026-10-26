@@ -1,0 +1,29 @@
+split_id: 1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1
+split:
+- 0.6
+- 0.2
+- 0.2
+seed: 42
+validation_metric: NDCG@10
+models:
+  cascade:
+    bpr: bpr
+    itemknn: cascade-itemknn
+    kind: cascade
+    shortlist: 10
+  cascade-itemknn:
+    file: cascade-itemknn.npz
+    kind: itemknn
+    parameters:
+      k: 200
+      shrink: 10.0
+  bpr:
+    file: bpr.npz
+    kind: bpr
+    parameters:
+      embedding_size: 128
+      epochs: 50
+      learning_rate: 0.0005
+      train_batch_size: 512
+search_records: hyperparameters\results\alternate-hybrids-60-20-20\cascade
+joint_component_tuning: true

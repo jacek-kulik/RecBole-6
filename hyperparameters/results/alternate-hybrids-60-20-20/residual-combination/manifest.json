@@ -1,0 +1,46 @@
+{
+  "architecture": "fixed raw MF dot product + MLP(concat); MLP hidden widths h,h/2 with ReLU; zero output layer",
+  "elapsed_seconds": 147.70400000000018,
+  "epoch_zero_matches_mf_exactly": true,
+  "frozen_embeddings": true,
+  "items": 1682,
+  "loss": "pairwise softplus(negative score - positive score)",
+  "max_epochs": 40,
+  "negative_sampling": "one uniform catalogue item per positive per epoch, reject training positives only; paired across variants",
+  "optimizer": {
+    "batch_size": 2048,
+    "learning_rate": 0.001,
+    "name": "Adam",
+    "weight_decay": 0.0001
+  },
+  "previous_run": "C:\\Users\\radud\\OneDrive\\Desktop\\Uni Stuff\\Master\\RecSys\\RecBole-6\\project\\artifacts\\feature-combination-retuned-bpr",
+  "previous_test_results_used_for_selection": false,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "selection": "best validation NDCG checkpoint including epoch zero; evaluate every epoch; width by mean across seeds",
+  "sha256": {
+    "feature_checkpoints": {
+      "mlp": "11fd245fa2cff1177a5578f8f7d9405b897ca9b8e0e0bc4d897241126fe39bcf",
+      "mlp-content": "99cc4eba57d8cb810652fc62fdd679e9cbbbccdaf4b64c07b6d77c2f2b49376c"
+    },
+    "feature_helpers": "50104123300226a0077f4465826e0a633f7ab9909629e71a768c695efd94364c",
+    "mf_scores": "e8c8eaeeb44e76212869abd87429d21b020935c9ecb568846fcd5b076a093f59",
+    "previous_manifest": "0021da4be5d32ef71a6abc8269aa587a12052b888f48b6620bf3f3ba7dd00251",
+    "source": "201a6dc84c1a6e18efdea303746a8f2cf78fd46514e61c0d9a5309016ff742e3",
+    "train": "dbe78c6b081e0bb60d77e919b99029b6784cd841f51c0a87bc4a8b40c4841c4c",
+    "valid": "c4090f3590b94f25f8a590325acce607e04fadbc1bffe5491d20734561ab600b"
+  },
+  "split_id": "1c62b75f944bd6cea03626d8cc1bac05289d65ab4e04003d1f10a92d20edbea1",
+  "status": "complete",
+  "test_evaluated": false,
+  "test_split_read": false,
+  "training_pairs": 60734,
+  "users": 943,
+  "widths": [
+    64,
+    128
+  ]
+}

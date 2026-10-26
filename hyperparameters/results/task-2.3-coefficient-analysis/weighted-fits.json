@@ -1,0 +1,325 @@
+{
+  "original": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.04695373275714226,
+      0.007655276967421587,
+      0.02118234666920494,
+      0.028186344527812688,
+      0.026056366078681555,
+      0.04126718898109121
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "refit-bpr": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.049434099493115155,
+      0.008831151923614519,
+      0.0,
+      0.028919363264085722,
+      0.027220621177646884,
+      0.045650660703365174
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.240147996183351,
+    "method": "OOF refit at original fixed penalty",
+    "removed": "bpr",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "refit-ease": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.05127329746448099,
+      0.014228305359157006,
+      0.023298545098262766,
+      0.040174351376328535,
+      0.0,
+      0.04391466592881115
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2265187739081242,
+    "method": "OOF refit at original fixed penalty",
+    "removed": "ease",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "refit-fism": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.05026541385682907,
+      0.009582084404132586,
+      0.029511349221673554,
+      0.029261782527848626,
+      0.028823936842720874,
+      0.0
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2551844527432694,
+    "method": "OOF refit at original fixed penalty",
+    "removed": "fism",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "refit-itemknn": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.0,
+      0.018456324215653668,
+      0.028357212042808614,
+      0.04138394594503269,
+      0.03293068383980992,
+      0.04630882608118364
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.234917726776073,
+    "method": "OOF refit at original fixed penalty",
+    "removed": "itemknn",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "refit-slimelastic": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.05596055675017903,
+      0.014333682139411063,
+      0.022629416874691142,
+      0.0,
+      0.0390764345909511,
+      0.042384528393830743
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.224706044238042,
+    "method": "OOF refit at original fixed penalty",
+    "removed": "slimelastic",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "refit-userknn": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.049395825763613906,
+      0.0,
+      0.021951398008883377,
+      0.03039889114460266,
+      0.028421476715885578,
+      0.04193040914272043
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.225990801349128,
+    "method": "OOF refit at original fixed penalty",
+    "removed": "userknn",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "zero-bpr": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.04695373275714226,
+      0.007655276967421587,
+      0.0,
+      0.028186344527812688,
+      0.026056366078681555,
+      0.04126718898109121
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "method": "frozen removal",
+    "removed": "bpr",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "zero-ease": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.04695373275714226,
+      0.007655276967421587,
+      0.02118234666920494,
+      0.028186344527812688,
+      0.0,
+      0.04126718898109121
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "method": "frozen removal",
+    "removed": "ease",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "zero-fism": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.04695373275714226,
+      0.007655276967421587,
+      0.02118234666920494,
+      0.028186344527812688,
+      0.026056366078681555,
+      0.0
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "method": "frozen removal",
+    "removed": "fism",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "zero-itemknn": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.0,
+      0.007655276967421587,
+      0.02118234666920494,
+      0.028186344527812688,
+      0.026056366078681555,
+      0.04126718898109121
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "method": "frozen removal",
+    "removed": "itemknn",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "zero-slimelastic": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.04695373275714226,
+      0.007655276967421587,
+      0.02118234666920494,
+      0.0,
+      0.026056366078681555,
+      0.04126718898109121
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "method": "frozen removal",
+    "removed": "slimelastic",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  },
+  "zero-userknn": {
+    "alpha": 30000.0,
+    "coefficients": [
+      0.04695373275714226,
+      0.0,
+      0.02118234666920494,
+      0.028186344527812688,
+      0.026056366078681555,
+      0.04126718898109121
+    ],
+    "components": [
+      "itemknn",
+      "userknn",
+      "bpr",
+      "slimelastic",
+      "ease",
+      "fism"
+    ],
+    "intercept": 3.2266501598166077,
+    "method": "frozen removal",
+    "removed": "userknn",
+    "target": "raw held-out rating",
+    "training_rows": 60734,
+    "transform": "per-user candidate z-score"
+  }
+}

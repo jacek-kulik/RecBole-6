@@ -8,7 +8,13 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from sklearn.exceptions import ConvergenceWarning
 
-from project.scripts.retune_ease_slim import choose, grid, parse_args, rankings, write_json
+from project.scripts.retune_ease_slim import (
+    choose,
+    grid,
+    parse_args,
+    rankings,
+    write_json,
+)
 from recbole.model.general_recommender.slimelastic import SLIMElastic
 
 

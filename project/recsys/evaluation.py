@@ -10,7 +10,8 @@ from typing import Any, Literal, TypedDict
 
 from .analysis.groups import GroupComparison, compare_groups, group_definitions
 from .artifacts import REPO_ROOT, new_run, provenance, write_json
-from .data import prepare_metadata, read_training_interactions
+from .contracts import Rankings
+from .data import TrainingStatistics, prepare_metadata, read_training_interactions
 from .metrics.accuracy import evaluate_accuracy
 from .metrics.beyond_accuracy import METRIC_DEFINITIONS, evaluate_beyond_accuracy
 from .metrics.types import AccuracyResults, BeyondAccuracyResults
@@ -22,6 +23,33 @@ class MetricComparison(TypedDict):
     recbole: float
     difference: float
     matches_reported_precision: bool
+
+
+def evaluation_settings(partition: Literal['valid', 'test'], k: int, scope: str = 'full') -> dict[str, Any]:
+    """Shared comparison fields for checkpoint and portable-ranking evaluations."""
+    if partition not in {'valid', 'test'} or scope not in {'full', 'warm'}:
+        raise ValueError('Unknown evaluation partition or candidate scope')
+    history = 'training history' if partition == 'valid' else 'training and validation history'
+    settings = {
+        'kind': 'independent-validation' if partition == 'valid' else 'independent-test-evaluation',
+        'partition': partition, 'k': k, 'test_evaluated': partition == 'test',
+        'relevance': f'all held-out {partition} interactions',
+        'candidate_policy': f'RecBole full-sort catalogue excluding padding and {history}',
+        'metric_definitions': METRIC_DEFINITIONS,
+        'aggregation': 'Equal user means for per-user metrics; cohort-wide coverage and exposure',
+        'smoothing': {'novelty_pseudocount': 1, 'genre_profile_mixture': .01},
+        'group_construction': {
+            'activity': 'Linear training-count terciles; ties stay together; zero-history users join low',
+            'gender': 'Recorded F/M from the dataset user file; any other value counts as unknown',
+            'genres': 'class column of the item file',
+            'item_popularity': 'Training interaction shares 20/60/20, with complete count buckets',
+        },
+        'profile_weights': 'Equal interactions; each movie contributes equal total genre mass',
+    }
+    if scope == 'warm':
+        settings['candidate_policy'] += '; restricted to items with training interactions'
+        settings['relevance'] += ' on items with training interactions'
+    return settings
 
 
 def print_summary(
@@ -39,6 +67,48 @@ def print_summary(
     n_user_groups = sum(len(cohorts) for cohorts in group_report["user_groups"].values())
     print(f"Group analysis {group_report['status']}: {n_user_groups} user cohorts and "
           f"{len(group_report['item_groups'])} item groups at k={group_report['k']}")
+
+
+def evaluation_manifest(source: dict[str, Any], run_dir: Path, partition: str,
+                        k: int, batch_size: int) -> dict[str, Any]:
+    """Common provenance and metric definitions for original and reranked lists."""
+    checkpoint = run_dir / source["checkpoint"]
+    manifest: dict[str, Any] = {
+        **provenance(), "status": "running",
+        **evaluation_settings(partition, k),
+        "source_run": str(run_dir), "source_git_commit": source["git_commit"],
+        "checkpoint": str(checkpoint), "checkpoint_sha256": hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
+        "split_id": source["split_id"], "model": source["model"], "dataset": source["dataset"],
+        "seed": source["seed"], "batch_size": batch_size,
+    }
+    return manifest
+
+
+def write_ranking_results(output: Path, rankings: Rankings, relevant: dict[str, set[str]],
+                          statistics: TrainingStatistics, k: int
+                          ) -> tuple[AccuracyResults, BeyondAccuracyResults, GroupComparison]:
+    """Evaluate supplied lists using the existing independent metric definitions."""
+    accuracy = evaluate_accuracy(rankings, relevant, k)
+    beyond = evaluate_beyond_accuracy(rankings, statistics, accuracy["per_user"], k)
+    group_report = compare_groups(rankings, relevant, statistics, k)
+    user = next((user for user in sorted(rankings) if accuracy["per_user"][user][f"Recall@{k}"] > 0), min(rankings))
+    example = {
+        "user": user, "relevant": sorted(relevant[user]), "k": k,
+        "ranking": [{"rank": rank, "item": item, "hit": item in relevant[user]}
+                    for rank, item in enumerate(rankings[user][:k], 1)],
+        "metrics": accuracy["per_user"][user],
+        "n_hits": sum(item in relevant[user] for item in rankings[user][:k]),
+        "n_relevant": len(relevant[user]),
+    }
+    write_json(output / "rankings.json", rankings)
+    write_json(output / "relevant.json", {user: sorted(items) for user, items in relevant.items()})
+    write_json(output / "metrics.json", accuracy["aggregate"])
+    write_json(output / "per_user_metrics.json", accuracy["per_user"])
+    write_json(output / "example.json", example)
+    write_json(output / "beyond_accuracy.json", beyond)
+    write_json(output / "groups.json", group_definitions(statistics, rankings))
+    write_json(output / "group_metrics.json", group_report)
+    return accuracy, beyond, group_report
 
 
 def run_evaluation(
@@ -61,27 +131,7 @@ def run_evaluation(
         raise FileNotFoundError(checkpoint)
     diagnostics = json.loads((run_dir / "validation.json").read_text()) if partition == "valid" else None
     output = new_run(output)
-    history = "training history" if partition == "valid" else "training and validation history"
-    manifest: dict[str, Any] = {
-        **provenance(), "status": "running",
-        "kind": "independent-validation" if partition == "valid" else "independent-test-evaluation",
-        "source_run": str(run_dir), "source_git_commit": source["git_commit"],
-        "checkpoint": str(checkpoint), "checkpoint_sha256": hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
-        "split_id": source["split_id"], "model": source["model"], "dataset": source["dataset"],
-        "seed": source["seed"], "partition": partition, "k": k, "batch_size": batch_size,
-        "test_evaluated": partition == "test", "relevance": f"all held-out {partition} interactions",
-        "candidate_policy": f"RecBole full-sort catalogue excluding padding and {history}",
-        "metric_definitions": METRIC_DEFINITIONS,
-        "aggregation": "Equal user means for per-user metrics; cohort-wide coverage and exposure",
-        "smoothing": {"novelty_pseudocount": 1, "genre_profile_mixture": .01},
-        "group_construction": {
-            "activity": "Linear training-count terciles; ties stay together; zero-history users join low",
-            "gender": "Recorded F/M from the dataset user file; any other value counts as unknown",
-            "genres": "class column of the item file",
-            "item_popularity": "Training interaction shares 20/60/20, with complete count buckets",
-        },
-        "profile_weights": "Equal interactions; each movie contributes equal total genre mass",
-    }
+    manifest = evaluation_manifest(source, run_dir, partition, k, batch_size)
     write_json(output / "manifest.json", manifest)
     try:
         predictions = partition_predictions(checkpoint, run_dir / "splits", source["split_id"],
@@ -98,9 +148,7 @@ def run_evaluation(
         }
         statistics = prepare_metadata(read_training_interactions(run_dir / "splits/train.csv"),
                                       item_file, user_file, predictions.catalogue)
-        accuracy = evaluate_accuracy(rankings, relevant, k)
-        beyond = evaluate_beyond_accuracy(rankings, statistics, accuracy["per_user"], k)
-        group_report = compare_groups(rankings, relevant, statistics, k)
+        accuracy, beyond, group_report = write_ranking_results(output, rankings, relevant, statistics, k)
         comparison: dict[str, MetricComparison] = {}
         if diagnostics is not None:
             reference = {name.lower(): value for name, value in diagnostics["metrics"].items()}
@@ -111,26 +159,8 @@ def run_evaluation(
                         "independent": value, "recbole": baseline, "difference": value - baseline,
                         "matches_reported_precision": round(value, config["metric_decimal_place"]) == baseline,
                     }
-        user = next((user for user in sorted(rankings) if accuracy["per_user"][user][f"Recall@{k}"] > 0), min(rankings))
-        example = {
-            "user": user, "relevant": sorted(relevant[user]), "k": k,
-            "ranking": [{"rank": rank, "item": item, "hit": item in relevant[user]}
-                        for rank, item in enumerate(rankings[user][:k], 1)],
-            "metrics": accuracy["per_user"][user],
-            "n_hits": sum(item in relevant[user] for item in rankings[user][:k]),
-            "n_relevant": len(relevant[user]),
-        }
-        write_json(output / "rankings.json", rankings)
-        write_json(output / "relevant.json", {user: sorted(items) for user, items in relevant.items()})
-        write_json(output / "metrics.json", accuracy["aggregate"])
-        write_json(output / "per_user_metrics.json", accuracy["per_user"])
         if partition == "valid":
             write_json(output / "comparison.json", comparison)
-        write_json(output / "example.json", example)
-        write_json(output / "beyond_accuracy.json", beyond)
-        #write_json(output / "statistics.json", statistics)
-        write_json(output / "groups.json", group_definitions(statistics, rankings))
-        write_json(output / "group_metrics.json", group_report)
         pending_work = dict(statistics.pending)
         if group_report["pending"]:
             pending_work["group_analysis"] = "; ".join(
