@@ -1,228 +1,142 @@
 {
-  "inspected_date": "2026-10-25",
-  "master_before_sync": "b0eb9781a",
-  "master_synced": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
-  "commits_fast_forwarded": 12,
-  "merged_prs": [
-    {
-      "number": 24,
-      "head": "580bfaa63de4b176b2018e6e2a5108e8f9e390c7"
-    },
-    {
-      "number": 27,
-      "head": "77012e4e3c2b924542465f732e5234d94259abc2"
-    },
-    {
-      "number": 28,
-      "head": "87321da05b01eaf825420371d44899a4583f0fa2",
-      "merged_at": "2026-10-25T14:50:44Z"
-    }
-  ],
+  "edition": "2026-10-28",
+  "source_master": "193a52a9d1d004475bd1afa64c6c34f57ec1bd0a",
+  "master_fast_forwarded_from": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
   "open_prs": [
     {
       "number": 26,
-      "head": "a3a55153f426727afd20091a33f39050c02cf815"
+      "head": "f7a1753c457bc89fd3234e79857d113bceb0d5ac"
+    },
+    {
+      "number": 30,
+      "head": "f2a5a3f8ee838fe678e09c932c6975eccf5d1dd3"
     }
   ],
-  "report_words": {
-    "jacek": 5944,
-    "other_and_shared": 5944
+  "scope": "Current source and open group-analysis implementations inspected; latest tuned six-model saved experiment used for reranking and its group illustration. No model training, retuning or PR merge was performed for this report.",
+  "reader_report": {
+    "words": 10080,
+    "jacek_words": 5040,
+    "other_and_shared_words": 5040,
+    "figures": 16,
+    "jacek_figures": 8,
+    "other_and_shared_figures": 8,
+    "chapters": 11,
+    "word_count_rule": "Regex word tokens inside ownership comment blocks after stripping HTML; front introduction and supporting documents excluded.",
+    "development_history_or_provenance_discussion": false,
+    "writing_skills": [
+      "writing-clearly-and-concisely",
+      "research-paper-writing"
+    ],
+    "paragraph_roles": "Annotated in Markdown comments; omitted from rendered reading flow",
+    "editorial_review": "editorial-review.md"
   },
-  "word_count_rule": "Regex word tokens within each substantive Part after stripping HTML tags; includes figure explanations, tables and code identifiers; excludes front matter, evidence/navigation section and source definitions.",
   "master_tests": {
-    "run": 196,
-    "passed": 195,
+    "run": 201,
+    "passed": 200,
     "skipped": 1,
-    "status": "passed",
     "warnings_as_errors": true,
-    "skip_reason": "Matplotlib unavailable in project runtime for one plotting test",
-    "command": ".venv/bin/python -W error -m unittest discover -s project/tests -v",
-    "source_head": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf"
+    "status": "passed",
+    "skip_reason": "Matplotlib unavailable in project Python environment for plotting test"
   },
-  "pr28_tests": {
-    "run": 196,
-    "passed": 195,
+  "pr30_tests": {
+    "run": 202,
+    "passed": 201,
     "skipped": 1,
-    "status": "passed",
     "warnings_as_errors": true,
-    "skip_reason": "Matplotlib unavailable in project runtime for one plotting test",
-    "source_head": "87321da05b01eaf825420371d44899a4583f0fa2"
-  },
-  "weighted_reconstruction_saved_list_audit": {
     "status": "passed",
-    "scope": "Current refresh recomputed saved accuracy and independent target arithmetic, candidate masks, full relevance and validation choices",
-    "evaluations": 38,
-    "recommendation_lists": 35834,
-    "frozen_choices": 6,
-    "maximum_target_recomputation_error": 1.6653345369377348e-15,
-    "new_training_performed": false
+    "skip_reason": "Matplotlib unavailable in project Python environment for plotting test"
   },
-  "pr28_compact_evidence_audit": {
+  "pr26_full_suite_run": false,
+  "tuned_reranking_audit": {
+    "checked_ranking_lists": 215004,
+    "comparison_per_user_rows": 39606,
+    "evaluations": 228,
+    "models": 6,
     "status": "passed",
-    "scope": "Compact saved numerical evidence; no access to all six models original raw ranking folders",
-    "validation_rows": 186,
-    "frozen_choices_checked": 36,
-    "final_comparison_rows": 42,
-    "diversification_summary_rows": 18,
-    "original_figure_hashes": {
-      "figure-data.json": "Recorded Windows CRLF hash matches after restoring CRLF; checked-out JSON has LF",
-      "test-effects.pdf": "byte-identical to recorded source hash",
-      "test-effects.png": "byte-identical to recorded source hash",
-      "validation-tradeoffs.pdf": "byte-identical to recorded source hash",
-      "validation-tradeoffs.png": "byte-identical to recorded source hash"
-    }
+    "test_cases_exceeding_validation_loss_budget": [
+      "itemknn/genre_calibration",
+      "userknn/genre_calibration",
+      "userknn/item_fairness",
+      "bpr/genre_calibration",
+      "slimelastic/genre_calibration",
+      "slimelastic/coverage_diversification",
+      "ease/genre_calibration",
+      "ease/item_fairness",
+      "ease/coverage_diversification"
+    ],
+    "test_comparison_rows": 42,
+    "validation_selections": 36
   },
-  "pr26_saved_ranking_smoke": {
-    "status": "passed",
-    "n_users": 943,
-    "activity_counts": {
+  "baseline_aggregate_checks": {
+    "models": 8,
+    "per_user_rows": 7544,
+    "accuracy_metrics": 6,
+    "maximum_recomputed_mean_error": 8.881784197001252e-16,
+    "status": "passed"
+  },
+  "group_analysis_checks": {
+    "source": "PR30",
+    "same_numerical_group_formulas_in_pr26": true,
+    "input": "Tuned EASE original, genre calibration and exposure test rankings",
+    "users": 943,
+    "activity_sizes": {
       "low": 321,
       "medium": 310,
       "high": 312
     },
-    "gender_counts": {
+    "recorded_gender_sizes": {
       "F": 273,
       "M": 670,
       "unknown": 0
     },
-    "minimum_group_size": 30,
-    "full_pr_suite_executed": false
-  },
-  "cross_pr_integration": {
-    "open_prs_merged_for_report": false,
-    "master_pr26_merge_tree_conflicts": [
-      "project/recsys/evaluation.py"
-    ],
-    "additional_api_handoff": "Master includes PR28 maximizing directions and training-count context. The shared writer and reranker consumers still need a coherent PR26 compare_groups signature and complete/pending schema.",
-    "combined_runtime_tested": false
-  },
-  "scope": "No model training or tuning in this refresh. Independently recomputed available weighted reconstruction lists and checked latest PR28 compact evidence. Original PR28 all-model raw lists were unavailable locally; its reported 228-evaluation/215004-list verification is a source claim, not a fresh full replay.",
-  "historical_checks_2026_10_24": {
-    "source_master": "54e60bffb07d0cf8ed538935b9c7b609be28f856",
-    "pr24_head": "580bfaa63de4b176b2018e6e2a5108e8f9e390c7",
-    "master_tests": {
-      "run": 151,
-      "skipped": 0,
-      "status": "passed",
-      "warnings_as_errors": true
-    },
-    "pr24_tests": {
-      "run": 149,
-      "skipped": 1,
-      "skip_reason": "Matplotlib unavailable for one plotting test",
-      "status": "passed",
-      "warnings_as_errors": true
-    },
-    "reranking_saved_result_audit": {
-      "checked_ranking_lists": 113160,
-      "comparison_per_user_rows": 22632,
-      "evaluations": 120,
-      "models": 6,
-      "status": "passed",
-      "test_cases_exceeding_validation_loss_budget": [
-        "itemknn/genre_calibration",
-        "userknn/genre_calibration",
-        "userknn/item_fairness",
-        "slimelastic/genre_calibration",
-        "ease/genre_calibration",
-        "ease/item_fairness"
-      ],
-      "test_comparison_rows": 24,
-      "validation_selections": 18
-    },
-    "reranking_artifact_checksums": {
-      "checked": 1237,
-      "status": "passed"
-    },
-    "portable_hybrid_replay": {
-      "status": "passed",
-      "portable_model_file_hashes": 33,
-      "replayed_evaluations": 57,
-      "checked_lists": 53751,
-      "maximum_metric_error": 0.0
-    },
-    "note": "Checks completed for the earlier report and preserved with their date; not repeated in full for the refresh."
-  },
-  "assessment": {
-    "bank_version": "2026-10-25.1",
-    "questions": 30,
-    "automatic_questions": 20,
-    "written_questions": 10,
-    "points": 100,
-    "jacek_points": 50,
-    "other_and_shared_points": 50,
-    "written_answers": "Self-assessed against five one-point criteria per answer; blank explanations score zero.",
-    "updated_topics": [
-      "Merged calibration, exposure and diversification status",
-      "Score-preserving pre-rerank conversion",
-      "Switching commutation and cohort state",
-      "Diversification objectives",
-      "Latest PR26 documentation, tests and schema"
-    ],
-    "grading_logic_checks": "Passed all 20 objective correct answers and blanks, exact-set order/partial cases, fractions, invalid numeric inputs, 50/50 weights, pending/final rubric scoring and readiness gates.",
-    "browser_dom_checks": {
-      "status": "passed",
-      "observed": [
-        "30 questions rendered",
-        "Radio selection and 1/3 fraction accepted",
-        "Three correct objective answers yielded 7.5/50",
-        "All 30 response fieldsets locked on grading",
-        "Blank explanations automatically zero",
-        "Combined result stayed pending until the five nonblank rubric criteria were scored",
-        "Final combined score equaled 12.5/100 for the synthetic attempt",
-        "Exported JSON appeared in the visible textarea with final source identities and scores"
-      ],
-      "file_download": "JSON text export was verified; a browser file-download event was not asserted",
-      "reset_check": "The fresh export-read/reset follow-up timed out in the browser tool. Reset was verified in the prior report; its implementation is unchanged."
-    }
+    "output": "data/groups.json",
+    "status": "passed"
   },
   "figures": {
-    "count": 12,
-    "jacek": 6,
-    "other_and_shared": 6,
-    "copied_unchanged_project_plots": 4,
-    "new_views_of_recorded_results": 4,
-    "illustrative_diagrams": 4,
-    "training_or_selection_performed": false,
-    "provenance": "figures/manifest.json",
-    "generator": "build_visualizations.py passed with warnings as errors",
-    "visual_review": "Four new conceptual PNGs inspected for legibility and layout; two PR28 original plots inspected; six retained figures had been inspected in the earlier report.",
-    "browser_rendering": {
-      "status": "passed",
-      "embedded_figures_loaded": 12,
-      "figures_fit_containers": 12,
-      "jacek_figures": 6,
-      "other_and_shared_figures": 6,
-      "contents_links": 34,
-      "horizontal_page_overflow": false
-    }
+    "count": 16,
+    "generated_with_warnings_as_errors": true,
+    "new_views": [
+      "system-overview",
+      "accuracy-example",
+      "baseline-comparison"
+    ],
+    "latest_tuned_project_plots": 4,
+    "existing_group_illustration_copied_unchanged": true,
+    "browser_images_loaded": 16,
+    "browser_images_fit": 16,
+    "browser_horizontal_overflow": false,
+    "toc_links": 39,
+    "supporting_checksums": "figures/manifest.json"
+  },
+  "assessment": {
+    "version": "2026-10-28.1",
+    "questions": 30,
+    "objective": 20,
+    "written": 10,
+    "points": 100,
+    "jacek_points": 50,
+    "shared_points": 50,
+    "all_questions_link_to_current_chapters": true,
+    "logic_checks": "Passed syntax, all correct objective answers and blanks, exact-set scoring, fractions, invalid numeric input, ownership weights, pending/final rubric totals and readiness gates.",
+    "browser": "All 30 questions rendered. The subsequent interactive grading check timed out in the browser tool; it is not claimed as passed.",
+    "export_or_reset_retested": false
   },
   "packaging": {
     "status": "passed",
-    "builder": "build_study_pack.py",
-    "checks": [
-      "Source and figure checksums",
-      "Four unchanged original PNG plots",
-      "All twelve image references",
-      "All local HTML targets and anchors",
-      "SHA256SUMS",
-      "ZIP CRC and every archived file byte-for-byte against delivery"
-    ],
-    "local_links": 126,
-    "checksummed_files": 34,
-    "zip_files": 35
-  },
-  "master_sync_history": [
-    {
-      "from": "b0eb9781a",
-      "to": "b744066a2",
-      "commits": 7
+    "ownership_words": {
+      "jacek": 5040,
+      "shared": 5040
     },
-    {
-      "from": "b744066a2",
-      "to": "1dc9587d2",
-      "commits": 5,
-      "reason": "PR28 merged during refresh"
-    }
-  ]
+    "frozen_choices": 36,
+    "test_budget_overruns": 9,
+    "table3_rows": 6,
+    "figures": 16,
+    "figure_assets": 27,
+    "chapter_links": 30,
+    "local_links": 134,
+    "checksummed_files": 44,
+    "zip_files": 45,
+    "builder": "build_study_pack.py"
+  },
+  "lint": "Ruff executable unavailable on PATH. Python syntax, figure generation and artifact checks used instead."
 }

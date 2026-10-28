@@ -9,7 +9,8 @@ import csv
 import hashlib
 import json
 import shutil
-import subprocess
+import sys
+import tempfile
 from collections import Counter
 from pathlib import Path
 
@@ -141,14 +142,14 @@ def tuning_figure(results, output):
     fig, axes = plt.subplots(1, 2, figsize=(12, 5.1), layout="constrained")
     axes[0].plot([r["parameters"]["reg_weight"] for r in ease],
                  [r["validation"]["NDCG@10"] for r in ease], "o-", color=BLUE)
-    for key, marker, color, label in (("baseline_same_solver", "s", "#555555", "Previous setting"),
+    for key, marker, color, label in (("baseline_same_solver", "s", "#555555", "Reference setting (250)"),
                                        ("best", "*", GOLD, "NDCG-selected setting")):
         record = selected_ease[key]
         axes[0].scatter(record["parameters"]["reg_weight"], record["validation"]["NDCG@10"],
                         marker=marker, s=150 if marker == "*" else 65, color=color,
                         edgecolors="black", zorder=3, label=label)
     axes[0].set(xscale="log", xlabel="EASE regularization (log scale)",
-                ylabel="Validation NDCG@10", title="EASE: the gain over the previous setting is small", ylim=(0, .33))
+                ylabel="Validation NDCG@10", title="EASE: nearby strong settings differ little", ylim=(0, .33))
     axes[0].grid(alpha=.15)
     axes[0].legend(fontsize=8, loc="lower right")
     alphas = sorted({r["parameters"]["alpha"] for r in slim})
@@ -275,7 +276,7 @@ def conceptual_record(figure, output, name, sources, data):
 
 def evaluation_flow(output):
     figure, axis = diagram_canvas(
-        "A4 · Which information may influence each decision?",
+        "Which information may influence each decision?",
         "Conceptual map. Validation history joins the test mask; it does not refit the recorded training model.",
         height=6.2)
     rows = [(4.35, GREEN, "TRAIN", ["Training interactions\n+ static metadata", "Fit model parameters\nBuild profiles / counts", "Model scores\n+ training-only context"]),
@@ -315,7 +316,7 @@ def calibration_step(output):
         axis.set_xlabel(f"Relevance: {1. if i == 0 else .8:.1f}   |   smoothed KL: {divergences[i]:.6f}\n"
                         f"Objective at strength 0.5: {objectives[i]:.6f}" + ("  → CHOOSE y" if i else ""),
                         fontsize=9, color=GREEN if i else "#334155")
-    figure.suptitle("A5 · One greedy calibration decision: profile fit can outweigh relevance", fontsize=14, weight="bold")
+    figure.suptitle("One greedy calibration decision: profile fit can outweigh relevance", fontsize=14, weight="bold")
     figure.supxlabel("Toy example, not a measured MovieLens result. Objectives use already-normalized pool relevance and natural-log KL.", fontsize=9)
     return conceptual_record(figure, output, "calibration-step", [REPO_ROOT / "project/recsys/rerankers/calibration.py"],
                              {"profile": profile.tolist(), "candidate_distributions": [d.tolist() for d in appended],
@@ -325,7 +326,7 @@ def calibration_step(output):
 
 def exposure_round(output):
     figure, axis = diagram_canvas(
-        "A6 · One user's recommendation changes the next user's choice",
+        "One user's recommendation changes the next user's choice",
         "Toy example: K=1, strength=1, both users prefer a to b. At strength=0 both receive a.")
     steps = [(0.25, "START", "Exposure (a, b) = (0, 0)\nBonuses: a=1, b=1\nNo item has been recommended"),
              (4.3, "USER 1 PICKS a", "Bonuses tie; original score wins\nExposure becomes (1, 0)\nRank-one increment = 1"),
@@ -346,7 +347,7 @@ def exposure_round(output):
 
 def pipeline_orders(output):
     figure, axis = diagram_canvas(
-        "B4 · The order experiment changes one controlled operation",
+        "The order experiment changes one controlled operation",
         "Conceptual weighted-hybrid paths. Fixed routing replaces score fusion in the separate switching experiment.", height=6.1)
     box(axis, .6, 4.8, 10.8, .85,
         "Shared start: full eligible-candidate z-scores → unchanged hybrid chooses the same top-50 pool",
@@ -372,85 +373,136 @@ def pipeline_orders(output):
                               "pre_strength": "one shared strength for all six components", "second_normalization": False})
 
 
-def diversification_figures(source_root, output):
-    previous = output / "manifest.json"
-    if source_root is None:
-        if not previous.exists():
-            raise ValueError("Pass --diversification-source with an inspected PR #28 checkout")
-        retained = read_json(previous)
-        records = {name: retained["figures"][name] for name in
-                   ("diversification-validation-tradeoffs", "diversification-test-effects")}
-        for record in records.values():
-            for name, digest in record["files"].items():
-                if sha256(output / name) != digest:
-                    raise ValueError(f"Retained PR #28 figure changed: {name}")
-        for name, record in retained["diversification_supporting_files"].items():
-            if sha256(output / name) != record["sha256"]:
-                raise ValueError(f"Retained PR #28 supporting data changed: {name}")
-        return records, retained["diversification_supporting_files"]
-    relative_root = Path("hyperparameters/results/task-3.1-diversification-six-models-60-20-20")
-    root = source_root / relative_root
-    head = subprocess.check_output(["git", "-C", str(source_root), "rev-parse", "HEAD"], text=True).strip()
-    if head != "87321da05b01eaf825420371d44899a4583f0fa2":
-        raise ValueError("The source checkout differs from the report's inspected PR #28 head")
-    recorded = read_json(root / "manifest.json")
+def overview_figure(output):
+    figure, axis = diagram_canvas(
+        "From interaction evidence to an evaluated top-ten list",
+        "Scores express a preference order. Reranking changes the supplied candidates; evaluation measures the final output.",
+        height=4.8)
+    labels = ["Training\ninteractions", "Individual models\nor a hybrid", "Eligible\ncandidate scores", "Optional\nreranking", "Final ten\n→ metrics"]
+    for i, label in enumerate(labels):
+        x = .15 + 2.4 * i
+        box(axis, x, 2.45, 2.05, 1.65, label, GREEN if i == 0 else BLUE if i < 3 else ORANGE, 10)
+        if i < 4:
+            arrow(axis, (x + 2.1, 3.25), (x + 2.35, 3.25))
+    axis.text(6, 1.2, "Training fits parameters  •  Validation chooses settings  •  Test measures fixed choices",
+              ha="center", fontsize=10)
+    return conceptual_record(figure, output, "system-overview",
+                             [REPO_ROOT / "project/recsys/contracts.py"],
+                             {"stages": labels, "final_list_length": 10})
+
+
+def accuracy_figure(output):
+    figure, axis = diagram_canvas(
+        "One ranking can be judged in several useful ways",
+        "Toy example: K=3, recommendations [a,b,c], relevant items {a,c,d,e,f}.",
+        height=4.8)
+    for i, (item, hit) in enumerate([("a", True), ("b", False), ("c", True)]):
+        x = 1 + i * 3.5
+        box(axis, x, 3.25, 2.7, 1.65, f"Rank {i+1}: {item}\n" + ("HIT" if hit else "MISS"),
+            GREEN if hit else "#64748B", 13)
+    axis.text(6, 2.3, "Precision = 2/3       Recall = 2/5       F1 = 1/2       Reciprocal rank = 1",
+              ha="center", fontsize=11)
+    ndcg = 1.5 / sum(1 / np.log2(rank+1) for rank in range(1, 4))
+    axis.text(6, 1.25, f"AP = (1 + 2/3)/5 = 1/3       DCG = 1 + 1/2 = 1.5       NDCG ≈ {ndcg:.3f}",
+              ha="center", fontsize=11)
+    return conceptual_record(figure, output, "accuracy-example",
+                             [REPO_ROOT / "project/recsys/metrics/accuracy.py"],
+                             {"ranking": ["a","b","c"], "relevant": ["a","c","d","e","f"],
+                              "precision": 2/3, "recall": .4, "f1": .5, "rr": 1, "ap": 1/3,
+                              "dcg": 1.5, "ndcg": float(ndcg)})
+
+
+def baseline_figure(output):
+    source = REPORT_DIR / "data/baselines.csv"
+    rows = read_csv(source)
+    names = [row["label"] for row in rows]
+    figure, axes = plt.subplots(1, 2, figsize=(12, 6), layout="constrained")
+    data = {}
+    for axis, metric, factor, title, limit in [
+            (axes[0], "NDCG@10", 1, "Recovery of held-out interactions", .45),
+            (axes[1], "CatalogueCoverage@10", 100, "Fraction of the catalogue reached", 110)]:
+        values = [factor * float(row[metric]) for row in rows]
+        colors = [ORANGE if name in ["Random","Popularity"] else BLUE for name in names]
+        bars = axis.barh(names, values, color=colors, height=.65)
+        axis.bar_label(bars, labels=[f"{value:.4f}" if factor == 1 else f"{value:.2f}%" for value in values],
+                       padding=4, fontsize=9)
+        axis.set(xlim=(0,limit), xlabel=metric if factor == 1 else "Catalogue coverage (%)", title=title)
+        axis.invert_yaxis()
+        axis.grid(axis="x", alpha=.15)
+        data[metric] = dict(zip(names, values))
+    figure.suptitle("Accuracy and catalogue breadth favor different behaviors", fontsize=14, weight="bold")
+    figure.supxlabel("Supplied individual configurations; the same 943 users, full eligible catalogue and K=10.", fontsize=9)
+    return save_figure(figure, output, "baseline-comparison", [source], data)
+
+
+def project_reranking_figures(output):
+    sys.path.insert(0, str(REPO_ROOT))
+    from project.scripts.plot_reranking import plot as calibration_plot
+    from project.scripts.plot_diversification import plot as diversification_plot
+
+    source = REPORT_DIR / "data/reranking.json"
+    evidence = read_json(source)
     records = {}
-    for name in ("validation-tradeoffs", "test-effects"):
-        source = root / "figures" / f"{name}.png"
-        if sha256(source) != recorded["figure_sha256"][source.name]:
-            raise ValueError(f"Original PR #28 plot failed its recorded hash: {source.name}")
-        destination = output / f"diversification-{source.name}"
-        shutil.copyfile(source, destination)
-        records[f"diversification-{name}"] = {
-            "kind": "existing project figure copied without alteration", "source_ref": head,
-            "sources": [{"path": (relative_root / "figures" / source.name).as_posix(), "sha256": sha256(source)}],
-            "files": {destination.name: sha256(destination)},
-            "source_code": "PR28: project/scripts/plot_diversification.py"}
-    supporting = {}
-    for relative, name in (("summary.csv", "diversification-summary.csv"),
-                           ("figures/figure-data.json", "diversification-figure-data.json"),
-                           ("manifest.json", "diversification-source-manifest.json")):
-        shutil.copyfile(root / relative, output / name)
-        supporting[name] = {"sha256": sha256(output / name), "source_ref": head,
-                            "source_path": (relative_root / relative).as_posix()}
-    supporting["diversification-figure-data.json"]["line_endings"] = (
-        "Committed checkout uses LF; source manifest records the equivalent Windows CRLF bytes")
-    return records, supporting
+    with tempfile.TemporaryDirectory(prefix="recbole-study-plots-") as temporary:
+        root = Path(temporary)
+        (root / "manifest.json").write_text(json.dumps(
+            {"status": "complete", "models": list(evidence["models"]), "k": evidence["k"]}))
+        for name, model in evidence["models"].items():
+            for partition, field in [("valid", "validation"), ("test", "test")]:
+                folder = root / name / partition
+                folder.mkdir(parents=True)
+                (folder / "summary.json").write_text(json.dumps(model[field]))
+            (root / name / "valid/selection.json").write_text(json.dumps(model["selection"]))
+        for plotter, prefix, module in [
+                (calibration_plot, "", "plot_reranking.py"),
+                (diversification_plot, "diversification-", "plot_diversification.py")]:
+            target = root / ("calibration" if not prefix else "diversification")
+            plotter(root, target)
+            for stem in ("validation-tradeoffs", "test-effects"):
+                name = prefix + stem
+                destination = output / (name + ".png")
+                shutil.copyfile(target / (stem + ".png"), destination)
+                records[name] = {"kind": "project plotting code applied to saved tuned-model results",
+                                 "sources": source_records([source, REPO_ROOT / "project/scripts" / module]),
+                                 "files": {destination.name: sha256(destination)}}
+            if prefix:
+                destination = output / "diversification-figure-data.json"
+                shutil.copyfile(target / "figure-data.json", destination)
+    return records
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--reranking-bundle", type=Path, default=REPO_ROOT / "project/artifacts/reranking-20261022-001")
+    parser.add_argument("--reranking-bundle", type=Path,
+                        default=REPO_ROOT / "project/artifacts/reranking-20261022-001")
     parser.add_argument("--results-root", type=Path, default=REPO_ROOT / "hyperparameters/results")
-    parser.add_argument("--diversification-source", type=Path,
-                        help="Inspected PR #28 checkout; omit to retain already verified packaged PR figures")
     parser.add_argument("--output", type=Path, default=REPORT_DIR / "figures")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
-                         "svg.fonttype": "none", "svg.hashsalt": "recbole-study-20261024"})
+                         "svg.fonttype": "none", "svg.hashsalt": "recbole-study"})
     figures = {}
-    for name in ("validation-tradeoffs", "test-effects"):
-        source = args.reranking_bundle / "evaluation/figures" / f"{name}.png"
-        destination = args.output / source.name
-        shutil.copyfile(source, destination)
-        figures[name] = {"kind": "existing project figure copied without alteration",
-                         "sources": source_records([source]), "files": {destination.name: sha256(destination)},
-                         "source_code": "PR24 at 580bfaa63: project/scripts/plot_reranking.py"}
-    for name, generate, inputs in (("training-popularity", popularity_figure, args.reranking_bundle),
-                                    ("individual-tuning", tuning_figure, args.results_root),
-                                    ("hybrid-comparisons", hybrid_figure, args.results_root),
-                                    ("coefficient-ablation", ablation_figure, args.results_root)):
+    for name, generate, inputs in [
+            ("training-popularity", popularity_figure, args.reranking_bundle),
+            ("individual-tuning", tuning_figure, args.results_root),
+            ("hybrid-comparisons", hybrid_figure, args.results_root),
+            ("coefficient-ablation", ablation_figure, args.results_root)]:
         figures[name] = generate(inputs, args.output)
-    for name, generate in (("evaluation-flow", evaluation_flow), ("calibration-step", calibration_step),
-                            ("exposure-round", exposure_round), ("pipeline-orders", pipeline_orders)):
+    for name, generate in [("evaluation-flow", evaluation_flow), ("calibration-step", calibration_step),
+                            ("exposure-round", exposure_round), ("pipeline-orders", pipeline_orders),
+                            ("system-overview", overview_figure), ("accuracy-example", accuracy_figure),
+                            ("baseline-comparison", baseline_figure)]:
         figures[name] = generate(args.output)
-    diversification, supporting = diversification_figures(args.diversification_source, args.output)
-    figures.update(diversification)
-    manifest = {"kind": "report figure provenance", "report_source_snapshot": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
+    figures.update(project_reranking_figures(args.output))
+    group_plot = args.output / "reranking-groups.png"
+    figures["reranking-groups"] = {
+        "kind": "existing project illustration copied without alteration",
+        "sources": source_records([REPORT_DIR / "data/groups.json", REPORT_DIR / "data/reranking.json"]),
+        "files": {group_plot.name: sha256(group_plot)}}
+    manifest = {"kind": "supporting figure verification",
+                "report_source_snapshot": "193a52a9d1d004475bd1afa64c6c34f57ec1bd0a",
                 "generator_sha256": sha256(Path(__file__)),
-                "training_or_selection_performed": False, "figures": figures,
-                "diversification_supporting_files": supporting}
+                "training_or_selection_performed": False, "figures": figures}
     (args.output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"Prepared {len(figures)} figures in {args.output}")
 

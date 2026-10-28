@@ -30,7 +30,7 @@ code{font-size:.88em;background:#e7eee6;padding:2px 5px;border-radius:4px;overfl
 pre{padding:20px;background:#e7eee6;border-radius:9px;overflow-x:auto;line-height:1.55;font-size:.9rem}
 pre code{padding:0;background:transparent;overflow-wrap:normal}
 table{border-collapse:collapse;margin:22px 0;width:100%;display:block;overflow-x:auto;font-size:.9rem;line-height:1.5}
-th,td{padding:11px 13px;border:1px solid #c6d1c4;text-align:left;vertical-align:top}
+th,td{padding:11px 13px;border-bottom:1px solid #c6d1c4;text-align:left;vertical-align:top}
 th{background:#e1e9df}tr:nth-child(even){background:#eeefe7}
 blockquote{border-left:4px solid #176550;margin:20px 0;padding:1px 20px}
 .nav{display:flex;gap:20px;flex-wrap:wrap;font-size:.92rem;border-bottom:1px solid #c6d1c4;padding-bottom:16px}
@@ -58,15 +58,18 @@ def load_questions():
 
 def word_counts(report):
     counts = {}
-    for part, end in (("A", "## Part B"), ("B", "## Evidence")):
-        content = report.split("## Part " + part, 1)[1].split(end, 1)[0]
-        counts[part] = len(re.findall(r"\b[\w]+(?:[-'][\w]+)*\b", re.sub(r"<[^>]+>", "", content)))
+    for part, owner in (("A", "jacek"), ("B", "shared")):
+        blocks = re.findall(r"<!-- ownership: " + owner + r":start -->(.*?)<!-- ownership: " + owner + r":end -->", report, re.S)
+        if not blocks:
+            raise ValueError(f"Missing ownership blocks for {owner}")
+        counts[part] = sum(len(re.findall(r"\b[\w]+(?:[-'][\w]+)*\b",
+                                         re.sub(r"<[^>]+>", "", block))) for block in blocks)
     return counts
 
 
 def write_answer_key(questions):
     text = ["# Self-assessment: answer key and scoring rubric", "",
-            "Refreshed 25 October 2026 for master `1dc9587d2`, merged PRs #24/#27/#28, and open PR #26 `a3a55153f`.", "",
+            "An assessment of the project’s concepts, implementation decisions and measured trade-offs.", "",
             "Attempt [self-test.html](self-test.html) before reading this key. Every prompt is included for printing. Allow 75–90 minutes.", "",
             "Each half is worth 50 points: ten objective questions worth 2.5 each and five explanations worth 5 each. Multiple choice uses exact-set scoring. Numeric tolerance is 0.0001; simple fractions are accepted. A blank explanation scores zero.", "",
             "For explanations, award one point per criterion only when the locked answer demonstrates it without a material contradiction. These points are self-assessed. Finish all rubrics before interpreting the combined score.", "",
@@ -101,14 +104,14 @@ def page(title, body):
     return (f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title>'
             f'<style>{CSS}</style></head><body><main>{navigation}{body}'
-            '<footer>Updated 25 October 2026 · Source identities and verification scope are in verification.json. '
+            '<footer>Updated 28 October 2026 · '
             'Figures and the assessment work offline.</footer></main></body></html>\n')
 
 
 def render_markdown(name, title):
     renderer = markdown.Markdown(extensions=["tables", "fenced_code", "toc"], extension_configs={"toc": {"toc_depth": "2-4"}})
     body = renderer.convert((SOURCE / name).read_text())
-    body = body.replace('href="report.md"', 'href="report.html"').replace('href="answer-key.md"', 'href="answer-key.html"')
+    body = body.replace('href="report.md', 'href="report.html').replace('href="answer-key.md"', 'href="answer-key.html"')
     contents = '<details class="toc-box"><summary>Contents and section navigation</summary>' + renderer.toc + "</details>"
     return page(title, contents + body)
 
@@ -134,20 +137,20 @@ def main():
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source, destination)
         packaged.append(destination)
-    quiz = (output / "self-test.html").read_text().replace('href="report.md"', 'href="report.html"').replace('href="answer-key.md"', 'href="answer-key.html"')
+    quiz = (output / "self-test.html").read_text().replace('href="report.md', 'href="report.html').replace('href="answer-key.md"', 'href="answer-key.html"')
     (output / "self-test.html").write_text(quiz)
-    for source, title in (("report.md", "Our project: implementation and understanding"), ("answer-key.md", "Project understanding: answer key")):
+    for source, title in (("report.md", "Our project: ideas, decisions and results"), ("answer-key.md", "Project understanding: answer key"), ("editorial-review.md", "Writing review and claim checks")):
         destination = output / (Path(source).stem + ".html")
         destination.write_text(render_markdown(source, title))
         packaged.append(destination)
-    intro = (f'<p class="eyebrow">RecBole course project · refreshed 25 October 2026</p>'
+    intro = (f'<p class="eyebrow">RecBole course project · revised 28 October 2026</p>'
              '<h1>Understand the project,<br>then test your understanding.</h1>'
              f'<p>{counts["A"] + counts["B"]:,} substantive words, split equally between your assigned work and the other/shared contributions. '
-             'Twelve explained figures: six in each half. Updated for master 1dc9587d2, merged PRs #24/#27/#28, and open PR #26.</p>'
-             '<section class="card"><h2><a href="report.html">Read the illustrated report</a></h2><p>Concepts, code structure, decisions, worked examples, saved results, latest PRs and evidence limits.</p></section>'
+             'Sixteen explained figures. Follow the task and models through metrics, reranking, hybrids and group interpretation.</p>'
+             '<section class="card"><h2><a href="report.html">Read the illustrated report</a></h2><p>Definitions, implementation decisions, worked examples, trade-offs and the interpretation of results.</p></section>'
              '<section class="card"><h2><a href="self-test.html">Attempt the 100-point self-test</a></h2><p>Thirty questions. Automatic calculations and choices, then explicit rubrics for your explanations. Start closed-book.</p></section>'
              '<section class="card"><h2><a href="answer-key.html">Review the answer key</a></h2><p>Every prompt, solution and reasoning criterion, plus scoring and retesting guidance.</p></section>'
-             '<p><a href="study-pack.zip">Download the complete offline pack</a> · <a href="verification.json">Verification record</a> · <a href="figures/manifest.json">Figure provenance</a> · <a href="README.md">Source and rebuild instructions</a></p>')
+             '<p><a href="study-pack.zip">Download the complete offline pack</a> · <a href="editorial-review.html">Writing review</a> · <a href="README.md">Pack instructions</a></p>')
     (output / "index.html").write_text(page("Project understanding study pack", intro))
     packaged.append(output / "index.html")
     checksums = "".join(f"{hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(output).as_posix()}\n" for path in sorted(packaged))
@@ -155,7 +158,7 @@ def main():
     with zipfile.ZipFile(output / "study-pack.zip", "w", zipfile.ZIP_DEFLATED) as archive:
         for path in sorted(packaged) + [output / "SHA256SUMS"]:
             archive.write(path, path.relative_to(output))
-    print(json.dumps({"output": str(output), "word_counts": counts, "figures": 12, "questions": len(questions), "packaged_files": len(packaged) + 1}))
+    print(json.dumps({"output": str(output), "word_counts": counts, "figures": 16, "questions": len(questions), "packaged_files": len(packaged) + 1}))
 
 
 if __name__ == "__main__":

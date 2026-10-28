@@ -1,0 +1,164 @@
+{
+  "original": {
+    "ndcg": 0.4048716310149405,
+    "gender": {
+      "F": {
+        "n_users": 273,
+        "ndcg": 0.360967297751545
+      },
+      "M": {
+        "n_users": 670,
+        "ndcg": 0.4227610085983835
+      },
+      "unknown": {
+        "n_users": 0,
+        "ndcg": null
+      }
+    },
+    "activity": {
+      "low": {
+        "n_users": 321,
+        "ndcg": 0.2922599796459183
+      },
+      "medium": {
+        "n_users": 310,
+        "ndcg": 0.32882383036010854
+      },
+      "high": {
+        "n_users": 312,
+        "ndcg": 0.5962920101574202
+      }
+    },
+    "item_popularity": {
+      "head": {
+        "n_recommended": 6363,
+        "n_hits": 2169,
+        "n_relevant": 3925,
+        "precision": 0.3408769448373409,
+        "recall": 0.5526114649681528
+      },
+      "middle": {
+        "n_recommended": 3062,
+        "n_hits": 996,
+        "n_relevant": 11817,
+        "precision": 0.32527759634225994,
+        "recall": 0.08428535161208428
+      },
+      "tail": {
+        "n_recommended": 5,
+        "n_hits": 2,
+        "n_relevant": 3891,
+        "precision": 0.4,
+        "recall": 0.0005140066820868671
+      }
+    }
+  },
+  "genre_calibration": {
+    "ndcg": 0.37762373204895544,
+    "gender": {
+      "F": {
+        "n_users": 273,
+        "ndcg": 0.34111140296986114
+      },
+      "M": {
+        "n_users": 670,
+        "ndcg": 0.3925011437483467
+      },
+      "unknown": {
+        "n_users": 0,
+        "ndcg": null
+      }
+    },
+    "activity": {
+      "low": {
+        "n_users": 321,
+        "ndcg": 0.25876287459089936
+      },
+      "medium": {
+        "n_users": 310,
+        "ndcg": 0.3133832952655041
+      },
+      "high": {
+        "n_users": 312,
+        "ndcg": 0.5637419071992913
+      }
+    },
+    "item_popularity": {
+      "head": {
+        "n_recommended": 6155,
+        "n_hits": 2108,
+        "n_relevant": 3925,
+        "precision": 0.3424857839155158,
+        "recall": 0.5370700636942675
+      },
+      "middle": {
+        "n_recommended": 3265,
+        "n_hits": 1030,
+        "n_relevant": 11817,
+        "precision": 0.31546707503828486,
+        "recall": 0.08716256241008716
+      },
+      "tail": {
+        "n_recommended": 10,
+        "n_hits": 4,
+        "n_relevant": 3891,
+        "precision": 0.4,
+        "recall": 0.0010280133641737343
+      }
+    }
+  },
+  "item_fairness": {
+    "ndcg": 0.38221902483419257,
+    "gender": {
+      "F": {
+        "n_users": 273,
+        "ndcg": 0.34693337761243875
+      },
+      "M": {
+        "n_users": 670,
+        "ndcg": 0.3965966094484294
+      },
+      "unknown": {
+        "n_users": 0,
+        "ndcg": null
+      }
+    },
+    "activity": {
+      "low": {
+        "n_users": 321,
+        "ndcg": 0.2723680618374096
+      },
+      "medium": {
+        "n_users": 310,
+        "ndcg": 0.3036541257956073
+      },
+      "high": {
+        "n_users": 312,
+        "ndcg": 0.5733000435006306
+      }
+    },
+    "item_popularity": {
+      "head": {
+        "n_recommended": 5246,
+        "n_hits": 1855,
+        "n_relevant": 3925,
+        "precision": 0.3536027449485322,
+        "recall": 0.4726114649681529
+      },
+      "middle": {
+        "n_recommended": 3998,
+        "n_hits": 1230,
+        "n_relevant": 11817,
+        "precision": 0.3076538269134567,
+        "recall": 0.10408733181010409
+      },
+      "tail": {
+        "n_recommended": 186,
+        "n_hits": 26,
+        "n_relevant": 3891,
+        "precision": 0.13978494623655913,
+        "recall": 0.006682086867129272
+      }
+    }
+  }
+}

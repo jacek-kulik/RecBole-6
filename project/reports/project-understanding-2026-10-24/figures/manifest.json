@@ -1,35 +1,9 @@
 {
-  "kind": "report figure provenance",
-  "report_source_snapshot": "1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf",
-  "generator_sha256": "4aa2d32a5c85eed8019704d492cfac028639bde2804815266fc37ca73b74af17",
+  "kind": "supporting figure verification",
+  "report_source_snapshot": "193a52a9d1d004475bd1afa64c6c34f57ec1bd0a",
+  "generator_sha256": "09f96249c980f98f440d10f6742c8f358743c324b4f40c71aec0734e5d5d2a12",
   "training_or_selection_performed": false,
   "figures": {
-    "validation-tradeoffs": {
-      "kind": "existing project figure copied without alteration",
-      "sources": [
-        {
-          "path": "/home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/evaluation/figures/validation-tradeoffs.png",
-          "sha256": "6628352d2e87db68211eaa2dc7c9d64f2b4e5410f429f7dcf35d9447a274e23b"
-        }
-      ],
-      "files": {
-        "validation-tradeoffs.png": "6628352d2e87db68211eaa2dc7c9d64f2b4e5410f429f7dcf35d9447a274e23b"
-      },
-      "source_code": "PR24 at 580bfaa63: project/scripts/plot_reranking.py"
-    },
-    "test-effects": {
-      "kind": "existing project figure copied without alteration",
-      "sources": [
-        {
-          "path": "/home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/evaluation/figures/test-effects.png",
-          "sha256": "3f08222586b352460b0fa3de542ba459c46717731a9b734dd891e3115a21e9c2"
-        }
-      ],
-      "files": {
-        "test-effects.png": "3f08222586b352460b0fa3de542ba459c46717731a9b734dd891e3115a21e9c2"
-      },
-      "source_code": "PR24 at 580bfaa63: project/scripts/plot_reranking.py"
-    },
     "training-popularity": {
       "kind": "new visualization of recorded results",
       "sources": [
@@ -67,7 +41,7 @@
         }
       },
       "files": {
-        "training-popularity.svg": "9696226b76eb03f7aafce01425e65192a99535b54f238f30a6a91ed0d002c8dc",
+        "training-popularity.svg": "22994d8efc3b84f21605d76bd684872394af01516281d7f30cce39d6e79819be",
         "training-popularity.png": "670d377acc9d1c93cfd405e29d6bfcf4ed0a5626297e516389b87f69cb3f9ff0"
       }
     },
@@ -399,8 +373,8 @@
         }
       },
       "files": {
-        "individual-tuning.svg": "a2d63945260ea8c77654da5d59cde812dada7c203503e6d244024b4f2995f994",
-        "individual-tuning.png": "57b3a411a0b1a29823f7d200423d525e080ebae1fe14c591508f5ff656c485e7"
+        "individual-tuning.svg": "b0ff0044bbba9b7ab0d532f036057f50f54280a8ecc07a5088c7739e4b5c1583",
+        "individual-tuning.png": "a2d4f55c3d95bb380393f2172bf65eaf3364a026b63dc4d878e5382639121463"
       }
     },
     "hybrid-comparisons": {
@@ -464,7 +438,7 @@
         }
       },
       "files": {
-        "hybrid-comparisons.svg": "de4ab807e28f2a651b445fe494249bbd2536e554382c7411cfad7981ee5a36af",
+        "hybrid-comparisons.svg": "5b79a191e7df9bff267fa70755dc5e296c275cbbbdca3f3ad83c24db31b18a80",
         "hybrid-comparisons.png": "537e7231446dd233f89f6fc987d729d3925b1b187a65734bcd5dd11bc41ac72e"
       }
     },
@@ -557,7 +531,7 @@
         }
       },
       "files": {
-        "coefficient-ablation.svg": "2d30edd19cb00a5f5e90a24df7d3f367964d8b081f1cfe6d87335efc5b9c6a64",
+        "coefficient-ablation.svg": "d0291b67b23bacc909abce2a30e10cfdfa93a90731f30a29dadd8bd6c243fb96",
         "coefficient-ablation.png": "ce73d4053f9de721314d91e19fb928c969fc3da26b1ecde2838ef0e0f9260818"
       }
     },
@@ -581,8 +555,8 @@
         "test_reselection": false
       },
       "files": {
-        "evaluation-flow.svg": "38f685ebf1bcc176f4fa15d57f700a7f6f31fc16d9d2e32f69ec70ac9e59596b",
-        "evaluation-flow.png": "2c5360a003ad871a880cff4b5b9bc4709e2ea8a3b7a6f8a8647cfed44a6525c5"
+        "evaluation-flow.svg": "d92348f8691da9303d29dc145d5fd0db3a956c1740eb8d29940dc76b5cd55e02",
+        "evaluation-flow.png": "64a7b1b98e5eda06cb0126a8691324abd96265602cea80787159516c6ebb430c"
       }
     },
     "calibration-step": {
@@ -630,8 +604,8 @@
         "chosen": "y"
       },
       "files": {
-        "calibration-step.svg": "73964eb636318fe78abb9cbdeab1c71ff788b7a58768c845167bbacf2569c6e9",
-        "calibration-step.png": "14e064c52b357aabb721c4efbfd89924fdaf2700c054ae4b3d346522d83bbedb"
+        "calibration-step.svg": "bf9018082e7bf9df37e4a5b1cbc5c1342cd1c88d37e6b19b028a2ce54b8043cc",
+        "calibration-step.png": "d979fde44d7bdce42f767ced3c2b6dfc3e9ec01b171bae4b2189d4f4a334159a"
       }
     },
     "exposure-round": {
@@ -669,8 +643,8 @@
         ]
       },
       "files": {
-        "exposure-round.svg": "53a684bd4f54edc617cd556930e54d235772df6644ff446ea1829ec50d6d798a",
-        "exposure-round.png": "525ab2e9f84b4ef6b907edf66878f703575a88c25f6811a2cdbec3f387aabcbb"
+        "exposure-round.svg": "266485a7dec2e54639797df01ca49b9b4402a35c1fce1f88d220ae9e776240f8",
+        "exposure-round.png": "5330fadeb4d4c0c15e3d6909e8bff894cfe62b865bec8d2c692b735059d8e338"
       }
     },
     "pipeline-orders": {
@@ -689,55 +663,181 @@
         "second_normalization": false
       },
       "files": {
-        "pipeline-orders.svg": "5fed522728f28a374fcc7af9328c247606e73f969c5db3dc951ee4dd34b9411f",
-        "pipeline-orders.png": "28bdf019e0aea17b5ac337ae9c0e9cf2291316637fd51d066f28ab41786f871d"
+        "pipeline-orders.svg": "f2357a6b7a39ce71b4218764c4bb673525e606847117056f6e8ec78cf08e5a7d",
+        "pipeline-orders.png": "53dac0617865399f66224efb45b4c620ad4ab29d90f67ce3931970dafd1eaefe"
+      }
+    },
+    "system-overview": {
+      "kind": "illustrative explanation of implemented behavior; not an experimental measurement",
+      "sources": [
+        {
+          "path": "project/recsys/contracts.py",
+          "sha256": "dd1f1cc78117b3343a864ae4d26279f38381b3310efaf2222c2357a054143f57"
+        }
+      ],
+      "plotted_data": {
+        "stages": [
+          "Training\ninteractions",
+          "Individual models\nor a hybrid",
+          "Eligible\ncandidate scores",
+          "Optional\nreranking",
+          "Final ten\n\u2192 metrics"
+        ],
+        "final_list_length": 10
+      },
+      "files": {
+        "system-overview.svg": "284b71ac334208a5c3bdcf9c5a2170e349e8441b3b440f7463fb32112943f97d",
+        "system-overview.png": "3fd49835390fbca7b706664e7337b9be1847edcdc6f92e5b057c8408c8c63737"
+      }
+    },
+    "accuracy-example": {
+      "kind": "illustrative explanation of implemented behavior; not an experimental measurement",
+      "sources": [
+        {
+          "path": "project/recsys/metrics/accuracy.py",
+          "sha256": "cc41c3470c808d7ee6c6959ab81e0164e93f371a10b1878c603a1bbad0991dd8"
+        }
+      ],
+      "plotted_data": {
+        "ranking": [
+          "a",
+          "b",
+          "c"
+        ],
+        "relevant": [
+          "a",
+          "c",
+          "d",
+          "e",
+          "f"
+        ],
+        "precision": 0.6666666666666666,
+        "recall": 0.4,
+        "f1": 0.5,
+        "rr": 1,
+        "ap": 0.3333333333333333,
+        "dcg": 1.5,
+        "ndcg": 0.7039180890341347
+      },
+      "files": {
+        "accuracy-example.svg": "3f146b520d98c1092541d053613a15f9475cbd959facd7ed5fc470a5cf490593",
+        "accuracy-example.png": "fd496f843cd96fc1fa3d8727a921648239e639e4594bb44015c20776c56f07f8"
+      }
+    },
+    "baseline-comparison": {
+      "kind": "new visualization of recorded results",
+      "sources": [
+        {
+          "path": "project/reports/project-understanding-2026-10-24/data/baselines.csv",
+          "sha256": "edaa4dda2e7b98fb9d6bbd5ac050a71a02dc93c79f35259b21a040155e08a0a3"
+        }
+      ],
+      "plotted_data": {
+        "NDCG@10": {
+          "Random": 0.014493520121416742,
+          "Popularity": 0.21172518026094336,
+          "BPR": 0.35449731485115304,
+          "EASE": 0.40487163101494067,
+          "SLIM": 0.403265733859095,
+          "ItemKNN": 0.363395745578905,
+          "UserKNN": 0.36865647141011576,
+          "FISM": 0.3487648455145245
+        },
+        "CatalogueCoverage@10": {
+          "Random": 99.58382877526753,
+          "Popularity": 2.9131985731272296,
+          "BPR": 26.991676575505352,
+          "EASE": 17.419738406658738,
+          "SLIM": 18.489892984542212,
+          "ItemKNN": 11.59334126040428,
+          "UserKNN": 10.107015457788346,
+          "FISM": 37.63376932223543
+        }
+      },
+      "files": {
+        "baseline-comparison.svg": "b984219e8c686f876228a1aaed4c87cf2b905f7cdb8ce7532234396f95c7f78d",
+        "baseline-comparison.png": "8c103858659f2363fcf086d19c75848f38e87a51d9581f75cbd38b00cb232a9b"
+      }
+    },
+    "validation-tradeoffs": {
+      "kind": "project plotting code applied to saved tuned-model results",
+      "sources": [
+        {
+          "path": "project/reports/project-understanding-2026-10-24/data/reranking.json",
+          "sha256": "7ef1dc3d7f092fa399a20f5327db7b463232cbd2043d24481ccc21ea546cde0c"
+        },
+        {
+          "path": "project/scripts/plot_reranking.py",
+          "sha256": "da1fc3ed918fa9fe139652e41fd6bd03ba43eac8773e8f0df2105a90cf824d59"
+        }
+      ],
+      "files": {
+        "validation-tradeoffs.png": "6753a1b3c3ba13290a46ef2cc00109f1b0b0dacfacab701ca99d81e91639d900"
+      }
+    },
+    "test-effects": {
+      "kind": "project plotting code applied to saved tuned-model results",
+      "sources": [
+        {
+          "path": "project/reports/project-understanding-2026-10-24/data/reranking.json",
+          "sha256": "7ef1dc3d7f092fa399a20f5327db7b463232cbd2043d24481ccc21ea546cde0c"
+        },
+        {
+          "path": "project/scripts/plot_reranking.py",
+          "sha256": "da1fc3ed918fa9fe139652e41fd6bd03ba43eac8773e8f0df2105a90cf824d59"
+        }
+      ],
+      "files": {
+        "test-effects.png": "719b3bbe3b8c61427c5af16d5d88c2db2450ca10fa03666415fe860f8ade58e4"
       }
     },
     "diversification-validation-tradeoffs": {
-      "kind": "existing project figure copied without alteration",
-      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "kind": "project plotting code applied to saved tuned-model results",
       "sources": [
         {
-          "path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/figures/validation-tradeoffs.png",
-          "sha256": "04edb730f86ee373e1639237d417ab3a099523a7713361c55803bdeffbfd548e"
+          "path": "project/reports/project-understanding-2026-10-24/data/reranking.json",
+          "sha256": "7ef1dc3d7f092fa399a20f5327db7b463232cbd2043d24481ccc21ea546cde0c"
+        },
+        {
+          "path": "project/scripts/plot_diversification.py",
+          "sha256": "db47f4c6ffbddc545506cb7f28cddd5d7894838709ec9b4745ad9e3273d6eb32"
         }
       ],
       "files": {
-        "diversification-validation-tradeoffs.png": "04edb730f86ee373e1639237d417ab3a099523a7713361c55803bdeffbfd548e"
-      },
-      "source_code": "PR28: project/scripts/plot_diversification.py"
+        "diversification-validation-tradeoffs.png": "9267e762693372a34d9bdeea3d94e8b80503bf5da536b7b218e3ab712fbe0a83"
+      }
     },
     "diversification-test-effects": {
-      "kind": "existing project figure copied without alteration",
-      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
+      "kind": "project plotting code applied to saved tuned-model results",
       "sources": [
         {
-          "path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/figures/test-effects.png",
-          "sha256": "eb9212835562696c07cf525babf0ef9806cd1baf973decb64a959a3b1db3b38a"
+          "path": "project/reports/project-understanding-2026-10-24/data/reranking.json",
+          "sha256": "7ef1dc3d7f092fa399a20f5327db7b463232cbd2043d24481ccc21ea546cde0c"
+        },
+        {
+          "path": "project/scripts/plot_diversification.py",
+          "sha256": "db47f4c6ffbddc545506cb7f28cddd5d7894838709ec9b4745ad9e3273d6eb32"
         }
       ],
       "files": {
-        "diversification-test-effects.png": "eb9212835562696c07cf525babf0ef9806cd1baf973decb64a959a3b1db3b38a"
-      },
-      "source_code": "PR28: project/scripts/plot_diversification.py"
-    }
-  },
-  "diversification_supporting_files": {
-    "diversification-summary.csv": {
-      "sha256": "83be4105604c520aa42e8c826f5f6bc5349358e35b82d1f4da1f1f5e6a61ffea",
-      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
-      "source_path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/summary.csv"
+        "diversification-test-effects.png": "9d45f8f15ce893a344ecbf98ea366f8aa828e7991b0ecb01b704e2bd7e1f8038"
+      }
     },
-    "diversification-figure-data.json": {
-      "sha256": "0c844092689f47fe464ba47c478353af81edd1453703b23cca47afd9a0f7385d",
-      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
-      "source_path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/figures/figure-data.json",
-      "line_endings": "Committed checkout uses LF; source manifest records the equivalent Windows CRLF bytes"
-    },
-    "diversification-source-manifest.json": {
-      "sha256": "bb94b1f33b7045541d2ca08aba172ad404c0a47934129eb26a5763f045a22ab1",
-      "source_ref": "87321da05b01eaf825420371d44899a4583f0fa2",
-      "source_path": "hyperparameters/results/task-3.1-diversification-six-models-60-20-20/manifest.json"
+    "reranking-groups": {
+      "kind": "existing project illustration copied without alteration",
+      "sources": [
+        {
+          "path": "project/reports/project-understanding-2026-10-24/data/groups.json",
+          "sha256": "11920c15619d48631e2fe94362d9b5524af3a23de5443e6fb19fc03eaf293d30"
+        },
+        {
+          "path": "project/reports/project-understanding-2026-10-24/data/reranking.json",
+          "sha256": "7ef1dc3d7f092fa399a20f5327db7b463232cbd2043d24481ccc21ea546cde0c"
+        }
+      ],
+      "files": {
+        "reranking-groups.png": "672febfe8a8076ff94d27b88f4ab7daf80c6b7bc90d13b692b6d65e2970f8c12"
+      }
     }
   }
 }

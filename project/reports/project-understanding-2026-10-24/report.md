@@ -1,663 +1,660 @@
 # Understanding our recommender-system project
 
-Study report for Jacek · refreshed 25 October 2026
+Our project asks how to recommend ten movies to each user, and what we gain or lose when we change the way those movies are chosen. It compares individual models, combinations of models, and rerankers that adjust an existing ranking. Accuracy is one outcome; variety, novelty, preference matching and the distribution of exposure reveal other aspects of the same recommendations.
 
-This report explains what the project does, how the implementation works, why its decisions matter, and what the evidence supports. It is a learning document, rather than the space-limited course submission. Read it alongside the scored assessment in `self-test.html`; keep `answer-key.md` closed until you have attempted the questions.
+Read the chapters in order on a first pass. The report defines the task and models before measuring them, then explains interventions before interpreting their results. Your work—independent metrics, calibration, item exposure and reranker evaluation—receives half the substantive coverage. The other half explains the shared foundations and your teammates' models, hybrids, diversification and group analysis.
 
-The substantive report has two equally weighted halves. **Part A covers your assigned work: independent metrics, reranker integration, calibration, item fairness, and reranker evaluation. Part B covers the other contributions and the shared system.** The ownership source is the current [work distribution][assignments], including its scope correction: implementing metric formulas does not transfer ownership of metadata preparation or subgroup interpretation to you.
+<!-- ownership: shared:start -->
+## 1. What the system predicts
 
-The refreshed source snapshot is merged `master` at **1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf**. The clean local checkout was fast-forwarded from `b0eb9781a` and matched `origin/master`. Your reranker [PR #24][pr24], Bogdan's order-comparison [PR #27][pr27], and [Gabriel's diversification, #28][pr28] are now merged. PR #28 merged during this refresh, so its code and results are included on master. The remaining open work is [Victor's group analysis, #26][pr26], inspected at **a3a55153f** without merging it into the report checkout.
+<!-- role: opening -->
+The system predicts an ordered list of movies from a user's observed interactions. An <strong>interaction</strong> is a recorded user–movie rating. A <strong>catalogue</strong> is the set of movies the system can recommend. A <strong>candidate</strong> is a movie eligible for a particular user's current recommendation. A model assigns a numerical <strong>score</strong> to each candidate; sorting those scores produces a <strong>ranking</strong>. Higher scores express a model's preference and need not be probabilities or predicted star ratings.
 
-The twelve annotated figures follow the same balance: A1–A6 explain your work; B1–B6 explain the other contributions. Four empirical plots are copied unchanged from saved project results. Other figures show recorded numerical evidence or explicitly labeled conceptual examples. Select any image to view it at full size.
+<!-- role: method -->
+Three stages play different roles. A <strong>base model</strong> learns scores from interaction patterns. A <strong>hybrid</strong> combines information from models, such as scores, candidate lists or learned representations. A <strong>reranker</strong> selects and orders items from a supplied candidate pool using an additional objective. Keeping these stages separate lets us ask whether a change comes from learning better preferences, combining complementary signals or deliberately changing the final list's composition.
 
-| Change since the previous report | Current interpretation |
-| --- | --- |
-| Calibration and item-exposure rerankers merged | Their implementation and native evaluation commands are available on master. |
-| Weighted/switching order comparison merged | Task 3.3 has real implementations and measured results, despite the generic task runner retaining an old placeholder message. |
-| New weighted reconstruction recorded | The same split/folds and qualitative conclusions are reproduced closely; the rebuilt predictions are not numerically identical. |
-| Diversification merged with six-model evidence | Genre variety, novelty, and catalogue reach are separate implemented objectives on master through PR #28. |
-| Group PR updated | Some definition text and tests changed; the shared evaluator integration still needs resolution. |
+<figure class="report-figure" id="figure-1"><a href="figures/system-overview.svg"><img src="figures/system-overview.svg" alt="Training interactions feed individual models; a model or hybrid scores eligible candidates; optional reranking selects the final ten; independent metrics measure the output."></a></figure>
 
-“Merged,” “implemented in an open PR,” and “supported by saved evidence” are separate claims throughout this report. Historical result tables keep their original experiment identities instead of being relabeled as measurements of today's source.
+**Figure 1. The recommendation pipeline.** Follow the arrows from evidence to scores, then from candidates to the final list. The evaluation stage reads recommendations and held-out answers. The reranker reads permitted scores and context. This separation lets the same metric definitions compare outputs from different algorithms.
 
-## Part A — Your work: measuring and changing recommendations
+### The data and the prediction task
 
-### A1. Your responsibility and its place in the system
+<!-- role: definition -->
+MovieLens-100K contains 100,000 ratings from 943 users on 1,682 movies. The split randomly divides each user's history using seed 42: approximately 60% for training, 20% for validation and 20% for test. Per-user rounding gives 60,734 training interactions and 19,633 in each held-out partition. A <strong>partition</strong> is one of these disjoint subsets. <strong>Held-out</strong> means its outcomes are reserved from the model's fitting inputs.
 
-Your main assignments are Task 2.1, independent accuracy and beyond-accuracy metrics; Task 3.1, integration of four reranker families; and Task 3.2, evaluation of reranking trade-offs. Within Task 3.1, you implement calibration and item-side fairness, Gabriel supplies diversification, and Victor supplies user-side fairness. You also review diversification, user fairness, Bogdan's pipeline-order comparison, and Victor's improvement proposal.
+<!-- role: method -->
+The ranking task treats every held-out interaction as a relevant item, including low star ratings. This is an <strong>implicit-feedback</strong> interpretation: an observed interaction is positive evidence of interest. The weighted regression hybrid also uses the original 1–5 ratings as training targets, but ranking evaluation asks whether the movie was interacted with. These choices answer different questions without contradicting each other.
 
-The common thread is turning model scores into defensible statements about recommendations. A model can produce plausible numbers while using the wrong candidate set, an unsuitable metric denominator, or information unavailable at recommendation time. Your code supplies a second measurement layer and the machinery for evaluating controlled changes to the resulting lists.
+<!-- role: limitation -->
+An unobserved user–movie pair has unknown relevance. Some learning algorithms sample such pairs as negatives to create a tractable training objective. That sampling does not establish that the user dislikes those movies. Likewise, a recommendation absent from the held-out set counts as a miss in offline evaluation even if the user might enjoy it. The measurements describe recovery of recorded interactions.
 
-There are three distinct responsibilities. A **metric** describes an already produced ranking. A **reranker** constructs another ranking using model scores and permitted context. An **experiment runner** chooses settings on validation and records their later test performance. Keeping those roles separate makes the implementation understandable: changing a metric does not silently change the algorithm, and evaluation relevance labels do not become reranker inputs.
+<!-- role: method -->
+Before ranking, the system applies a <strong>history mask</strong>: it removes already observed movies from eligibility. Validation excludes training history; test excludes training plus validation history. Adding validation items to the test mask prevents recommending them again. It does not refit the model on those validation interactions. Most experiments score the full eligible catalogue, a policy called <strong>full-sort evaluation</strong>.
 
-Merged master now contains your independent metrics, shared validation/test writer, genre/popularity calibration, and item-exposure reranking. These are the three evaluated variants delivered through PR #24. Bogdan's two-order experiments and Gabriel's three diversification variants with six-model evidence are also merged. Master therefore has six implemented reranking variants. User-side fairness remains an explicit placeholder. Four assigned method families do not translate into four finished functions: calibration and diversification each have multiple distinct variants, while another family is still pending.
+<!-- role: limitation -->
+The random split measures held-out interaction recovery, rather than future prediction in chronological order. A temporal evaluation would train on earlier events and test on later ones. It could reveal a different ordering of models, but it would be a different experiment. Results on this split should therefore be interpreted within its random-holdout task.
 
-The important interface is `rerank(scores, context, k, strength) -> Rankings`. The input `ScoreTable` contains eligible item scores; `RerankContext` supplies training-derived profiles and metadata; the output is an ordered list of external item IDs for every evaluation user. That contract lets the same independent metric functions score original and modified rankings. [Sources: assignments][assignments], [metric runner][evaluation], [PR implementation][rerank].
+### Training, selection and measurement
 
-### A2. Accuracy metrics: the exact quantities your code calculates
+<!-- role: definition -->
+<strong>Training</strong> fits model parameters. <strong>Validation</strong> chooses settings, such as regularization strength, a training checkpoint or a reranking strength. <strong>Test</strong> measures the choices after they have been fixed. A <strong>hyperparameter</strong> controls the learning procedure rather than being fitted directly from its training objective. A <strong>checkpoint</strong> stores a fitted model at a particular training stage.
 
-`metrics/accuracy.py:evaluate_accuracy` makes one pass through each user's top-K list and returns both per-user results and equal-user means. Let `h_r` equal one when rank `r` contains a held-out relevant item, `H = sum(h_r)`, and `R` be the number of that user's relevant items.
+<!-- role: method -->
+The primary selection measure is normalized discounted cumulative gain at ten, <strong>NDCG@10</strong>. It rewards relevant movies near the beginning of the list and scales performance against an ideal ordering. Chapter 3 gives its exact formula. Using one selection measure prevents each model from choosing the metric that makes it look strongest. Other metrics remain necessary to understand what that selection favors.
 
-| Metric | Implemented per-user definition | What it rewards |
+<!-- role: advantage -->
+A fair comparison holds the task constant: the users, candidate policy, relevant items, list length and aggregation rule. A <strong>control</strong> is the matched system used to isolate a particular change. For example, a reranker's control is the same model's original ranking on the same eligible candidates. Comparing against a differently trained model would mix several effects.
+
+<!-- role: method -->
+The code expresses these boundaries through three shared objects. <code>ScoreTable</code> maps external user IDs to eligible item scores and identifies the evaluation partition. <code>Rankings</code> maps each user to an ordered list of item IDs. <code>RerankContext</code> carries training-derived profiles, counts and prepared metadata. External IDs identify the same real users and movies across modules; framework-internal array indices are converted at the boundary.
+
+<!-- role: advantage -->
+The module structure follows the same separation. RecBole supplies model training and prediction. <code>project/recsys/recbole_adapter.py</code> connects those models to the shared data and score format. The metrics, rerankers and hybrid modules implement the experimental decisions discussed below. A common evaluation writer calls the independent metric functions for every supplied ranking, so a hybrid and a reranker receive the same definitions of success.
+
+## 2. How the individual models produce scores
+
+<!-- role: opening -->
+The individual models use different assumptions about how interaction patterns reveal preference. Let <code>X[u,i]</code> be one when user <code>u</code> interacted with movie <code>i</code> in training, and zero otherwise. This user–item matrix is sparse: most entries are unobserved. <strong>Collaborative filtering</strong> uses patterns across users and items in this matrix, rather than relying solely on movie descriptions.
+
+### Neighborhood models
+
+<!-- role: method -->
+<strong>ItemKNN</strong> recommends movies similar to those in a user's training history. It estimates similarity between item interaction columns, keeps a neighborhood of useful neighbors and aggregates their support for a candidate. <strong>UserKNN</strong> starts from similar users and recommends movies supported by their histories. KNN means k-nearest neighbors; its neighborhood size is a model setting and differs from the final recommendation length of ten.
+
+<!-- role: advantage -->
+Neighborhood models make a concrete assumption: shared interaction patterns contain reusable preference information. Their appeal is a direct link between evidence and score. Their weakness is sparse support: a similarity based on very few common observations may be unreliable. Shrinkage reduces the influence of weak similarity evidence, while the neighborhood limit controls how much distant evidence contributes.
+
+<!-- role: method -->
+This repository implements both variants through the <code>ItemKNN</code> class, selected by <code>knn_method: item</code> or <code>user</code>. The configuration label therefore carries meaning that the Python class name alone cannot convey. A comparison must keep ItemKNN and UserKNN distinct even though they share implementation machinery.
+
+### Pairwise and linear models
+
+<!-- role: definition -->
+<strong>BPR</strong>, Bayesian Personalized Ranking, learns an embedding, or numerical vector, for each user and item. Their dot product is the score. Training samples an observed item and an unobserved item for the same user, then encourages the observed item to score higher. A <strong>pairwise loss</strong> learns an ordering from such comparisons. It differs from predicting an exact rating and from directly maximizing top-ten NDCG.
+
+<!-- role: tradeoff -->
+BPR's learned vectors can generalize beyond an explicitly chosen neighborhood. Their quality depends on embedding size, regularization, sampling, learning rate and training duration. More dimensions offer more capacity but can fit noise. More training can improve the objective while harming held-out ranking, which motivates validation-based checkpoint selection.
+
+<!-- role: method -->
+<strong>EASE</strong> learns a linear item-to-item coefficient matrix. A user's interaction vector multiplied by that matrix produces scores. Its objective reconstructs observed interactions while penalizing large coefficients. The diagonal is fixed at zero, so an item cannot explain itself by copying its own input. The regularized problem has a closed-form solution, which makes fitting quite different from an epoch-by-epoch neural model.
+
+<!-- role: method -->
+<strong>SLIMElastic</strong> also reconstructs item interactions, but fits a separate elastic-net regression for each target movie. The L1 penalty encourages many coefficients to become zero; the L2 penalty shrinks their magnitude. The project's configuration also constrains coefficients to be nonnegative. Hiding the target item's input prevents self-copying. Sparse coefficients can retain a compact set of useful relationships, at the cost of solving many optimization problems.
+
+<!-- role: tradeoff -->
+Regularization controls the balance between fitting observations and limiting complexity. Too little can overfit sparse co-occurrences; too much can remove useful signal. SLIM's solver also needs enough iterations to converge. An unconverged configuration confounds model choice with incomplete optimization, so convergence belongs to a meaningful comparison.
+
+<figure class="report-figure" id="figure-2"><a href="figures/individual-tuning.svg"><img src="figures/individual-tuning.svg" alt="Validation NDCG across nine EASE regularization values and a five by five SLIM regularization grid."></a></figure>
+
+**Figure 2. Regularization has an operating range.** The EASE horizontal axis is logarithmic; the SLIM heatmap contains 25 discrete settings. The selected EASE setting improves validation NDCG only slightly over 250: approximately 0.298099 versus 0.297866. SLIM selects alpha 0.2 and L1 ratio 0.005. The tested grids support these choices within their search ranges, rather than a claim of global optimality.
+
+### Learning an item-based user representation
+
+<!-- role: method -->
+<strong>FISM</strong>, the Factored Item Similarity Model, learns two embeddings per movie: one for contributing to a user's history representation and another for scoring a target. It sums the source embeddings in the user's history, scales that sum by history length raised to a negative exponent and compares it with the target embedding. Bias terms add user- and item-specific offsets.
+
+<!-- role: reasoning -->
+The history-length exponent controls how strongly a large history increases the representation's magnitude. With no normalization, more observations can create a larger sum simply because there are more terms. Stronger normalization reduces that effect. FISM therefore represents a user's evidence through their interacted items instead of assigning the user an independent free embedding, as BPR does.
+
+<!-- role: method -->
+The target movie is excluded from its own history contribution, including its contribution to the normalization count. Otherwise, training could score an observed target using that target's own source vector. The implementation applies this rule consistently in individual-item scoring and full-catalogue scoring.
+
+<!-- role: definition -->
+FISM's training output is a <strong>logit</strong>: an unrestricted score transformed by the logistic sigmoid when computing binary cross-entropy. <code>BCEWithLogitsLoss</code> combines these operations internally for numerical stability, so it receives raw logits. Applying sigmoid beforehand would change the intended objective. This distinction concerns the meaning of the model output, rather than whether a ranking score must resemble a probability.
+<!-- ownership: shared:end -->
+
+<!-- ownership: jacek:start -->
+## 3. Your metric layer: what a good ranking means
+
+<!-- role: opening -->
+Your independent metric layer turns a ranking into several precise measurements. “Independent” means these calculations are implemented in the project rather than accepted only from the training framework's summary. The purpose is a stable evaluation definition across individual, hybrid and reranked outputs. It also makes small examples easy to inspect by hand.
+
+<figure class="report-figure" id="figure-3"><a href="figures/evaluation-flow.svg"><img src="figures/evaluation-flow.svg" alt="Training builds models and profiles, validation selects settings, and frozen settings produce final test measurements."></a></figure>
+
+**Figure 3. Each stage may use different information.** Training observations build the model and reranker context. Validation outcomes select settings. Test outcomes measure fixed choices. A profile calculated from test interactions would supply answers to the recommendation algorithm; calculating a metric from those interactions is the intended evaluation.
+
+### Accuracy: six questions about relevant items
+
+<!-- role: definition -->
+For one user, let <code>K</code> be the list length, <code>R</code> the number of held-out relevant items and <code>H</code> the number found in the top K. A <strong>hit</strong> is a recommended item in that user's relevant set. The code requires K distinct recommendations, a nonempty relevant set and matching evaluation users. These requirements make the denominators and the evaluated population explicit.
+
+**Table 1. The six per-user accuracy metrics. All are higher-is-better.**
+
+| Metric | Implemented definition | Question |
 | --- | --- | --- |
-| Precision@K | `H / K` | A high fraction of relevant recommendations. |
-| Recall@K | `H / R` | Recovering a high fraction of the user's relevant set. |
-| F1@K | `2PR/(P+R)`, or zero without hits | Balance between that user's precision and recall. |
-| MRR@K | Reciprocal rank of the first hit, or zero | Getting at least one relevant item very early. |
-| NDCG@K | `sum(h_r/log2(r+1)) / IDCG` | Multiple relevant items, with earlier ranks worth more. |
-| AP@K, reported as per-user MAP@K | `sum(h_r * hits_through_r/r) / R` | Early relevant items and recovery of the relevant set. |
+| Precision@K | H/K | What fraction of recommendations are relevant? |
+| Recall@K | H/R | What fraction of relevant items are recovered? |
+| F1@K | 2 × precision × recall / (precision + recall), or zero without hits | How well are precision and recall balanced for this user? |
+| MRR@K | Reciprocal of the first hit's rank, or zero | How early is the first useful result? |
+| NDCG@K | Discounted hit gain divided by ideal discounted gain | How close is the ordering to the best attainable top-K ordering? |
+| AP@K | Sum of precision at each hit position, divided by R | Are the hits concentrated near the top while recovering the relevant set? |
 
-`IDCG` sums the same discounts over the first `min(K,R)` ranks. Relevance is binary: a five-star held-out interaction contributes the same gain as a one-star held-out interaction under the adopted all-interaction protocol. That is an evaluation choice, not a claim that the two ratings express equal satisfaction.
+<!-- role: definition -->
+<strong>MRR</strong> means mean reciprocal rank after averaging users. For a first hit at rank four, the user's reciprocal rank is 1/4; later hits do not change it. <strong>Discounted cumulative gain</strong>, DCG, adds <code>1/log2(r+1)</code> for a hit at rank <code>r</code>. NDCG divides DCG by the sum for an ideal list with hits in its first <code>min(K,R)</code> positions.
 
-The AP denominator deserves particular attention. Your code divides by **all relevant items**, rather than `min(K,R)` or the number retrieved. When `R > K`, even a perfect top-K list can have AP below one. Other implementations use different truncated-AP conventions. A metric called MAP@10 is therefore comparable only after checking its definition. Within this repository, the verifier intentionally reproduces the same full-relevant denominator.
+<!-- role: method -->
+The project divides average precision by the full relevant-set size R. This choice matters because some definitions use <code>min(K,R)</code>. In the output, the per-user field is called <code>MAP@K</code>, and its average is mean average precision. Reading the implementation prevents a familiar metric name from hiding a different denominator.
 
-Consider K=3, ranking `[a,b,c]`, and relevant set `{a,c,d,e,f}`. The hit pattern is `[1,0,1]`. Precision is `2/3`, recall `2/5`, F1 `1/2`, and reciprocal rank `1`. DCG is `1 + 1/log2(4) = 1.5`; ideal DCG is approximately `2.13093`, giving NDCG approximately `0.70392`. AP is `(1 + 2/3)/5 = 1/3`. This example separates membership, order, and relevant-set size in one calculation.
+<figure class="report-figure" id="figure-4"><a href="figures/accuracy-example.svg"><img src="figures/accuracy-example.svg" alt="A three-item ranking has hits at ranks one and three, illustrating precision, recall, reciprocal rank, average precision and discounted gain."></a></figure>
 
-Moving the same two hits later leaves precision and recall unchanged but lowers MRR, NDCG, and AP. This is why the project is a ranking task, and why ranking quality cannot be reduced to classification accuracy. Likewise, a model that predicts raw ratings well need not place the right items near the top.
+**Figure 4. One ranking, different judgments.** For ranking [a,b,c] and relevant set {a,c,d,e,f}, precision is 2/3, recall is 2/5 and reciprocal rank is 1. Average precision is <code>(1 + 2/3)/5 = 1/3</code>. NDCG is approximately 0.704: the first hit is ideal, but the missing rank-two hit reduces discounted gain. The metrics reward different properties of the same list.
 
-The aggregate F1 is the mean of individual F1 values. It is not computed by inserting aggregate precision and aggregate recall into the harmonic-mean formula. Each user gets equal weight, so an active user with many held-out interactions does not automatically dominate the report. This macro convention must remain the same across models, baselines, hybrids, and rerankers. [Source: accuracy implementation][accuracy].
+<!-- role: method -->
+The aggregate accuracy metrics are <strong>macro averages</strong>: each user contributes one value with equal weight. A user with many held-out interactions does not receive more weight simply for having more observations. This makes the typical evaluated user the unit of comparison, rather than the typical interaction.
 
-### A3. Validation contracts and why invalid inputs stop evaluation
+<!-- role: reasoning -->
+Calculate F1 per user before averaging. Suppose one user has precision 1 and recall 0.2, while another has precision 0.2 and recall 1. Each F1 is 1/3, so mean F1 is 1/3. Applying the F1 formula to mean precision and recall, both 0.6, gives 0.6 and answers a different question. Similar care is needed whenever aggregation follows a nonlinear formula.
 
-`metrics/_validation.py:validate_rankings` checks that K is a positive integer, users have nonempty external string IDs, and each list supplies K distinct valid item IDs. It evaluates the first K entries of a longer ranking. A too-short list or duplicate item is an error rather than a recommendation to silently pad the list. When a catalogue is supplied, recommended items must belong to it.
+### Why metric denominators change the interpretation
 
-Accuracy additionally requires the relevance mapping to contain exactly the evaluation users and a nonempty valid relevant set for each. It converts each user's positives to a set, so repeated positive IDs do not enlarge the denominator. Beyond-accuracy evaluation checks that its users match the per-user accuracy users. These checks prevent seemingly harmless differences in coverage from becoming misleading model comparisons.
+<!-- role: reasoning -->
+The maximum attainable recall at a fixed K depends on the relevant-set size. If a user has fifty relevant movies and receives ten recommendations, even ten hits give recall 0.2. Another user with five relevant movies can reach recall one. The full-set AP denominator creates a related limit: when R exceeds K, even an ideal top-K list cannot achieve AP one. This is an intended consequence of rewarding recovery of the whole relevant set.
 
-External IDs matter because RecBole assigns internal integer indices. The integer at a matrix position is not sufficient provenance across separately created datasets or checkpoints. Your metric layer sees original dataset tokens as strings. The adapters handle index conversion before evaluation, and `ScoreTable` carries split and partition identity along with scores.
+<!-- role: reasoning -->
+NDCG answers a different question by normalizing against the best ordering possible within K positions. It can reach one for both users when every attainable top position is a hit. MRR can also reach one after a single first-position hit, regardless of how many other relevant items remain. Comparing several metrics therefore distinguishes early usefulness, list accuracy and completeness of recovery.
 
-There is a deliberate distinction between a **bad experiment input** and an **unavailable quantity**. Repeated recommendations, mismatched users, or nonfinite eligible scores should stop the experiment. Missing genre information can instead make a genre-dependent metric unavailable, with a reason and usable-user count. Returning zero in that case would falsely imply perfect calibration or no diversity. An empty subgroup similarly needs explicit unavailable values, rather than a fabricated mean.
+<!-- role: limitation -->
+These differences matter when comparing activity cohorts. Users with different history lengths often have different held-out set sizes. A gap in recall can partly reflect its denominator, while a gap in NDCG describes performance relative to each user's ideal ranking. Neither metric removes every difference in prediction difficulty. Report the definition and cohort sizes before treating a group gap as evidence about a model's treatment of that group.
 
-These checks are useful but finite in scope. A valid string can still identify the wrong movie, and aligned score tables can still have been trained with leaked labels. Contract validation establishes structural consistency; provenance checks and experimental review establish whether the values were legitimately produced. Understanding that boundary is more useful than treating a passing validation method as a complete proof of correctness. Review must establish that each saved result answers the intended task using evidence available when those recommendations would actually be produced. [Sources: input checks][metric-validation], [score contracts][contracts].
+### Variety, novelty and matching a user's preferences
 
-### A4. Beyond accuracy: eight families with different units and meanings
+<!-- role: definition -->
+<strong>Intra-list diversity</strong>, ILD, measures genre variety among the recommended movies. For genre sets A and B, Jaccard distance is <code>1 − |A ∩ B|/|A ∪ B|</code>. ILD averages this distance over unordered pairs. A ten-item list has 45 pairs. Identical genre sets have distance zero; disjoint sets have distance one. ILD is undefined for a one-item list.
 
-`evaluate_beyond_accuracy` produces per-user metrics where meaningful, cohort-wide statistics where necessary, availability records, recorded-gender comparisons, and item-group exposure summaries. The eight families answer different questions; increasing one does not establish improvement in all the others.
+<!-- role: definition -->
+<strong>Novelty</strong> uses a movie's rarity in training as a proxy for how unfamiliar it might be. Mean self-information averages <code>−log2((count_i+1)/(N+M))</code>, where N is the total number of training interactions and M is catalogue size. Adding one is <strong>Laplace smoothing</strong>; it gives a finite value to movies with zero training interactions. Larger values indicate lower training popularity.
 
-**Intra-list diversity, ILD**, averages Jaccard distance over unordered pairs of recommended movie genre sets. For sets A and B, distance is `1 - |A intersect B|/|A union B|`. At K=10 there are 45 pairs. Identical genre sets have distance zero; disjoint sets have distance one. ILD measures genre variety inside a list, rather than novelty, accuracy, or fairness. It is undefined for K=1 and unavailable when required genres are missing.
+<!-- role: limitation -->
+This novelty measure describes population-level rarity, rather than a particular user's knowledge. A rare movie may be familiar to a specialist, while a popular movie may be new to another user. Genre diversity is different again: a varied list can contain only famous movies. The two metrics should therefore retain separate names and interpretations.
 
-**Mean self-information** averages `-log2((training_count_i+1)/(training_interactions+catalogue_size))` across recommended items. The added one is Laplace smoothing, giving zero-count catalogue items finite novelty. Less popular training items receive larger values. This is a popularity-based novelty proxy: it does not know whether a particular user has heard of the movie, and it does not measure surprise conditional on individual taste.
+<!-- role: definition -->
+<strong>Calibration</strong> measures whether the list's category proportions match the user's training preferences. Let <code>p</code> be the historical distribution and <code>q</code> the recommendation distribution. Genre miscalibration is <code>KL(p || 0.99q + 0.01p)</code>, using natural logarithms. Kullback–Leibler divergence, KL, penalizes assigning too little recommendation mass to categories represented in the profile. The mixture gives those categories positive mass and avoids infinite penalties.
 
-**Genre miscalibration** compares the user's training genre profile `p` with recommendation distribution `q` using `KL(p || 0.99q+0.01p)`, with natural logarithms. Each movie contributes one total unit of genre mass, divided across its genres. A movie with four labels therefore does not contribute four times as much profile evidence as a single-genre movie. The mixture avoids infinite divergence when the list lacks a genre present in the profile. Lower values mean closer genre proportions, rather than better relevance.
+<!-- role: definition -->
+<strong>User popularity deviation</strong>, UPD, applies the same matching idea to head, middle and tail popularity bands. It uses base-two Jensen–Shannon divergence between the training and recommendation distributions. Jensen–Shannon divergence compares each distribution with their midpoint; it is symmetric and bounded. The implementation uses the divergence itself, without taking its square root. Lower genre KL and lower UPD mean closer matching under their respective definitions.
 
-**Recorded-gender unfairness, GRU**, reports F and M user counts, group means for all six accuracy metrics, absolute gaps, and signed F-minus-M gaps. A zero gap says the groups have equal measured mean quality under this definition. Both groups could still receive poor recommendations. Unknown recorded gender is counted explicitly and is not silently reassigned. This dataset-specific binary comparison is narrower than a general account of user fairness.
+<!-- role: reasoning -->
+Matching a popular-history user with another popular list can produce low UPD. Promoting tail items may increase novelty while increasing that user's deviation. Calibration therefore preserves a historical preference distribution; novelty favors rare items. This distinction explains why two reasonable objectives can recommend different movies to the same user.
 
-**Catalogue coverage** is the number of distinct recommended movies divided by the evaluation catalogue size. It is a union across users' lists, not the average fraction of a catalogue in an individual top ten. Recommending a new item once can raise coverage while barely changing the overall concentration of exposure.
+<!-- role: reasoning -->
+The direction and units of a divergence belong to its definition. Genre KL weights category penalties by the user's historical profile, so reversing its arguments would create another measurement. Jensen–Shannon divergence uses the midpoint of both distributions and gives a symmetric comparison. Smoothing makes genre KL finite when a list omits a historically observed genre, but it does not remove the penalty for that omission.
 
-**Exposure Gini** measures inequality of accumulated discounted item exposure across the entire catalogue, including movies receiving zero exposure. Each appearance at rank `r` contributes `1/log2(r+1)`. Sorting the resulting exposures and applying the Gini formula gives a cohort statistic. Excluding zero-exposure items would hide part of the concentration the project is trying to measure. Lower Gini means more even exposure under this definition, not necessarily exposure proportional to relevance or item quality.
+<!-- role: tradeoff -->
+Changing logarithm base rescales a divergence. That rescaling preserves its ordering as a standalone metric, yet changes its numerical balance against relevance inside a fixed-strength objective. A strength selected for natural-log KL cannot automatically be interpreted as equivalent to the same strength for base-two JS. The validation rule measures the consequence of the particular implemented definitions.
 
-**User popularity deviation, UPD**, is base-two Jensen–Shannon divergence between the user's training and recommendation head/middle/tail distributions. It uses unweighted item occurrences in those profiles, rather than rank discounts. It is the divergence, not its square root. Lower values mean popularity proportions better match the user's history. A user who mostly consumes popular movies can be well calibrated by another popular list; forcing every user toward tail items is a different objective.
+### Reach, exposure and group differences
 
-**Item-group exposure** reports each popularity band's item count, total discounted exposure, share of all exposure, and exposure per item. These views cannot be substituted for one another. A large group can receive substantial total exposure but very little per movie. Equal total exposure across differently sized groups would not mean equal exposure per movie.
+<!-- role: definition -->
+<strong>Catalogue coverage</strong> is the fraction of catalogue items appearing at least once across the supplied users' lists. It measures breadth over a <strong>cohort</strong>, the collection of users evaluated together. With 943 users and ten recommendations each, the union of recommended items can be much larger than ten. Repeated appearances of an already covered item add no further coverage.
 
-The code averages available per-user values and records how many users contributed. Coverage, Gini, and exposure are recomputed for the supplied cohort. They cannot be reconstructed by averaging subgroup Ginis or subgroup coverages. Always read availability beside a metric: a high value over a small metadata-complete subset may answer a different question from the full-cohort accuracy result. [Sources: formulas][beyond], [statistics helpers][data].
+<!-- role: definition -->
+<strong>Exposure</strong> assigns more visibility to high ranks. Each appearance at rank r adds <code>1/log2(r+1)</code> to that movie's exposure. <strong>Exposure Gini</strong> measures inequality across all catalogue movies, including those with zero exposure. For sorted exposures <code>e_1 ≤ … ≤ e_M</code>, the code's Gini is <code>Σ(2j−M−1)e_j / (M Σe_j)</code>. Zero indicates equality; larger values indicate concentration.
 
-### A5. Training profiles, grouping decisions, and leakage boundaries
+<!-- role: reasoning -->
+Coverage and Gini answer different questions. Exposures [3,1,0,0] give coverage 2/4 and Gini 0.625. Introducing a previously unseen movie can raise coverage without spreading the remaining exposure evenly. Excluding zero-exposure movies from Gini would remove part of the inequality being measured, so the catalogue denominator must remain explicit.
 
-Your committed training-statistics helpers build histories, item counts, genre distributions, popularity distributions, activity terciles, and popularity bands. Caio and Victor retain ownership of metadata preparation, including reading the item `class` and user `gender` columns. Those loaders are now merged; older documentation describing metadata as wholly absent is stale.
+<!-- role: method -->
+Item-group exposure summarizes head, middle and tail through total exposure, share of all exposure and exposure per item. Equal total exposure for two differently sized groups does not imply equal exposure per movie. The tail has far more movies than the head, so these two fairness targets would produce very different allocation policies.
 
-Activity groups use linear one-third and two-third quantiles of training interaction counts. Equal counts stay together, so equal-sized groups are not guaranteed. On the inspected saved run, boundaries are **26 and 69**, giving **321 low-, 310 medium-, and 312 high-activity users**. A zero-history user is assigned low by the reporting interface. These are data-derived boundaries, rather than universal constants.
+<!-- role: definition -->
+The project's recorded-gender diagnostic compares mean accuracy for F and M users. It reports absolute gaps and signed F-minus-M gaps, plus group counts. For NDCG, the absolute gap is <code>|mean_F − mean_M|</code>. Unknown recorded values remain explicit. This is a dataset-specific group diagnostic; it neither captures every dimension of user fairness nor demonstrates a fairness intervention.
 
-Popularity bands are based on cumulative **training interaction shares**, not equal numbers of movies. Items are sorted by count; a complete tied-count bucket receives the band indicated by the cumulative total before that bucket. Crossing a 20% or 80% boundary can overshoot because ties are preserved. On this run, the catalogue contains **60 head, 485 middle, and 1,137 tail movies**. Calling that an equal-item tercile partition would be wrong.
+<!-- role: limitation -->
+A smaller gap can occur because the higher-performing group becomes worse. Both groups can also receive equally poor recommendations. Interpret the gap alongside each group's absolute quality and size. Item exposure inequality and user quality gaps concern different recipients—movies and people—and an improvement in one need not improve the other.
 
-All profiles, counts, and activity memberships use training interactions only. Item metadata itself can be known for a catalogue item without observing a held-out interaction with it. Using that static metadata is different from estimating popularity from validation/test occurrences. The crucial question is what information is fitted from outcomes, rather than whether a file happens to contain catalogue entries later encountered during evaluation.
+### Availability and the evaluation interface
 
-The same boundary applies to ratings. The independent ranking protocol treats all held-out interactions as positives, while the regression hybrid uses raw ratings as training targets. A reranker cannot read a user's held-out ratings to improve their calibration profile. That would change the task from recommending with existing evidence to arranging recommendations using the answers.
+<!-- role: method -->
+The main entrypoints are <code>metrics/accuracy.py:evaluate_accuracy</code> and <code>metrics/beyond_accuracy.py:evaluate_beyond_accuracy</code>. The first returns per-user accuracy and macro means. The second computes per-user measures where appropriate, cohort statistics where necessary and explicit availability information. The shared writer calls both for supplied rankings, so reranking cannot quietly substitute easier metric definitions.
 
-Missing metadata is handled explicitly. The loader records pending reasons, metric availability reflects incomplete inputs, and reranking can mark a method unavailable for the cohort. In PR #24, required metadata is checked for the whole supplied candidate pool. Silently dropping users or inconvenient items would change the experiment and make apparent gains difficult to interpret. [Source: training statistics][data].
+<!-- role: reasoning -->
+Invalid rankings and unavailable measurements require different responses. Duplicate recommendations, missing evaluation users or invalid scores undermine the experiment and should stop it. Missing genre metadata can make a genre-dependent measurement unavailable. Returning zero instead would imply a meaningful numerical outcome, such as perfect calibration, where none was established.
 
-#### Figure A1. What the training popularity groups actually contain
+<!-- role: method -->
+Coverage and Gini must be recomputed on the cohort being described. Averaging two subgroup Ginis does not recover the full-population Gini. Likewise, averaging subgroup coverage double-counts movies appearing in both groups. Per-user means and pooled catalogue statistics require different aggregation procedures because their units of analysis differ.
+<!-- ownership: jacek:end -->
 
-<figure class="report-figure" id="figure-a1"><a href="figures/training-popularity.svg"><img src="figures/training-popularity.svg" alt="Cumulative training interaction share by sorted catalogue share, beside item and interaction shares for head, middle and tail groups."></a></figure>
+<!-- ownership: shared:start -->
+## 4. What the baselines establish
 
-**Read the figure.** The left curve sorts movies from most to least frequent in training. Its horizontal axis is the fraction of catalogue items encountered, and its vertical axis is the fraction of training interactions accounted for. The shaded regions are the existing head, middle, and tail memberships. Dashed lines mark the intended 20% and 80% cumulative boundaries. Complete count ties explain why the actual boundaries cross those targets slightly.
+<!-- role: opening -->
+Random and Popularity provide two useful reference behaviors. Random ignores learned preference and gives each user–item pair an independent random score. Popularity assigns scores from actual training item frequencies. All users share its underlying item ordering, but their history masks can leave different eligible lists.
 
-The right panel makes the denominator difference visible. The 60 head movies are only **3.6% of the catalogue**, yet account for **20.6% of training interactions**. The middle contains 485 movies and 60.1% of interactions; the tail contains **67.6% of movies but only 19.3% of interactions**. These are neither equal movie groups nor exactly equal interaction percentages.
+<!-- role: reasoning -->
+Popularity counts each real training interaction once. It does not estimate frequency from how often a training loader happens to expose an item, and sampled negatives contribute no popularity evidence. Dividing counts by the maximum count rescales the score without changing the ranking. Random needs separate draws across users; repeating one score vector would artificially couple their recommendations.
 
-**Interpretation.** A popularity-oriented recommender has much more historical evidence for a small part of the catalogue. This motivates reporting novelty, coverage, and exposure alongside accuracy. It also explains why equal total exposure for head and tail would give very different exposure per movie: the tail contains many more movies. The curve describes training observations; it does not show user satisfaction, causal popularity bias, or any reranker's effect. A recommendation-exposure curve would be a different measurement.
+**Table 2. Eight-model comparison under the supplied individual configurations. Coverage is the fraction of the 1,682-item catalogue reached by the cohort.**
 
-**Origin.** This is a new visualization of the already saved training counts and popularity memberships from the 22 October run. No groups were fitted using held-out interactions. Exact inputs and plotted values are in the [figure provenance record](figures/manifest.json).
+| Model | Test NDCG@10 ↑ | Coverage ↑ | Exposure Gini ↓ |
+| --- | ---: | ---: | ---: |
+| Random | 0.014494 | 99.58% | 0.269797 |
+| Popularity | 0.211725 | 2.91% | 0.990920 |
+| ItemKNN | 0.363396 | 11.59% | 0.966588 |
+| UserKNN | 0.368656 | 10.11% | 0.968856 |
+| BPR | 0.354497 | 26.99% | 0.934923 |
+| SLIMElastic | 0.403266 | 18.49% | 0.946017 |
+| EASE | 0.404872 | 17.42% | 0.950662 |
+| FISM | 0.348765 | 37.63% | 0.909388 |
 
-### A6. Calibration reranking: a greedy construction of a balanced list
+<figure class="report-figure" id="figure-5"><a href="figures/baseline-comparison.svg"><img src="figures/baseline-comparison.svg" alt="Test NDCG and catalogue coverage for Random, Popularity and six individual recommenders, showing the accuracy and breadth trade-off."></a></figure>
 
-The merged implementation from PR #24 provides genre and popularity calibration in `rerankers/calibration.py`. A keyword-only `attribute` chooses which profile and divergence to use. The default is genres. Both variants build a list one position at a time and select the remaining candidate maximizing a combination of relevance and profile agreement.
+**Figure 5. High reach is easy to obtain without useful personalization.** Random reaches 1,675 movies but has very low NDCG. Popularity is much more accurate while concentrating almost all exposure on a small catalogue subset. EASE and SLIM achieve the strongest NDCG in this comparison, yet their coverage remains much lower than Random's. The panels use different units; a long coverage bar does not compensate numerically for an accuracy loss.
 
-For genre calibration, the objective is `(1-lambda)*normalized_relevance - lambda*smoothed_KL(p,q_after_addition)`. Popularity calibration uses the same shape with base-two Jensen–Shannon divergence. The algorithm evaluates the distribution of the **growing list including the candidate**, rather than rewarding each item independently. An individually relevant drama can become less desirable when the list already overrepresents drama relative to the user's history.
+<!-- role: interpretation -->
+The personalized models outperform Popularity on NDCG under this setting. This supports the value of user-specific interaction patterns, but the best model depends on the property valued. FISM covers more of the catalogue than EASE here, while EASE ranks recorded positives more accurately. Treating accuracy, coverage and inequality as separate outcomes makes that trade-off visible.
 
-Relevance is min-max normalized separately within each user's candidate pool. This puts the relevance term on a bounded scale despite different models' raw score ranges. Constant score vectors map to zero. It does not make a unit of KL equivalent to a unit of JS, or guarantee equal trade-offs at the same lambda across models. The strength remains an empirical operating parameter.
+<!-- role: limitation -->
+These rows are a matched comparison of the supplied configurations, not a universal ranking of model families. The tuned reranking study uses its own fitted controls, including different BPR and FISM settings. Compare an intervention with its own original model; using a similarly named row from another configuration would mix model fitting with post-processing.
 
-The implementation precomputes each candidate's category distribution, maintains counts for the growing list, and tests every remaining candidate at each rank. This is a greedy search, approximately proportional to users times K times pool depth times the category work. It does not enumerate all possible ordered top-ten lists and cannot claim a globally optimal calibration-relevance solution.
+<!-- role: limitation -->
+The differences between Random and Popularity also show why an attractive diagnostic cannot serve alone as a quality objective. Random's small F/M gap can coexist with very poor accuracy for both groups. Popularity's high genre ILD can coexist with recommending only head movies. The project needs a collection of measurements because each omits properties that another reveals.
+<!-- ownership: shared:end -->
 
-Ties are resolved by the original model score and then external item ID. A set supplies remaining items, but the explicit tuple comparison removes dependence on set iteration order. At strength zero, the function directly returns `scores.top_k(k)`, reproducing the original ranking exactly, including ties. This supplies an interpretable control and avoids introducing changes merely from invoking a reranker.
+<!-- ownership: jacek:start -->
+## 5. Building the context your rerankers use
 
-At strength one, divergence dominates the greedy objective, with original score still resolving exact objective ties. Even then, calibration is limited by the candidate pool and the attainable discrete genre proportions in a ten-item list. A profile asking for 30% of a rare genre cannot be satisfied if that genre never enters the pool. Calibration also preserves historical preferences, which may themselves reflect previous exposure constraints. Matching history is a specified measurement objective, rather than proof that the history is ideal. [Sources: calibration][calibration], [normalization and checks][rerank-common].
+<!-- role: opening -->
+Rerankers need a description of preferences and exposure that can be calculated before seeing the held-out answers. The project constructs histories, item counts, genre profiles and popularity profiles from training interactions. Static movie genres and recorded user metadata supply category labels. The distinction is between known attributes and preferences estimated from outcomes.
 
-### A7. Item fairness: exposure allocation across users
+### Genre and popularity profiles
 
-The item-side method in PR #24 differs fundamentally from independent per-user calibration. It maintains one exposure map across the supplied evaluation cohort. At each rank, it visits users in sorted external-ID order and chooses an eligible remaining item maximizing `(1-lambda)*normalized_relevance + lambda/(1+accumulated_item_exposure)`.
+<!-- role: method -->
+A multi-genre movie contributes one total unit of genre mass. A movie labeled Action and Comedy contributes one half to each category. Summing these contributions over a user's training history and normalizing gives their genre profile. The recommendation distribution uses the same rule, so historical and recommended proportions are comparable.
 
-After selecting an item at rank `r`, it increments exposure by `1/log2(r+1)`. Rank one for one user can therefore influence another user's first recommendation. The traversal runs in rank rounds, rather than finishing all ten positions for the first user before moving to the next. That choice limits one user's opportunity to consume low-exposure items before anyone else receives a recommendation.
+<!-- role: reasoning -->
+Fractional weighting prevents a four-genre movie from counting as four times as much evidence as a one-genre movie. It also fixes the meaning of calibration: the profile represents normalized movie-level genre mass. A diagnostic that counts every genre membership once may be useful for another purpose, but its denominator differs.
 
-Exposure begins at zero for each call. Otherwise, results would depend on which model or strength happened to run earlier. The state is local to the experiment and does not represent an operational history of real impressions. Fixed user ordering makes the experiment deterministic, but ordering can affect allocation; a different cohort or ordering can yield different lists for an otherwise identical user.
+<!-- role: method -->
+Popularity bands describe cumulative training-interaction shares. Sort catalogue movies by training count and assign complete count-tie buckets to head, middle or tail around cumulative boundaries of 20% and 80%. Keeping ties together avoids assigning equally frequent movies to different bands merely because of item order. A bucket can cross a boundary, so realized shares need not equal 20/60/20 exactly.
 
-The reciprocal bonus favors items with less accumulated exposure. It is **not the marginal change in catalogue Gini**, and it does not mathematically guarantee equal exposure, minimum inequality, or a specified head/tail allocation. Gini is a downstream measurement used to choose a strength. Separating the heuristic from its evaluation prevents an attractive formula from being mistaken for an optimization guarantee.
+<figure class="report-figure" id="figure-6"><a href="figures/training-popularity.svg"><img src="figures/training-popularity.svg" alt="Cumulative training interaction share by catalogue share, and the different item and interaction shares in head, middle and tail."></a></figure>
 
-The context parameter is retained to fit the common interface, although this method's current objective does not consume genre profiles or user groups. It is item fairness under a particular exposure-inequality definition, whereas user fairness asks about quality across groups of people. A redistribution that broadens item reach could help, harm, or leave unchanged the measured F/M quality gap. Both outcomes need evaluation. [Source: item fairness][item-fairness].
+**Figure 6. Popularity bands have very different catalogue sizes.** The 60 head movies form 3.6% of the catalogue but account for 20.6% of training interactions. The 485 middle movies account for 60.1% of interactions. The tail contains 1,137 movies—67.6% of the catalogue—but 19.3% of interactions. The left curve shows the concentration; the right panel makes the denominator difference explicit.
 
-### A8. Candidate depth and strength selection are experimental decisions
+<!-- role: interpretation -->
+The popularity structure explains why head-focused recommendation can perform well on observed interactions while offering little catalogue reach. It also explains why equal exposure per movie differs from equal total exposure per band. A policy that gives the head and tail the same total exposure divides the tail allocation among many more items.
 
-The reranking runner first verifies the complete score table against the reconstructed checkpoint split and the exact eligible catalogue. Only then does it retain the user's highest-scoring **50** candidates and return K=10. Fewer than fifty is allowed when every eligible item is used, but fewer than ten is rejected. Validation excludes training history; test excludes both training and validation history.
+<!-- role: method -->
+Each user's popularity profile is the fraction of their training interactions in the three bands. The recommendation profile is the corresponding fraction of recommended items. These are unweighted occurrence distributions for UPD. Exposure summaries instead discount rank, so a head share computed from visibility is a different quantity from a head share used in calibration.
 
-Depth fifty is a bounded-cost, common-pool design choice. It was not prescribed by the brief and was not established as optimal by a depth-sensitivity experiment. It places an upper bound on what any reranker can retrieve. Exposure improvements inside this restricted pool do not demonstrate redistribution over all catalogue possibilities. Candidate depth must accompany every interpretation of the result.
+<!-- role: example -->
+A small profile makes the weighting concrete. Suppose a user interacted with one Action/Comedy movie and one Drama movie. Their genre mass is 0.5 Action, 0.5 Comedy and 1 Drama; dividing by the two movies gives profile (0.25,0.25,0.50). A recommendation list uses the same fractional calculation. Counting both labels as full observations would instead give three membership units and change what “matching the profile” means.
 
-Each model/method sweeps strengths `{0,0.25,0.5,0.75,1}` on validation. For the three implemented variants, choose the lowest target metric among points satisfying `validation_NDCG >= 0.95 * original_validation_NDCG`. Tie-breaking prefers higher NDCG and then lower strength. Zero is always inserted into the grid, providing the unchanged-ranking fallback when the target is available.
+<!-- role: reasoning -->
+Training support and catalogue knowledge also differ. A movie can have known genre metadata but zero training interactions. It can enter the catalogue, receive finite smoothed novelty and contribute its genres if recommended. Its collaborative score may still be weak because the model has little behavioral evidence. Knowing the item's identity and attributes does not by itself solve the problem of predicting which users would want it.
 
-The **5% relative validation-loss budget** is also a chosen operating point. If original validation NDCG is 0.30, the threshold is 0.285, not 0.25. It is relative loss, not five NDCG percentage points. The policy expresses a preference for limited measured accuracy loss in exchange for a lower mismatch or inequality metric; it does not prove that 5% is the best trade-off for users.
+### Information boundaries and metadata
 
-Selection is per model and per objective. Genre, popularity, and exposure runs are separate alternatives. They are not chained and do not jointly optimize all eight beyond-accuracy families. A combined method would need an explicit objective or ordering policy, additional choices, and another validation process. Task 3.3's hybrid/reranker order comparison is a different question from combining several reranking objectives.
+<!-- role: reasoning -->
+Validation and test interactions measure how the system behaves on unseen outcomes. Using them to construct a profile would teach the reranker what it is supposed to discover. The user can have different validation and test candidate masks while retaining the same training-derived profile. Masking known history and fitting preferences are separate operations.
 
-Once selected, the strength remains frozen on test. A validation constraint does not guarantee the same test loss, and a test outcome exceeding 5% is retained and flagged. Choosing another strength after seeing that outcome would turn test into another development set. [Source: candidate and selection runner][rerank].
+<!-- role: method -->
+The context is prepared in <code>data.py</code> and passed through <code>RerankContext</code>. Genre calibration reads user profiles and candidate genres. Popularity calibration reads user popularity profiles and item bands. Novelty reads full-catalogue training counts. Exposure allocation can use its running exposure state without reading genre or recorded-gender attributes. The common interface permits different objectives without making their information requirements identical.
 
-#### Figure A2. Reading the original validation trade-off curves
+<!-- role: limitation -->
+Required metadata is checked for the supplied cohort and candidates. Removing difficult users or items after seeing missing inputs would change the population being evaluated. The system instead makes unavailability explicit. A comparison over a metadata-complete subset must identify that subset rather than being interpreted as a full-cohort result.
 
-<figure class="report-figure" id="figure-a2"><a href="figures/validation-tradeoffs.png"><img src="figures/validation-tradeoffs.png" alt="Six model panels showing validation NDCG change against reduction of genre mismatch, popularity deviation, or exposure Gini; stars identify selected strengths and a dashed vertical line marks minus five percent NDCG."></a></figure>
+## 6. Your reranking methods: change the list deliberately
 
-**Read the figure.** Each panel is one base model. A point is an evaluated strength, and the connecting lines follow the strength sweep. Horizontal position is `100*(reranked_NDCG/original_NDCG-1)`, so negative values mean accuracy loss. Vertical position is the percentage reduction in that method's target metric. Blue means genre mismatch, orange popularity deviation, and green exposure Gini. The stars identify the validation-selected settings.
+<!-- role: opening -->
+A reranker chooses ten items from a model's top fifty eligible candidates. It can reorder or replace items within that pool, but it cannot recover a useful movie the model excluded from the pool. Candidate depth therefore limits attainable accuracy, calibration and reach before the reranker's objective is considered.
 
-The dashed vertical line marks **−5%** NDCG change. Feasible choices lie on or to its right; the largest target improvement outside that region cannot win under the declared policy. For a given method, movement upward and rightward is preferable, but the colors represent different quantities. An orange reduction of forty percent and a green reduction of five percent do not quantify comparable amounts of user benefit.
+<!-- role: reasoning -->
+The candidate pool limits what the reranker may recommend; it does not redefine which held-out items count as relevant. If a relevant movie lies outside the top fifty, the reranker cannot hit it, but it remains in the recall and average-precision denominators. Removing it would reward a restrictive retriever by making its task easier. This is why the evaluation layer receives the full relevant set separately from the score table supplied to the reranker. A candidate mask represents recommendation eligibility; a relevance set represents the outcomes against which the final recommendation is judged.
 
-**Interpretation.** Stronger genre/popularity calibration can reduce mismatch much further than the selected stars, but often only at substantial accuracy cost. The experiment therefore reports a constrained operating point rather than the largest attractive percentage. ItemKNN's green star lies slightly to the right of zero: its selected exposure variant improves validation NDCG a little, while redistributing exposure. That is a result of this measured combination, not a general guarantee from the heuristic.
+### A common relevance scale
 
-The panels use different horizontal ranges, so compare tick values rather than apparent distances. These curves show development choices on one split; they are not training-loss curves, confidence intervals, or evidence that the validation trade-off will transfer unchanged to test.
+<!-- role: method -->
+The rerankers min-max normalize model scores separately within each user's pool: <code>normalized_i = (score_i − minimum)/(maximum − minimum)</code>. Constant score vectors map to zero. This places the relevance term between zero and one, allowing one strength parameter to combine it with another objective despite different models' raw score ranges.
 
-Use the selected strengths recorded in the stored files, since visual proximity alone cannot replace the explicit validation selection rule.
+<!-- role: tradeoff -->
+Normalization removes arbitrary location and scale, but it does not make all target metrics equally important at the same strength. A unit of genre KL has a different meaning from a unit of popularity JS or an exposure bonus. The strength λ is an empirical trade-off parameter, and each model/method pair needs its own validation choice.
 
-**Origin.** This is the existing `validation-tradeoffs.png`, copied without alteration from the saved reranking bundle. The [original plotting implementation][rerank-plots] defines both percentage formulas and the selection stars.
+<!-- role: method -->
+At λ=0, every implemented method returns the original top ten exactly. At positive strengths, ties use the original score and then the external item ID. These decisions create a clear control and reproducible tie handling. Equality at zero means that merely invoking the reranker does not introduce another algorithmic change.
 
-### A9. Provenance, saved outputs, and what the safeguards establish
+### Greedy genre and popularity calibration
 
-`rerank.py:source_identity` binds the choice to the checkpoint hash, both score exports, saved split identity, dataset files, relevant source code, K, candidate count, and accuracy-loss budget. Test evaluation requires a completed validation `selection.json` with matching identity and settings. It rejects a fresh strength grid. Hashing test scores establishes input identity; it is not itself test-based model selection.
+<!-- role: definition -->
+A <strong>greedy algorithm</strong> chooses the best available next item under its current objective, commits to it and continues. Calibration constructs a list this way. For each remaining candidate, it forms the category distribution of the growing list after that candidate is appended. It chooses the candidate maximizing <code>(1−λ) × normalized relevance − λ × mismatch</code>.
 
-The six-model script completes every validation sweep before starting test evaluation. Each point saves rankings, relevance, aggregate and per-user accuracy, beyond-accuracy measures, group interfaces, and a manifest. The final test folders follow the shared comparison format, so Caio's comparison command can read original and reranked outputs without implementing another set of formulas.
+<!-- role: reasoning -->
+Mismatch is smoothed genre KL for genre calibration and popularity JS for popularity calibration. The whole growing distribution matters. A drama can be attractive early, then less useful when the list already contains too much drama relative to the user's profile. This is a property of the list, rather than a fixed independent reward attached to every item.
 
-This is a practical separation of algorithm, orchestration, and evidence. The pure reranker returns lists. The runner checks inputs and writes one experiment. The batch script coordinates models. The plotting script visualizes saved summaries without loading checkpoints, while `verify_reranking.py` independently recalculates accuracy, Gini, and coverage from saved lists and checks selections and masks.
+<figure class="report-figure" id="figure-7"><a href="figures/calibration-step.svg"><img src="figures/calibration-step.svg" alt="A toy 75/25 genre profile, comparing the smoothed KL and relevance objectives of appending another A-only movie or a B-only movie."></a></figure>
 
-The earlier 24 October audit of the 22 October bundle passed **120 evaluations, 113,160 recommendation lists, 18 validation selections, 24 final comparison rows, and 22,632 per-user comparison rows**. All **1,237 artifact checksums** matched. These remain historical checks of that specific bundle. The current refresh additionally rechecks the locally saved weighted reconstruction and the new diversification selections, with the exact scope recorded in `verification.json`. Updating a document does not retroactively rerun its old experiments.
+**Figure 7. A worked calibration decision.** The user's profile is p=(0.75 A,0.25 B), and the list already contains one A-only movie. Candidate x is A-only with normalized relevance 1.0; candidate y is B-only with relevance 0.8. Appending them gives distributions (1,0) and (0.5,0.5). After profile smoothing, KL is approximately 0.937408 for x and 0.128325 for y.
 
-These checks support the integrity and arithmetic of the saved experiment. They do not establish online user satisfaction, statistical significance, fairness under another definition, or an untouched test design. Similarly, `status: complete` for one evaluation folder means that process finished; `project_evaluation_complete: false` correctly preserves outstanding project work.
+<!-- role: method -->
+At λ=0.5, x's objective is <code>0.5×1 − 0.5×0.937408 = 0.031296</code>. Candidate y's is <code>0.5×0.8 − 0.5×0.128325 = 0.335838</code>. The algorithm chooses y because its improvement in profile matching outweighs its lower model relevance. Those relevance values are already normalized within the full pool; renormalizing only the two illustrated candidates would change the calculation.
 
-There is still an integration boundary around open PR #26. Master now uses `write_ranking_results` from the merged reranker work, while the group branch introduces `compare_groups(rankings,relevant,statistics,k)` through an older evaluator layout. Its complete report lacks the pending report's top-level `reason`, which existing reranker consumers expect. A read-only merge-tree check confirms an evaluator conflict. Resolving it requires updating the shared writer and its consumers consistently; passing tests on each branch separately does not prove the combined system works. The maximizing directions and expanded context merged through PR #28 must survive that integration. [Sources: runner][rerank], [shared writer][evaluation], [PR #26][pr26], [PR #28][pr28].
+<!-- role: tradeoff -->
+Greedy construction is tractable because it compares remaining candidates at each of ten steps, rather than enumerating all ordered ten-item subsets. Its cost grows with users, list length, pool size and category calculations. The price of that efficiency is a local decision rule: it provides no guarantee of a globally optimal completed list.
 
-### A10. The recorded six-model calibration/exposure results
+<!-- role: limitation -->
+Even λ=1 cannot make arbitrary proportions attainable. The candidate pool may lack a genre, and ten discrete movie choices may only approximate the desired distribution. Calibration also preserves a historical preference pattern that may reflect earlier exposure constraints. Lower divergence establishes closer matching, rather than proving that the historical pattern is ideal for the user.
 
-The saved 22 October experiment uses seed 42, 943 users, 1,682 items, and 60,734/19,633/19,633 train/validation/test interactions. It retrains the six checked-in configurations without a new model-tuning search. Those configurations differ from some OOF and alternate-hybrid component fits discussed in Part B. Each reranked row must be compared with its own original model.
+### Allocating exposure across users
 
-| Model | Original test NDCG | Genre strength / test loss | Popularity strength / test loss | Exposure strength / test loss |
+<!-- role: method -->
+Item-exposure reranking maintains a shared exposure counter for all users in one call. At each choice it maximizes <code>(1−λ) × normalized relevance + λ/(1+item exposure)</code>. The reciprocal bonus favors items with less accumulated visibility. After choosing an item at rank r, it adds <code>1/log2(r+1)</code> to that item's counter.
+
+<!-- role: reasoning -->
+The algorithm operates in rank rounds: each user gets a first-position choice before any user gets a second-position choice. Within a round it visits users in sorted external-ID order. This limits the opportunity for one user to consume many low-exposure items before others receive a first recommendation. Sorting strings gives lexical order, which can place “10” before “2”.
+
+<figure class="report-figure" id="figure-8"><a href="figures/exposure-round.svg"><img src="figures/exposure-round.svg" alt="With strength one, the first of two users receives a and changes the exposure state, causing the second user to receive b."></a></figure>
+
+**Figure 8. Shared state changes the next user's answer.** Let both users prefer a over b, K=1 and λ=1. Initially both bonuses are one, so the original-score tie-break gives a to user 1. Exposure becomes (1,0). User 2 now sees bonuses 1/2 for a and 1 for b, so receives b. At λ=0, both users receive a.
+
+<!-- role: method -->
+Exposure state resets for every experiment call. Otherwise, the result for a model could depend on which model or strength happened to run earlier. The counter is a simulated allocation over the evaluated cohort, rather than a persistent record of real-world impressions.
+
+<!-- role: limitation -->
+The inverse-exposure bonus is a heuristic, not the exact marginal decrease in catalogue Gini. Gini measures the resulting lists and helps select a strength; it is not the greedy item's objective itself. The method can reduce concentration without achieving equality, minimum possible Gini or a specified allocation across popularity bands.
+
+<!-- role: reasoning -->
+This cohort dependence differs from calibration. Changing another user's candidates can affect exposure choices even when the first user's scores remain fixed. A different cohort or traversal order can therefore change an individual's result. The shared-state mechanism explains the pipeline-order experiment in chapter 9.
+
+### What the evaluation cohort means for allocation
+
+<!-- role: reasoning -->
+For a local calibration method, evaluating another user does not change the first user's list. For exposure allocation, the cohort is part of the algorithm's effective input. Splitting 943 users into independent batches resets counters more often and can produce different recommendations from processing all 943 together. Equal model scores and equal strength are insufficient to establish equivalent experiments when the state boundary changes.
+
+<!-- role: tradeoff -->
+The chosen traversal policy makes allocation deterministic and easy to inspect. It also gives earlier users a different state from later users within each round. Randomizing user order could test sensitivity, but would introduce another source of variability. Persisting exposure across calls could model a continuing service, but would require specifying its starting state and update policy. The reported experiment instead measures a fresh allocation over one fixed cohort.
+
+<!-- role: limitation -->
+Discounted exposure is a model of visibility, not measured attention. The logarithmic rule assumes that later positions receive less weight in a particular way. Real users may browse differently, and an impression may not imply that an item was noticed. Gini results are therefore conditional on this visibility rule as well as the catalogue, cohort and recommendation lists.
+
+### Integration choices that affect the experiment
+
+<!-- role: method -->
+The implementation contract is <code>rerank(scores, context, k, strength) → rankings</code>. Shared helpers validate the pool, strength and scores before an objective constructs its output. Calibration and exposure live in separate modules under <code>rerankers/</code>. The experiment runner associates each method with a target metric and an optimization direction, keeping algorithm construction separate from measurement and strength selection.
+
+<!-- role: reasoning -->
+Direction matters: genre mismatch, UPD and Exposure Gini are minimized; ILD, novelty and coverage are maximized. A direction error could choose a mathematically valid setting that worsens the intended objective. Keeping direction in the method definition makes the selection rule explicit without pretending that all targets share one numerical scale.
+
+<!-- role: tradeoff -->
+Top fifty and the five-percent accuracy budget are experimental choices, rather than requirements derived from the metric formulas. A larger pool gives the reranker more alternatives and increases computation. A tighter loss budget preserves more ranking accuracy but may force weak or zero intervention. The experiment studies one controlled operating policy, leaving those sensitivity questions open.
+
+## 7. Evaluating your rerankers and interpreting the costs
+
+### Choose an operating point before testing
+
+<!-- role: method -->
+For each model and method, the runner evaluates λ in {0,0.25,0.5,0.75,1} on validation. A setting is feasible when its NDCG is at least 95% of that model's original validation NDCG. Among feasible settings, it chooses the best method-specific target, breaking ties by higher NDCG and then lower strength. The selected strength is fixed before test measurement.
+
+<!-- role: example -->
+If original validation NDCG is 0.300, the threshold is 0.285. Suppose strengths 0.25, 0.5 and 0.75 produce NDCG 0.292, 0.286 and 0.282 while reducing mismatch progressively. Strength 0.75 is infeasible; 0.5 wins among the remaining settings if it has the lowest mismatch. The rule optimizes a target subject to an accuracy constraint, rather than choosing the largest strength automatically.
+
+<figure class="report-figure" id="figure-9"><a href="figures/validation-tradeoffs.png"><img src="figures/validation-tradeoffs.png" alt="Six tuned models' validation trade-offs for genre calibration, popularity calibration and exposure, with selected strengths and a five-percent accuracy-loss boundary."></a></figure>
+
+**Figure 9. Read the feasible side of the boundary.** The horizontal axis is relative NDCG change, so values to the right of −5% satisfy the budget. The vertical axis is reduction in the designated mismatch or inequality metric. Stars mark selected strengths; connecting lines join the tested discrete settings. Each target retains its own meaning, so a larger vertical reduction is comparable within a target rather than across all colors.
+
+<!-- role: limitation -->
+The five-percent limit is a relative change, not five NDCG points or a demonstrated threshold of user acceptability. Validation feasibility also gives no guarantee of the same loss on test. If a fixed choice loses more than five percent on test, the correct response is to report that outcome. Selecting again with test answers would convert measurement into another tuning stage.
+
+### Read a trade-off as a choice between outcomes
+
+<!-- role: definition -->
+A setting is <strong>Pareto dominated</strong> when another tested setting is at least as good on both accuracy and the target, and strictly better on one. A set of undominated choices forms a <strong>Pareto frontier</strong> for those measured alternatives. This language helps identify wasteful operating points, but a finite strength grid reveals only the tested points; straight lines between them do not establish attainable intermediate lists.
+
+<!-- role: reasoning -->
+The project's constrained rule chooses one operating point from these possibilities. It expresses a priority: optimize the designated target after excluding excessive validation accuracy losses. A different budget can select another point without changing the algorithm's underlying formula. Neither the metric definitions nor the data alone determine how much accuracy should be exchanged for closer preference matching or broader exposure.
+
+<!-- role: reasoning -->
+Strength is not an effect-size scale. Doubling λ need not double the target improvement, because a greedy ranking changes through discrete item choices. The same λ can also produce different changes for two users whose candidate scores are separated differently. Validation measures the aggregate consequence of those choices, while subgroup analysis checks whether the aggregate hides concentrated costs.
+
+<!-- role: method -->
+Keep relative changes separate from absolute changes. EASE genre calibration changes NDCG from 0.404872 to 0.377624: an absolute drop of about 0.027248 and a relative loss of 6.73%. EASE exposure changes Gini from 0.950662 to 0.889884: about 0.060778 index units or 6.39% relative reduction. The bar heights summarize ratios against each original value, rather than quantities on a shared utility scale.
+
+<!-- role: limitation -->
+The zero-strength control is always a meaningful candidate when the original target is available. If no positive setting passes the budget, retaining zero says the tested grid found no permitted change. It does not prove that every smaller positive strength, alternative pool or different reranker would fail. A bounded follow-up can refine one such uncertainty while keeping model fits, profiles, masks and the validation rule fixed.
+
+### What the tuned-model comparison shows
+
+**Table 3. Calibration and exposure on the six tuned models. Loss is relative test NDCG loss; each method uses its own validation-selected strength.**
+
+| Model | Original NDCG | Genre λ / loss | Popularity λ / loss | Exposure λ / loss |
 | --- | ---: | ---: | ---: | ---: |
 | ItemKNN | 0.363396 | 0.50 / 5.80% | 0.75 / 4.32% | 0.50 / 0.12% |
 | UserKNN | 0.368776 | 0.50 / 5.27% | 0.75 / 4.00% | 0.75 / 6.45% |
-| BPR | 0.354497 | 0.50 / 3.77% | 0.50 / 2.81% | 0.25 / 2.44% |
+| BPR | 0.373665 | 0.50 / 6.23% | 0.50 / 2.92% | 0.25 / 2.46% |
 | SLIMElastic | 0.403266 | 0.50 / 5.54% | 0.75 / 3.79% | 0.50 / 4.49% |
 | EASE | 0.404872 | 0.50 / 6.73% | 0.75 / 4.31% | 0.50 / 5.60% |
-| FISM | 0.348765 | 0.50 / 4.80% | 0.50 / 3.47% | 0.25 / 2.74% |
+| FISM | 0.372549 | 0.25 / 0.14% | 0.50 / 3.30% | 0.25 / 1.77% |
 
-Genre mismatch fell by **35.00–38.70%**, popularity deviation by **20.10–42.44%**, and exposure Gini by **2.48–7.30%**. These reductions use different metrics and cannot be compared as a common unit of benefit. All eighteen choices met the validation budget; six exceeded it on test, with a maximum test loss of 6.73%.
+<!-- role: evidence -->
+Genre mismatch falls by 19.22–38.35%, popularity deviation by 18.41–42.44% and exposure Gini by 2.69–7.30%. Seven of these eighteen fixed choices exceed five-percent NDCG loss on test. These percentages describe different targets; they cannot be added or ranked as a common quantity of user benefit.
 
-ItemKNN exposure reranking is an instructive example: test NDCG changes from 0.363396 to 0.362948, approximately 0.12% loss, while catalogue coverage rises from 11.59% to 25.98%. Yet Gini falls only from about 0.966588 to 0.938365. Reaching many more distinct movies and achieving roughly equal exposure are separate properties.
+<figure class="report-figure" id="figure-10"><a href="figures/test-effects.png"><img src="figures/test-effects.png" alt="Frozen test NDCG changes and target reductions for calibration and exposure across six tuned models."></a></figure>
 
-UserKNN exposure obtains the largest relative Gini reduction, 7.30%, but loses 6.45% test NDCG. EASE genre calibration substantially improves the targeted mismatch measure while suffering the largest accuracy loss. Neither result is an implementation failure merely because it reveals a cost; the purpose of Task 3.2 is to measure and explain such costs.
+**Figure 10. Improving the target often has an accuracy cost.** Grey bars show test NDCG change; colored bars show reduction in the designated target. EASE genre calibration reduces mismatch by 37.09% while losing 6.73% NDCG. FISM genre calibration reduces mismatch by 19.22% at a much smaller 0.14% loss. The dashed −5% line is a reference to the validation budget, not a rule for choosing again on test.
 
-The defensible claim is that these specific greedy methods can improve their chosen beyond-accuracy objectives within common top-fifty pools, at model-dependent accuracy costs. It is a single-seed offline experiment, with no demonstrated significance or uniform subgroup benefit. Your explanation should end at that evidence boundary, while identifying sensitivity studies and group analysis as the next ways to test robustness. [Source: fresh PR experiment and local bundle][pr24].
+<!-- role: interpretation -->
+The cost depends on the base model and the available alternatives. A reranker can make a large category adjustment cheaply when several almost equally scored movies serve different categories. It can face a larger cost when its desired categories compete with much stronger relevance scores. The results are consistent with that mechanism, but they do not isolate a causal explanation for every model difference.
 
-#### Figure A3. What happened to the frozen choices on test
+<!-- role: evidence -->
+ItemKNN exposure reranking illustrates why reach and equality need separate measurements. NDCG changes from 0.363396 to 0.362948, about 0.12% loss. Coverage rises from 11.59% to 25.98%, while Gini falls from 0.966588 to 0.938365. Many more movies appear, but visibility remains highly concentrated.
 
-<figure class="report-figure" id="figure-a3"><a href="figures/test-effects.png"><img src="figures/test-effects.png" alt="Six model panels comparing grey bars for test NDCG change with colored bars for target metric reduction, with selected strengths annotated and a minus five percent reference line."></a></figure>
+<!-- role: evidence -->
+UserKNN exposure obtains the largest relative Gini reduction, 7.30%, with 6.45% NDCG loss. Across all six models, exposure-reranked Gini remains approximately 0.881–0.938. The method reduces concentration under the chosen metric while leaving substantial inequality. Calling that outcome complete item fairness would exceed the measurement.
 
-**Read the figure.** Each group of two bars is one method applied to one model. The grey bar is the relative change in test NDCG: below zero means worse ranking accuracy. The colored bar is the reduction in that method's test target: above zero means less mismatch or less exposure inequality. Text above the bars records the strength already chosen on validation. Nothing in this figure chooses a new strength.
+### A smaller user gap can still mean worse recommendations
 
-**Interpretation.** The large positive blue/orange bars alongside negative grey bars make the central trade-off explicit. Genre calibration reduces its target substantially, yet EASE loses approximately **6.73%** NDCG. UserKNN exposure reduces Gini by approximately **7.30%**, at **6.45%** NDCG loss. ItemKNN exposure has a much smaller grey loss, approximately **0.12%**, showing that the cost depends on the base model.
+<figure class="report-figure" id="figure-11"><a href="figures/reranking-groups.png"><img src="figures/reranking-groups.png" alt="EASE genre-calibration validation trade-off and test NDCG means for recorded F and M users before and after genre and exposure reranking."></a></figure>
 
-The dashed horizontal line at −5% is a reference to the validation budget, not a test feasibility rule. Six of the eighteen frozen choices fall below it on test. Those outcomes are retained and reported; moving them back above the line by test-based reselection would invalidate the procedure. The figure therefore shows a limit of validation transfer as well as successful target reductions.
+**Figure 11. Check absolute group quality alongside the gap.** The left panel follows EASE's genre-calibration validation sweep; the selected setting meets the validation budget. The right panel compares recorded F/M test NDCG means before and after all six interventions, including diversification. The lower-performing group does not automatically benefit when the two group means move closer.
 
-Panel heights and tick ranges differ. Colored reductions use different target metrics, and the bars have no uncertainty intervals. Their size cannot establish significance, equal benefits for user groups, or improved satisfaction. The accompanying coverage example also matters: reaching more distinct movies can coexist with a high remaining Gini.
+<!-- role: evidence -->
+For EASE exposure reranking, mean F-user NDCG falls from about 0.361 to 0.347 and mean M-user NDCG from 0.423 to 0.397. The gap narrows because the higher-scoring group loses more. This supports a specific description of the redistribution; it does not establish an improvement in the lower-performing group's recommendation quality.
 
-**Origin.** This is the existing `test-effects.png` from the same fresh experiment, copied without alteration. Its underlying lists and selections passed the saved-result audit described in A9.
+<!-- role: interpretation -->
+An evaluation should ask three questions together: did the designated target improve, what happened to accuracy, and who experienced the change? A cohort mean can hide unequal effects, while a gap can hide falling quality in both groups. This is why subgroup diagnostics complement your overall trade-off measurements.
 
-### A11. Follow the information flow before judging a result
+<!-- role: limitation -->
+The six-model study uses one seed and one repeatedly inspected split. Its curves and bars are descriptive comparisons without confidence intervals. They establish observed changes under the stated candidates, settings and metrics. Robustness across retraining, new splits, larger candidate pools and different activity groups remains a separate empirical question.
+<!-- ownership: jacek:end -->
 
-<figure class="report-figure" id="figure-a4"><a href="figures/evaluation-flow.svg"><img src="figures/evaluation-flow.svg" alt="Training data builds models and profiles; validation measures and selects settings; a freeze separates development from final test measurement, with no test-label feedback arrow."></a></figure>
+<!-- ownership: shared:start -->
+## 8. Hybrids: combine different kinds of information
 
-**Figure A4 — A map of permitted information.** The green training lane supplies fitted model parameters, training histories, popularity counts, and user profiles. The validation lane measures candidate rankings and selects checkpoints or operating parameters. The final lane uses frozen choices to measure test outcomes. The picture describes responsibilities and information use; it does not claim that every stage is one Python function or that all algorithms train in the same way.
+<!-- role: opening -->
+A hybrid combines models to exploit complementary information. The combination can happen at several levels: numerical scores, retrieved candidates, feature vectors or fitted representations. The mechanism determines what must be controlled in an experiment. Hybrids can use different objectives and information.
 
-Think through one user. Their training interactions help the model learn scores and provide evidence for the calibration profile. Their validation interactions tell us how well a proposed setting ranks held-out items. They may select a checkpoint or strength, but they do not get added to that training profile in the recorded experiments. When evaluating test, those validation items join the history mask so they cannot be recommended again. That masking change is not a train-plus-validation model refit.
+### Weighted prediction with out-of-fold features
 
-The same distinction explains why exporting test scores can be acceptable while selecting a setting using test NDCG is not. A score file contains model predictions. Selection needs outcome information and a decision rule. The report must therefore establish which labels influenced a decision, rather than infer leakage merely from a filename or timestamp. Conversely, a manifest flag saying `test_evaluated: false` is not proof if another stage already used test outcomes.
+<!-- role: method -->
+The weighted hybrid scores an item with an intercept plus a weighted sum of six component scores. <strong>Ridge regression</strong> learns those weights by minimizing squared error on observed raw ratings, with an L2 penalty on coefficient magnitude. The intercept is unpenalized, and the coefficients can be positive or negative. Its training objective predicts rating values; validation NDCG chooses the regression penalty for the eventual ranking task.
 
-The freeze is concrete. For native reranking it is the completed validation selection bound to input/settings identity. For Task 3.3 it is the saved method/order choice made after all validation points and before test outputs. Hashes catch changed inputs; they cannot establish that a person never inspected earlier test results. That is why the reused-split limitation remains even when every file matches.
+<!-- role: definition -->
+<strong>Out-of-fold prediction</strong> means predicting an example with a model fitted without that example's fold. The project divides only the outer training interactions into five user-stratified folds. Each component fits on four folds and predicts observed interactions in the fifth. Repeated user–item pairs stay together, and users retain training support. Concatenating these predictions gives 60,734 rows of component features paired with raw 1–5 training ratings.
 
-Your integration review should follow the entire chain: source checkpoint and split, complete eligible candidates, training-only context, declared selection direction, frozen choice, and saved final lists. A metric value is trustworthy only for the task that chain actually implements. This is also why the shared writer is useful: native, reranked, and portable-hybrid rankings can use the same definitions while retaining different declared candidate scopes.
+<!-- role: reasoning -->
+Using in-sample component scores would let the combiner learn from how well each component already fits its own answers. Out-of-fold features better represent the prediction behavior the combiner encounters on unseen interactions. Fold models use fixed training budgets; their held-out-fold target labels also do not select their checkpoint. Outer validation remains the separate source for choosing the Ridge penalty.
 
-### A12. A numerical calibration step makes the objective concrete
+<!-- role: method -->
+Before fusion, each component is <strong>z-score standardized</strong> over a user's eligible candidates: subtract its mean and divide by its standard deviation. A constant vector becomes zero. This prevents arbitrary raw score scales from determining a component's influence. It differs from the min-max scaling inside a reranker: the weighted combiner is fitted to standardized full-candidate scores.
 
-<figure class="report-figure" id="figure-a5"><a href="figures/calibration-step.svg"><img src="figures/calibration-step.svg" alt="A toy user profile with 75 percent genre A and 25 percent genre B, comparing another A recommendation with a B recommendation; smoothed KL and the combined objective favor B at strength one half."></a></figure>
+<!-- role: reasoning -->
+Standardization uses predictions and candidate membership, not test ratings. Test-history masking can change its candidate-relative mean and variance, so the transform is recomputed on eligible test candidates. That is part of the specified scoring procedure. The resulting weights retain meaning only alongside this transform; applying them directly to raw component scores would construct another hybrid.
 
-**Figure A5 — A worked example, not a MovieLens result.** Suppose the user's training profile is 75% genre A and 25% genre B. The growing list already contains an A-only movie. We now compare another A-only candidate, x, with normalized relevance 1.0, against a B-only candidate, y, with relevance 0.8. Those relevance values are already normalized within the candidate pool; do not normalize just the two displayed alternatives again.
+<!-- role: evidence -->
+The selected Ridge penalty is 30,000. The weighted hybrid reaches test NDCG 0.409095 against 0.401882 for its matched SLIM component, about 1.80% higher. On validation, the combination does not lead that component. This supports a measured test advantage in the experiment, rather than a claim that regression fusion always improves the strongest component.
 
-Appending x gives recommendation proportions `(1,0)`. Appending y gives `(0.5,0.5)`. Neither exactly matches the profile, but the second avoids entirely omitting the minority genre. The smoothed recommendation distributions become `(0.9975,0.0025)` and `(0.5025,0.4975)` respectively. Using natural-log KL from the profile to those mixtures gives approximately **0.937408** for x and **0.128325** for y.
+### What the other hybrid designs transfer
 
-At strength 0.5, x's objective is `0.5*1.0 - 0.5*0.937408 ≈ 0.031296`. Candidate y's is `0.5*0.8 - 0.5*0.128325 ≈ 0.335838`. The greedy step chooses y. It sacrifices some model relevance to make the list's composition closer to the user's history. This is the mechanism behind the aggregate mismatch reductions in A10, rather than a claim that genre B is always the right second recommendation.
+**Table 4. Hybrid mechanisms and the control each needs.**
 
-The calculation also clarifies several implementation choices. The divergence is computed for the growing list after adding a candidate. It is not an independent genre bonus attached permanently to each movie. The 0.01 profile mixture keeps missing profile genres from causing infinite KL. A multi-genre movie would divide its one unit of mass across its genres, so its contribution would have to be computed before forming the new list distribution.
-
-At zero strength, the explicit baseline branch returns the original top K. At greater strength, a changed order is intentional. Correctness therefore means reproducing the stated objective, tie rules, eligibility, and profile policy; it does not mean guaranteeing that NDCG rises. Finally, the arithmetic is one local greedy decision. It neither proves that the completed list is globally optimal nor establishes that preserving a historical profile is always desirable.
-
-### A13. Exposure fairness changes one user's answer through other users
-
-<figure class="report-figure" id="figure-a6"><a href="figures/exposure-round.svg"><img src="figures/exposure-round.svg" alt="Two users both prefer item a to b. With pure exposure bonus, user one picks a; accumulated exposure then makes user two pick b. Strength zero would recommend a to both."></a></figure>
-
-**Figure A6 — Trace the state, rather than just the formula.** Consider users `1` and `2`, each with candidates a and b, with a ranked higher by the original model. Set K=1 and strength=1. At the start, both items have exposure zero, so both have bonus one. User `1` chooses a through the original-score tie-break. Rank-one exposure adds one to a's counter.
-
-User `2` now sees bonus `1/(1+1)=0.5` for a and `1/(1+0)=1` for b, and chooses b. The final exposure vector is `(1,1)`. With strength zero, both users would receive a. The example shows how a cohort-level mechanism can change a recommendation even when that user's own scores and profile have not changed.
-
-Real runs use rank rounds: every user receives a rank-one choice before rank-two choices begin. Later exposure increments are discounted by `1/log2(rank+1)`. Original model scores and external item IDs resolve objective ties. Sorting external IDs means lexical string order, so identifiers such as `10` need not follow `2` numerically. Determinism makes the chosen policy reproducible; it does not make user ordering inconsequential.
-
-This state dependence is the key to understanding the new switching-order experiment in B11. Reranking two components independently maintains two exposure histories, including lists later discarded by routing. Reranking the final switched cohort maintains one history. Both can faithfully implement the exposure heuristic and still produce different lists. User-local calibration has no such cross-user counter, which permits exact equality under the recorded fixed-routing conditions.
-
-The same reasoning matters when reviewing Gabriel's merged coverage diversification. That method tracks whether an item has ever been recommended, rather than accumulating discounted exposure. Once a movie is in the covered set, another appearance no longer adds coverage; it can still add considerable exposure. A breadth objective and an equality objective therefore need separate implementations, selection targets, and interpretations.
-
-As the integration owner, check the operation being optimized as well as its direction. Your mismatch and Gini targets are minimized. PR #28's ILD, self-information, and coverage targets are maximized. A sign error could select a perfectly valid file with the wrong scientific meaning. The frozen-test path must also mark a newly introduced method unavailable when an older selection does not contain it; adding methods must never silently initiate test-time tuning. Review these contracts whenever a teammate extends the registry.
-
-## Part B — The other contributions and the shared system
-
-### B1. Project objective, ownership, and the adopted protocol
-
-The project studies offline top-ten recommendation on MovieLens-100K. It compares individual collaborative recommenders, several forms of hybrid recommendation, and post-processing methods that alter accuracy and beyond-accuracy properties. The central scientific question is how these design choices change recommendation behavior under a common evaluation procedure, rather than simply which file prints the highest score.
-
-The planned division remains Gabriel for individual models and diversification; Bogdan for hybrid methods, their tuning, coefficients, and order experiments; Caio for shared comparisons, baselines, metadata collaboration, and extensive review; Victor for explanatory/group analysis, user fairness, and report coordination; and you for the work in Part A. Ownership is an assigned responsibility, not proof that a particular student alone wrote every supporting helper.
-
-The current `protocol.yaml` specifies MovieLens-100K, seed 42, a random per-user 60/20/20 split, full-sort evaluation, K=10, and **validation NDCG@10** for selection. The primary selection metric changed from historical MRR@10 during the EASE/SLIM retuning review. Older narrative notes still mention MRR; they do not override the current configuration or a frozen experiment's explicitly recorded selection rule.
-
-Actual split sizes are **60,734 training, 19,633 validation, and 19,633 test interactions**. RecBole allocates held-out fractions within each user's history, with rounding leaving the remainder in training. This is why nominal 60% does not give exactly 60,000 training rows. There are 943 users and 1,682 nonpadding catalogue items.
-
-Random order, `RO`, shuffles rather than respecting time. The resulting task is held-out interaction recovery under that split; it is not a simulation of predicting each user's future from their past. Replacing it with timestamp order would change the experiment and require new training and artifacts. A timestamp column in an exported CSV does not itself make an evaluation temporal.
-
-Every held-out interaction is relevant, regardless of rating. That supplies enough positive evidence for ranking evaluation and matches the adopted implicit-feedback interpretation. It also means low-rated observed movies are positives. Missing interactions are unknown outcomes, even though training algorithms may sample them as negatives. Those sampled labels are a modeling approximation rather than observed dislike.
-
-Validation masks training interactions; test masks both training and validation interactions. Most comparisons retain the full catalogue, including items with no training interactions. Switching uses a separate warm-item scope, so it requires a matching warm control. Split, scope, relevance, K, and aggregation together define the task; a model name and dataset name do not. [Sources: current protocol][protocol], [assignments][assignments].
-
-### B2. Code structure and the path from a dataset to a report
-
-Reusable project code lives under `project/recsys/`; RecBole remains the model-training framework. YAMLs define experiments, scripts coordinate particular runs, and report files explain their evidence. Framework changes are limited to cases such as FISM correctness and SLIM solver configuration that cannot be solved solely in a project wrapper.
-
-```text
-dataset + model YAML + shared protocol
-                 |
-       recbole_adapter.train
-                 |
-  selected checkpoint + exact splits + full score tables
-                 |
-       individual / hybrid scores
-                 |
-  original rankings or PR #24 reranking
-                 |
-  independent accuracy + beyond-accuracy + group reporting
-                 |
-  comparable test folders -> tables / figures / interpretation
-```
-
-The shared `ScoreTable` holds `model`, `split_id`, `partition`, and `scores[user][item]`. Scores cover every eligible candidate, rather than just each component's top ten. `require_aligned` checks split/partition, evaluation users, and each user's candidate IDs before fusion. Equal array dimensions would not detect swapped users or different candidate catalogues.
-
-`recbole_adapter.train` loads the model YAML first and shared protocol second, preventing a model file from silently replacing shared split settings. It exports actual in-memory train/validation/test rows with external IDs, ratings, and timestamps. A SHA-256 digest includes partition names and CSV bytes. Copied inputs, resolved configuration, checkpoint location, and a manifest explain what produced a run.
-
-The selected checkpoint is reloaded before full score export. Both validation and test scores can be stored without calculating test performance. Keeping test labels out of selection is the experimental boundary; the mere existence of a test score file is not equivalent to choosing a configuration on test.
-
-Independent checkpoint evaluation loads on CPU, reconstructs data from the checkpoint's configuration, and verifies reconstructed split bytes and digest against saved exports. It batches full-sort prediction and converts internal indices back to original tokens. The checkpoint's frozen configuration governs reconstruction; today's changed YAML cannot relabel an old model as a new experiment.
-
-There are two inference paths. Native training artifacts use RecBole checkpoints and the adapter. The alternate-hybrid package uses portable NumPy/sparse weights and JSON through `HybridBundle`, avoiding machine-specific checkpoint pickles for replay. Both use shared evaluation settings so candidate-policy differences remain visible to the comparison tool.
-
-`new_run` refuses an existing destination, protecting previous evidence from overwrite. Manifests distinguish running, failed, and complete processes, and JSON writing rejects NaN. These are small explicit helpers rather than a large experiment framework. The optional `task1`, `task2`, and `task3` orchestrators can remain placeholders while working task-specific scripts exist. Conversely, an unimplemented required algorithm cannot be excused merely because an orchestration placeholder was optional. [Sources: adapter][adapter], [contracts][contracts], [artifact helpers][artifacts], [portable bundle][bundle].
-
-### B3. Individual recommenders: six models, different assumptions
-
-Gabriel's individual-model layer exposes ItemKNN, UserKNN, BPR, SLIMElastic, EASE, and FISM through a common score export. Sharing outputs lets the rest of the project compare and combine models without depending on their internal training APIs.
-
-**ItemKNN** constructs item similarities from the interaction matrix and scores candidates using a user's history. The neighborhood size limits contributing similar items; shrinkage regularizes weak similarity evidence. **UserKNN** instead uses similar users' interactions. In this fork, both are instances of the `ItemKNN` class, selected by `knn_method: item` or `user`. The exported label must therefore preserve their distinct identities. A table reporting both merely as the class name would be ambiguous.
-
-**BPR** learns user and item embeddings with pairwise training. A positive observed item should score above a sampled unobserved item for that user; the loss penalizes failures of that ordering. The score is a user-item dot product. Embedding size, learning rate, training budget, negative sampling, and checkpoint selection all influence the fit. A ranking-oriented training loss is useful but still does not directly optimize the finite top-ten NDCG statistic.
-
-**EASE** is a linear item model with a closed-form regularized solution and a zero diagonal. It reconstructs interactions from other item interactions. The diagonal restriction prevents simply copying an item's own input. Regularization controls coefficient magnitude and sensitivity to sparse evidence. This constructor fits the model directly, so repeated neural-style epochs would not represent repeated independent learning progress.
-
-**SLIMElastic** fits a sparse linear item model through per-target elastic-net regression. The inspected configurations constrain coefficients to be nonnegative and hide the target item's input while fitting its column. Alpha and the L1 ratio control total regularization and sparsity. Solver convergence matters: a poorly converged fit is not a fair representative of its hyperparameters. The project exposes a 1,000-iteration budget for retuning rather than relying on the earlier hard-coded 100.
-
-**FISM** learns source and destination item embeddings, builds a user representation by summing history embeddings, scales by history length raised to a negative exponent, and scores a target with the destination embedding plus biases. The candidate must be removed from its own source history, including repeated occurrences, before both the sum and length normalization are used.
-
-Two FISM corrections are central implementation decisions. `BCEWithLogitsLoss` receives raw logits because it applies the sigmoid internally; adding sigmoid beforehand changes the loss and gradients. Target self-contributions are also removed in both pairwise-item and full-sort computation. Excluding seen items only at evaluation would not repair training that learned to exploit the target itself. Tests compare scoring and gradients across paths, making the correction stronger than a superficially improved benchmark number.
-
-Checked-in configuration files are a reproducible starting set, not a universal best-model list. For example, the generic FISM YAML and the final OOF experiment's separately tuned FISM settings differ. Reading a YAML today does not identify every historical fit named FISM. [Sources: individual configurations][model-configs], [framework models][framework], [FISM correction][fism].
-
-### B4. Tuning, frozen experiments, and why similarly named results differ
-
-Current EASE/SLIM retuning uses nine EASE regularization values and a 25-setting SLIM alpha/L1-ratio grid. Selection maximizes independent validation NDCG@10; MRR and recall remain diagnostics. Nonconverged SLIM fits cannot win. Old parameters are refitted with the same solver budget, providing a controlled comparison of the hyperparameter change.
-
-EASE selects regularization **500**, compared with old 250. Validation NDCG changes from **0.297866 to 0.298099** while MRR decreases slightly. SLIM selects **alpha 0.2 and L1 ratio 0.005**, with validation NDCG **0.301125**, compared with **0.300154** for the old ratio 0.01. These small, metric-specific changes illustrate why declaring the selection metric before looking at results matters.
-
-The project retains older 80/10/10 tuning records and transfers some approved hyperparameters into later 60/20/20 experiments. Transferring a parameter is different from transferring predictions: scores and training must still belong to the new split. Retaining the history makes the limitation visible, but does not turn transferred settings into an exhaustive current-protocol optimum.
-
-The OOF hybrid uses fixed-budget full-training components; PR #24 uses selected checkpoints from the checked-in individual configurations; the alternate-hybrid bundle contains additional corrected inherited fits and jointly tuned cascade components. Thus, three tables can show different BPR or FISM numbers without any arithmetic contradiction. A meaningful comparison needs the source run, parameter values, training budget, checkpoint rule, normalization, candidate scope, and held-out membership.
-
-Source corrections also require redoing dependent calculations. The final OOF update regenerates FISM's folds and full fit while verifying the five unchanged component columns. Alternate-hybrid corrections replace inherited BPR/UserKNN fits and redo downstream selection. Reusing cached outputs after changing the generating code would preserve numbers while losing their meaning.
-
-Cached stages use source/config/data identity and hashes, atomic completion markers, and run locks. Resume is allowed only for compatible completed work. This makes expensive cross-fitting reproducible and prevents a partial artifact from masquerading as a completed stage. It also means an exact historical rerun may require original local caches that are not committed. [Sources: retuning report][retuning], [OOF reproduction notes][oof-doc].
-
-#### Figure B1. What the recorded tuning search says about regularization
-
-<figure class="report-figure" id="figure-b1"><a href="figures/individual-tuning.svg"><img src="figures/individual-tuning.svg" alt="EASE validation NDCG against logarithmic regularization, with previous and selected settings marked, beside a five by five SLIM alpha and L1 ratio heatmap."></a></figure>
-
-**Read the figure.** The EASE curve shows all nine declared regularization settings, using a logarithmic horizontal axis. The square marks the previous setting, 250; the star marks the NDCG-selected setting, 500. The SLIM heatmap shows all twenty-five alpha/L1-ratio combinations. Brighter cells have higher validation NDCG, and the outlined cell is the recorded selection. Rows and columns are the tested categorical grid positions, not a continuous optimization surface.
-
-**Interpretation.** EASE improves markedly from very weak regularization, then flattens around the better settings. Increasing regularization indefinitely does not continue improving the score. The small separation between 250 and 500 is real but modest: NDCG changes from about 0.297866 to 0.298099. That small gain should not be described with the same emphasis as the large difference from the weakest settings.
-
-SLIM selects alpha 0.2 and L1 ratio 0.005. The very poor lower-right cell demonstrates that plausible hyperparameter ranges can also include a badly performing combination. It does not prove that every increase in either parameter harms performance: the rows have different patterns. Rounded cell labels and saturated colors can hide small differences, so exact selection uses the stored full-precision values.
-
-All SLIM fits converged, and both searches share the declared protocol. These are validation measurements used for selection, not independent evidence of test gains. The figure visualizes existing trial records; neither models nor hyperparameters were fitted again for this report.
-
-**Origin.** The chart reads the nine EASE and twenty-five SLIM JSON trial records plus their NDCG-based selections under `individual-retuned-60-20-20/`.
-
-### B5. The weighted hybrid: out-of-fold rating regression
-
-Bogdan's weighted hybrid learns how to combine the six component score columns using Ridge regression. The target is each observed training interaction's **raw 1–5 rating**. Unrated candidates are not assigned zero ratings. The final prediction is an intercept plus a weighted sum of normalized component scores, subsequently sorted to obtain a ranking.
-
-To avoid training the combiner on in-sample component predictions, outer-training interactions are divided into five user-stratified folds. For each fold, components train on the other folds and predict the held-out interactions. Repeated user-item pairs stay together, and users retain training evidence. Concatenating those predictions gives one out-of-fold feature row per outer-training interaction: 60,734 rows in the final experiment.
-
-Fold components use fixed training budgets without held-out-fold early stopping. Otherwise, the labels meant to provide out-of-fold targets would also select the component checkpoint. Outer validation chooses Ridge's penalty; outer test is reserved for the frozen combination's later evaluation. This is cross-fitting, rather than fully nested tuning of every component hyperparameter within each fold.
-
-Each component is z-scored separately over the user's eligible candidates. Constant columns map to zero. That removes arbitrary score location and scale before combination while using predictions rather than target labels. The transform is recomputed on eligible test candidates after validation-history masking. It is a declared candidate-relative transform, not a scaler fitted using test ratings.
-
-The Ridge objective trades squared rating error against squared coefficient magnitude; the intercept is unpenalized and coefficients are unconstrained. Alpha **30,000** is selected from the final 24-penalty validation search. Its numerical size is meaningful only with the target units, feature scaling, row count, and solver objective.
-
-An earlier data-loader behavior normalized ratings to 0–1 despite raw-rating descriptions. The correction recovers raw ratings by external user-item pairs. Multiplying normalized targets by four and adding one correspondingly scales coefficients and adjusts the intercept; the recorded correction verifies unchanged rankings for that affine unit transformation. The final report supersedes earlier alpha-100 and alpha-100000 provisional snapshots.
-
-The original final corrected hybrid has validation NDCG **0.299155** and test NDCG **0.409095**; its retained SLIM component has test NDCG **0.401882** and corrected FISM **0.372549**. The test difference over that SLIM fit is about 1.80% relative. These are the original frozen results, retained in the historical comparison figures. The newly committed independent reconstruction reaches **0.409041** test NDCG, discussed in B11. Close reconstruction is different from an exact replay. The hybrid does not lead SLIM on validation, and no significance is claimed. The test split had already been inspected during earlier iterations, so neither table is a fresh untouched generalization estimate.
-
-Known catalogue identities across folds make the design transductive. A rare item's identity can be known even when its fold-training interactions are absent. That is different from observing its held-out target, and different again from solving deployment cold start. [Sources: hybrid implementation][hybrids], [cross-fitting runner][oof], [final results][oof-results].
-
-### B6. Five alternative hybrid styles and the questions they test
-
-The implemented alternative styles live in dedicated modules; the generic `predict_other_hybrid` placeholder is not a complete map of available work. The portable package exposes their frozen fits through a common inference layer.
-
-**Switching** chooses a whole UserKNN or BPR ranking per user. Training-only features describe history length and neighborhood support. A validation grid searches overlap, reliable-neighbor count, and history thresholds, including constant-model controls. It avoids cross-model score calibration because it does not blend scores. Its warm scope removes unsupported items from candidates and relevance together; this is an explicit change in task.
-
-**Cascade** uses ItemKNN to retrieve a shortlist and BPR to order it. It jointly searches component settings and shortlist depth by final validation NDCG, rather than substituting independently optimal standalone settings. Twenty ItemKNN fits, twelve BPR fits, and eight depths yield 1,920 combinations with cached component scores. Shortlisting must follow the current partition's history mask. Missed retrieval positives remain in the relevance denominator. Candidate fraction estimates potential scoring volume; cached full-score experiments do not establish measured latency savings.
-
-**Feature combination** concatenates frozen BPR user and item features and learns a two-hidden-layer ReLU MLP with pairwise ranking loss. It standardizes using training-supported entities, samples negatives excluding training positives, and selects checkpoints and width on validation. A metadata-input variant supplies a control. Three scorer seeds measure some training variability conditional on the same frozen BPR fit, rather than three independent dataset splits.
-
-The **residual extension** adds an MLP correction to the frozen raw BPR score. Its output layer begins at zero, so epoch zero exactly reproduces the baseline and is eligible for validation selection. This makes it possible to retain the original model when learned corrections do not help. It is an extension of feature combination, not a sixth required hybrid taxonomy.
-
-**Feature augmentation** adds normalized positive UserKNN predictions to unseen entries in the receiver's input matrix, while leaving binary observed targets unchanged. Strength controls inferred input mass. EASE and SLIM are retrained as receivers, with zero diagonal or target-column hiding retained. Because augmented input X differs from target R, EASE uses the constrained solution to `||R-XB||² + lambda||B||²`, rather than blindly applying the ordinary same-input-and-target shortcut. Adding inferred features is not declaring them observed target interactions.
-
-**Meta-level** transfers BPR user embeddings into a user-neighborhood recommender. Positive cosine similarities define neighbors, self-similarity is excluded, and neighborhood size is selected on validation. Multiplying neighbor weights by the original training interaction matrix yields item scores. An interaction-cosine control changes only the representation, helping isolate whether learned embeddings improve the neighborhood signal. This transfers a learned representation rather than predictions as augmentation targets. [Sources: alternative implementations][alternatives], [portable replay][bundle].
-
-### B7. What the hybrid evidence supports
-
-The corrected alternative-hybrid report gives the following representative frozen test results. These rows explain particular experiment comparisons; they are not one globally interchangeable leaderboard with Part A's reranking table.
-
-| Frozen model or variant | Scope | Validation NDCG | Test NDCG |
-| --- | --- | ---: | ---: |
-| EASE | full | 0.298099 | 0.404872 |
-| Native SLIM | full | 0.301125 | 0.403266 |
-| Paired SLIM receiver | full | 0.301112 | 0.403254 |
-| UserKNN → SLIM, strength 0.25 | full | 0.304670 | 0.411904 |
-| UserKNN → EASE, strength 0.25 | full | 0.298156 | 0.403747 |
-| Jointly selected cascade | full | 0.278699 | 0.384593 |
-| Switching | warm | 0.284915 | 0.371960 |
-| Matching warm UserKNN control | warm | 0.283897 | 0.368763 |
-| BPR-user-vector meta-level | full | 0.282216 | 0.375364 |
-| Interaction-cosine control | full | 0.283823 | 0.369014 |
-
-SLIM weak augmentation improves test NDCG by approximately **2.15% against its paired receiver**. Strength one improves less, so more transferred mass is not automatically better. EASE's slight validation improvement becomes a small test decline. Plain feature-combination test NDCG is about **0.345623 ± 0.009039**, below the corrected BPR control; residual CF reaches about **0.373233 ± 0.002061**, still slightly below that control's **0.373665**. These mean/sample-standard-deviation rows are summaries of three scorer seeds.
-
-Switching's warm catalogue contains **1,615 items**, with **19,590 validation and 19,588 test positives**. Full-catalogue test has 19,633 positives. Comparing switching directly to a full-catalogue control would confound routing with removal of difficult unsupported items. The same scope rule applies when presenting coverage and novelty, whose catalogue denominators can also change.
-
-Cascade gains over its own BPR control but remains below EASE and SLIM in the reported comparison. The meta-level model underperforms its interaction-cosine control on validation yet exceeds it on test. That pattern must be reported without retrospectively selecting by test. It illustrates ordinary validation/test variation, rather than permission to rewrite the selection policy.
-
-The bundle stores trained arrays, mappings, masks, labels, search evidence, and reference metrics. `HybridBundle.rankings` reconstructs eligible lists and applies special cascade masking where needed. That portable inference is stronger reproducibility evidence than a report table alone, although it does not independently regenerate every historical training fit. The preparation of this report replayed the available evaluation cases against their committed accuracy results. [Source: corrected results and reproduction][alternate-results].
-
-#### Figure B2. Compare hybrid results with the right component controls
-
-<figure class="report-figure" id="figure-b2"><a href="figures/hybrid-comparisons.svg"><img src="figures/hybrid-comparisons.svg" alt="Validation and test NDCG markers for the OOF hybrid and its six components on the left, and separately for the corrected full catalogue alternative hybrids and their controls on the right."></a></figure>
-
-**Read the figure.** Blue and orange markers are validation and test NDCG for the same recorded system. The left panel contains the OOF experiment's six retained components and final Ridge combination. The right panel contains the corrected alternative-hybrid fits and their controls. Their source configurations differ, so the panels deliberately preserve the experiment families instead of treating every repeated model name as one interchangeable fit.
-
-**Interpretation.** In the left panel, Ridge's validation NDCG is slightly below the retained SLIM component, while its test score is higher: approximately **0.409095 versus 0.401882**. This is a measured validation/test ordering change. It does not mean that the combination was selected on test, or that the validation result should be rewritten to make the story simpler.
-
-In the right panel, weak UserKNN-to-SLIM augmentation reaches approximately **0.411904** test NDCG against the paired receiver's **0.403254**. Strength one gives a smaller gain. The EASE augmentation row, in contrast, is slightly worse than its control on test. Feature combination and residual correction also do not automatically improve the base model. These controlled counterexamples are central to the project's explanation of when additional model structure helps.
-
-Every displayed row uses full-catalogue scope. Warm switching is excluded because it changes candidates and relevance. Asterisks mark means over three scorer seeds conditional on one frozen BPR fit; no uncertainty bars are drawn, so those means must not be mistaken for noiseless estimates. Higher test markers are not an improvement from validation to test: those are different held-out partitions with different masks.
-
-**Origin.** This new view uses the committed final OOF aggregate metrics and corrected alternative-hybrid comparison CSV, retaining the same frozen outcomes and selection rules.
-
-### B8. Coefficients, ablation, and explanatory claims
-
-Task 2.3 compares two forms of component removal. A frozen removal sets one Ridge coefficient to zero while holding the others and intercept fixed. A refit removes that feature and relearns remaining coefficients on the same OOF targets, at the same alpha 30,000. The first measures dependence of this particular fitted combination; the second measures whether other components can compensate under that fixed design.
-
-ItemKNN has the largest coefficient, about **0.046954**, yet removing it improves test NDCG by **0.004194** without refitting and **0.002524** with refitting. Removing FISM lowers test NDCG by **0.004608** in the frozen comparison, and removing SLIM lowers it by **0.004289**. These facts directly contradict interpreting coefficient magnitude as a percentage contribution to ranking success.
-
-The components are correlated; standardization changes coefficient units; the regression target is rating error while the reported outcome is NDCG. A feature can help a regression surrogate without improving the final ranking. Refitting also changes the remaining weights, so frozen and refit deltas answer related but different questions.
-
-`paired_summary` records per-user differences, counts of improved/worse/tied users, top-ten overlap, and a seeded 2,000-resample user bootstrap. Such intervals are conditional on this split and these trained fits. They do not include variation from new training seeds, new datasets, repeated model selection, or a fresh test holdout. An interval should therefore accompany a precise estimand rather than a broad claim of universal model importance.
-
-Task 2.3's result is explanatory evidence, not authorization to select a new reduced hybrid from test improvements. A deployable removal choice would need validation selection before a later evaluation. This is also the standard you apply when reviewing Victor's Task 2.6 improvement: distinguish an observed mechanism, a proposed change, and an independently evaluated improvement. [Sources: ablation code][coefficients], [coefficient report][coefficient-results].
-
-#### Figure B3. Why the largest coefficient is not the largest contribution
-
-<figure class="report-figure" id="figure-b3"><a href="figures/coefficient-ablation.svg"><img src="figures/coefficient-ablation.svg" alt="Fitted regression coefficients beside test NDCG changes from frozen and refitted component removal, with recorded paired user bootstrap intervals and a zero reference line."></a></figure>
-
-**Read the figure.** The left bars are coefficients multiplying per-user standardized component scores. Their units belong to the raw-rating regression. The right points ask a different question: how test NDCG changes when that component is removed. Orange holds the remaining fit fixed; green relearns remaining coefficients at the same Ridge penalty. A point to the right of zero means that removing the component improved this recorded ranking.
-
-**Interpretation.** ItemKNN receives the largest coefficient, yet its removal has a positive point estimate in both comparisons. FISM has a relatively large coefficient too, but removing it hurts. SLIM also causes a substantial loss on removal despite its smaller coefficient. The paired panels make the failure of a coefficient-as-importance interpretation visible: correlated score features and a rating-error training objective are not equivalent to independent contributions to ranking accuracy.
-
-Error bars show the recorded 95% paired user-bootstrap intervals. Several cross zero, including ItemKNN's refit interval, while its frozen-removal interval stays positive in this conditional analysis. This distinguishes uncertainty in a particular controlled comparison from a broad claim that the component is always harmful. The intervals hold the split and trained systems fixed; they omit new training fits, new data splits, and uncertainty from the model-selection process.
-
-The graph is descriptive evidence for Task 2.3. Choosing a reduced hybrid because its test removal looks favorable would reuse test for selection. It therefore motivates a development-only follow-up rather than declaring a newly selected best model.
-
-**Origin.** Coefficients come from the final frozen `hybrid.json`; removal deltas and intervals come from the existing Task 2.3 `weighted.csv`. Both are preserved at their original precision in the figure provenance record.
-
-### B9. Baselines, comparisons, metadata, and subgroup interpretation
-
-Caio's reference popularity baseline counts training interactions only; unseen-count catalogue items receive zero. The random baseline uses a local seeded generator and sorted users/items so dictionary insertion order does not change the sequence of scores. Both return `ScoreTable`s and use the same candidate contract as other models. They provide essential context: complexity is not useful if it fails to improve on simple popularity under the same task.
-
-`comparisons.py` reads completed test folders rather than retraining models. It requires matching split identity, dataset, partition, cutoff, relevance, candidate policy, metric definitions, aggregation, smoothing, group construction, catalogue/training sizes, and evaluation users. It rejects validation folders and duplicate labels. It writes aggregate CSV/JSON, per-user CSV, and source provenance. It does not establish that a human-selected folder was chosen without looking at test results.
-
-Victor's PR #26 replaces pending group reports with activity, recorded-gender, and top-three-training-genre user cohorts, plus popularity and genre item groups. For each user cohort it recomputes the shared metrics, including cohort-wide exposure statistics. A minimum group size of thirty is reported as a flag; smaller groups are still calculated. Genre cohorts overlap, so their user counts must not be added as if they formed a partition.
-
-The item report distinguishes recommendation slots, relevant hits, held-out relevant occurrences, precision/recall, and audience metrics. Audience quality weights a user's whole-list metric by their recommendation occurrences in a group. It is not precision restricted to that group's items. Multi-genre movies count in multiple genre memberships, so genre shares describe membership occurrences rather than mutually exclusive movie slots. For example, an Action/Comedy movie contributes one occurrence to each genre group. That differs from the fractional per-movie genre mass used by calibration: the two reports answer different questions and should not be combined without checking denominators.
-
-A smoke run of the updated PR #26 on saved original ItemKNN test lists completes with activity counts 321/310/312 and recorded-gender counts **273 F and 670 M**. That establishes operability on this input, not completed cross-model subgroup interpretation. The current PR changes five files, including updates to the existing validation and beyond-accuracy tests. In particular, missing-gender groups and unavailable metadata retain explicit counts and nulls in the revised test expectations.
-
-Definition text is partially corrected, not fully resolved. The emitted activity description now says 26/69, but uses strict inequalities that do not describe boundary users correctly; the helper actually uses `<=26` and `<=69`. The function docstring still mentions high activity above 92. User-genre membership is top three, while item genres are all supplied genres despite a top-one description. `pending_inputs` still contains the catalogue tuple instead of pending-reason metadata. These defects do not invalidate every numeric calculation, but make unqualified interpretation of emitted definitions unsafe. The evaluator still conflicts with current master and needs a consistent shared-writer API before combined use. [Sources: comparisons][comparisons], [updated group implementation][groups-pr].
-
-### B10. Exploratory analysis, unfinished work, and the project's claim boundary
-
-The repository also contains content-based experiments: genre cosine profiles, item-vector normalization, training-item IDF, raw-rating profile weights, and per-user Ridge predictors using genres with an optional release-year feature. These are useful exploratory evidence and negative controls; their existence does not complete every assigned explanatory task.
-
-The genre-only experiments perform poorly against popularity on their recorded validation comparison. IDF reaches roughly **0.0509 NDCG**, compared with popularity around **0.1807**. Per-user genre Ridge reaches roughly **0.0409**; adding the tested linear year feature falls to about **0.0244** despite reducing ties. These observations challenge those specific feature/objective choices, rather than establishing that content-based recommendation is impossible. The small zero-training-history item cohort is inadequate for a strong cold-start conclusion.
-
-At the refreshed snapshot, user-side fairness and the explanatory entrypoint remain placeholders. Group reporting is implemented in open PR #26. Gabriel's diversification and its numerical evidence are now merged through PR #28. The two hybrid/reranker orders are also implemented on master through PR #27. A stale message in the generic `task3.run()` does not override those real entrypoints and scripts. Task 3.3 cannot be inferred from the older cascade alone: it requires the explicit order comparison described next.
-
-The strongest current conclusion is methodological: comparable candidates, explicit objectives, training-only context, validation selection, frozen tests, and inspectable saved predictions make the results defensible within their scope. The remaining uncertainty concerns robustness, pending algorithms and interpretation, integration of open work, and reuse of an already inspected single test split. Those limits should remain visible in the final project narrative. [Sources: exploratory code][content], [order interfaces][orders], [explanatory placeholder][explanations].
-
-### B11. The newly merged comparison of hybrid/reranker orders
-
-Task 3.3 is now concrete code and evidence in merged PR #27. It compares rerank-then-combine, called **pre**, with combine-then-rerank, called **post**, for the frozen weighted Ridge hybrid. A second experiment compares rerank-then-route with route-then-rerank for the existing UserKNN/BPR switch. Bogdan owns these implementations; your responsibility includes reviewing the interface, candidate controls, and interpretation.
-
-<figure class="report-figure" id="figure-b4"><a href="figures/pipeline-orders.svg"><img src="figures/pipeline-orders.svg" alt="Two controlled paths through the same frozen weighted hybrid: rerank each component then convert ranks back to scores and combine, or combine original component scores then rerank; both use the same hybrid-selected top fifty pool."></a></figure>
-
-**Figure B4 — What changes when order changes.** Both weighted paths begin with scores standardized over each user's full eligible candidates, then use the **same unchanged-hybrid-selected top fifty**. Profiles, coefficients, base fits, K, and validation policy stay fixed. Positives outside the pool remain in the relevance denominator. This prevents the result from quietly comparing two different retrieval policies.
-
-Pre-reranking needs a real list-to-score rule. The implementation promotes a component's reranked top-ten prefix, appends the unselected pool items in that component's original score order, and assigns its original descending standardized score values to those positions. For example, scores `{a:3,b:2,c:1}` and prefix `[c]` become `{c:3,a:2,b:1}`. The multiset of values is preserved; those values are not replaced with arbitrary reciprocal ranks. Frozen Ridge weights then combine the reassigned scores, without standardizing again.
-
-Post-reranking combines the original standardized scores first, then applies one reranker to the hybrid. Each method/order chooses one strength on validation under the inherited 5% relative NDCG-loss limit. Pre uses that same strength across all six components, rather than tuning six independent strengths. Zero strength must reproduce the unchanged hybrid in both paths.
-
-The original frozen results are:
-
-| Hybrid | Method and strength | Order | Test NDCG | Relative NDCG loss | Target reduction |
-| --- | --- | --- | ---: | ---: | ---: |
-| Weighted, full | Genre, 0.5 | Pre | 0.386796 | 5.45% | 27.41% |
-| Weighted, full | Genre, 0.5 | Post | 0.379720 | 7.18% | 37.15% |
-| Weighted, full | Popularity, 0.75 | Pre | 0.395378 | 3.35% | 31.68% |
-| Weighted, full | Popularity, 0.75 | Post | 0.391661 | 4.26% | 37.85% |
-| Weighted, full | Exposure, 0.5 | Pre | 0.399308 | 2.39% | 3.95% |
-| Weighted, full | Exposure, 0.5 | Post | 0.388479 | 5.04% | 5.86% |
-| Switch, warm | Genre, 0.5 | Pre = post | 0.352646 | 5.19% | 36.10% |
-| Switch, warm | Popularity, 0.75 | Pre = post | 0.357064 | 4.00% | 41.15% |
-| Switch, warm | Exposure, 0.5 | Pre | 0.364221 | 2.08% | 4.64% |
-| Switch, warm | Exposure, 0.5 | Post | 0.356549 | 4.14% | 5.27% |
-
-Changes use each hybrid's own baseline: weighted **0.409095** with 1,682 catalogue items; switching **0.371960** within its 1,615-item warm scope. Targets are genre KL, popularity JS, and exposure Gini. Their reduction percentages are not a shared unit of benefit.
-
-For the weighted system, post-reranking improves each designated target more, at a larger accuracy cost. The result is conditional on the stated score-preserving conversion; it does not prove that every form of pre-reranking is weaker. Equal original scores can also make some promoted rank changes invisible to the combiner.
-
-For switching, local genre/popularity reranking commutes with fixed routing: the selected component supplies the same user-specific pool, scores, profile, and strength in either path. The experiment checks exact list equality at every validation strength and at the frozen test choices. That is stronger evidence than merely finding equal mean NDCG. Exposure does not commute under the declared policy. Pre-reranking allocates exposure over all 943 potential users separately for each component, including lists later discarded; post uses the final mixed cohort. Test exposure lists differ for **747 users**. Routing remains frozen at 733 UserKNN and 210 BPR users.
-
-**New reproduction evidence.** The original Windows caches were unavailable locally, so a separate reconstruction rebuilt thirty OOF fits and six full-training fits, recovered raw targets, and independently reselected Ridge alpha 30,000. Its split and fold memberships match the recorded design. Baseline test NDCG is **0.409041**, compared with original 0.409095. The largest selected-test discrepancy is post-exposure, **0.386825 instead of 0.388479**. All six selected strengths and the qualitative pre/post conclusions agree.
-
-The reconstruction's saved 38 evaluations and 35,834 lists were audited; this report refresh also recomputed their saved metric arithmetic, masks, full relevance, and validation choices. It is close reproduction, not byte-identical replay. Different runtime versions and KNN neighbor tie handling are possible contributors, not a demonstrated causal explanation. The original and rebuilt result folders remain separate. Neither result removes the reused-test limitation. [Sources: order implementation][orders], [switching order code][switch-orders], [experiment protocol][order-protocol], [original combined results][order-results], [independent reconstruction][weighted-reproduction].
-
-### B12. Gabriel's newly merged diversification: three separate objectives
-
-Merged PR #28 implements three variants behind `diversification.rerank`, selected by `attribute="genre"`, `"popularity"`, or `"coverage"`. All share the existing candidate checks, deterministic tie-breaking, min-max relevance normalization, and exact strength-zero baseline. They are separate alternatives, not one method simultaneously optimizing all beyond-accuracy properties.
-
-| Variant | Bonus added to `(1-strength)*relevance` | Selection target |
+| Design | Information transferred | Main decision or trade-off |
 | --- | --- | --- |
-| Genre variety | Mean Jaccard distance to items already selected for that user | Maximize ILD@10. |
-| Long-tail discovery | Smoothed training self-information, min-max normalized within that user's pool | Maximize MeanSelfInformation@10. |
-| Catalogue reach | One if the item has not yet been recommended in this cohort call; otherwise zero | Maximize CatalogueCoverage@10. |
+| Switching | A choice of one whole model per user | Routing can exploit support differences without calibrating scores. |
+| Cascade | A candidate shortlist for another scorer | Retrieval can make relevant items unreachable. |
+| Feature combination | Several feature vectors into a learned scorer | Extra capacity can learn interactions or overfit them. |
+| Feature augmentation | Inferred values added to a receiver's inputs | Receiver training must distinguish inferred inputs from observed targets. |
+| Meta-level | A learned representation used by another model | Improvement depends on whether the representation helps that model's similarity rule. |
 
-Genre diversity rewards being different from the growing prefix. At its first position, that bonus is zero, so the original score and external ID resolve the choice. It does not compare against the user's historical genre proportions. That is the contrast with your genre calibration: a varied list and a historically proportionate list are not necessarily the same list.
+<!-- role: method -->
+Switching selects UserKNN or BPR using training-derived features such as history length and neighborhood support. A validation grid chooses routing thresholds, including constant-model controls. Because it chooses an entire score row, it avoids numerical score fusion. Its warm-item experiment includes 1,615 training-supported movies and 19,588 test positives, so the control must use that same scope.
 
-Long-tail discovery uses `-log2((count+1)/(training_interactions+catalogue_size))`. The context now includes `item_counts`, validated as nonnegative integer counts for external IDs. The additional normalization gives novelty a bounded within-pool scale before combining it with relevance. Your popularity calibration instead minimizes disagreement with a user's head/middle/tail profile. A user with a popular-history profile can receive a well-calibrated list that is not very novel.
+<!-- role: method -->
+The cascade uses ItemKNN to retrieve candidates and BPR to order them. It selects component settings and shortlist depth jointly by final validation NDCG. Joint selection matters because the best standalone retriever and scorer need not be the best pair. History masking occurs before retrieval, and relevant items missed by the shortlist remain in the evaluation denominator. Reported candidate fractions indicate scoring volume, rather than measured speed gains.
 
-Coverage is cohort-dependent. It traverses rank rounds and sorted users with a fresh global covered-item set. Once an item appears, additional appearances receive no coverage bonus. Exposure fairness instead accumulates discounted appearances and continues distinguishing differently exposed movies. Neither objective guarantees the other, and neither can retrieve outside the supplied pool.
+<!-- role: method -->
+Feature combination concatenates frozen BPR user and item vectors and trains a multilayer perceptron (MLP) with two hidden layers and a pairwise ranking loss. Its ReLU activations clip negative values to zero. A metadata-feature variant supplies a different input control. A residual variant instead adds an MLP correction to the frozen BPR score. Its final layer starts at zero, making its initial prediction exactly the BPR control and allowing validation to retain that option.
 
-The registry adds maximizing target directions and method-specific manifest fields. Compatible frozen selections that omit a newly registered method mark it unavailable rather than tuning it on test. Input and source identity checks remain in force; this rule does not make an old selection reusable after arbitrary code changes.
+<!-- role: method -->
+Feature augmentation adds normalized positive UserKNN predictions to previously unobserved entries in EASE or SLIM's input matrix. Observed binary targets remain unchanged, and the receiving model is refitted. Since augmented input X differs from target R, EASE solves the constrained objective <code>||R−XB||² + λ||B||²</code>. Treating inferred entries as observed targets would change the learning problem. A matched unaugmented receiver isolates the augmentation effect.
 
-<figure class="report-figure" id="figure-b5"><a href="figures/diversification-validation-tradeoffs.png"><img src="figures/diversification-validation-tradeoffs.png" alt="PR twenty eight validation curves for genre variety, novelty and catalogue coverage across six models; stars show the frozen choices and the five percent loss boundary is positive on the horizontal axis."></a></figure>
+<!-- role: method -->
+The meta-level hybrid transfers BPR user vectors into a neighborhood model. Positive cosine similarities between those vectors determine neighbors; self-similarity is excluded. Neighbor weights applied to the training interaction matrix produce item scores. An interaction-cosine control changes the similarity representation while preserving the neighborhood mechanism.
 
-**Figure B5 — Read the sign convention carefully.** Unlike A2's accuracy-change axis, the horizontal axis here is **NDCG loss**, so the feasible side of the +5% line is to the left. The three panels are different objectives; colors distinguish base models. Stars mark the highest available target within the validation constraint. Greater strengths can improve the target while imposing much larger accuracy costs, especially for novelty. The connecting segments are the declared discrete strength sweep, not a continuously estimated frontier.
+### Controlled results and component contribution
 
-<figure class="report-figure" id="figure-b6"><a href="figures/diversification-test-effects.png"><img src="figures/diversification-test-effects.png" alt="Frozen test effects of the three diversification methods across six models, with grey accuracy changes, colored target gains and red outlines for losses greater than five percent."></a></figure>
+<figure class="report-figure" id="figure-12"><a href="figures/hybrid-comparisons.svg"><img src="figures/hybrid-comparisons.svg" alt="Validation and test NDCG for the weighted hybrid and its components, and for alternative hybrids with their matched controls."></a></figure>
 
-**Figure B6 — What the new six-model evidence supports.** The experiment covers ItemKNN, UserKNN, BPR, SLIMElastic, EASE, and FISM using checked-in configurations without another model-tuning search. Test ILD gains range from **4.66–12.11%**, novelty gains from **1.00–2.47%**, and catalogue-coverage gains from **44.55–143.20%**, relative to each model's own original value. Those three scales cannot be compared as interchangeable improvements in user benefit.
+**Figure 12. Read each experiment beside its own control.** The left panel compares the Ridge hybrid with its retained components. The right compares the alternative hybrids. Weak UserKNN-to-SLIM augmentation reaches test NDCG 0.411904 against its paired receiver's 0.403254, about 2.15% higher. Full catalogue scope is common to these panels; warm switching is evaluated separately.
 
-Four of eighteen diversification cases exceed 5% test NDCG loss: FISM genre/novelty and SLIM/EASE coverage. The largest loss is EASE coverage, **7.15%**. Some novelty points improve NDCG too; no monotonic accuracy penalty is assumed. The frozen choices are retained without reselection.
+<!-- role: evidence -->
+More transferred information does not consistently help. Stronger SLIM augmentation yields a smaller gain, and weak EASE augmentation reaches 0.403747 against the receiver's 0.404872. Plain feature combination averages about 0.345623 across three scorer seeds; the residual variant averages 0.373233 against its BPR control's 0.373665. These seeds vary the added scorer while keeping the underlying BPR fit fixed.
 
-UserKNN coverage illustrates the relative/absolute distinction. Its catalogue fraction rises from about **10.05% to 24.44%**: roughly **143.20% relative gain**, but about **14.39 percentage points** and still far below covering the whole catalogue. A large coverage bar does not establish equal exposure or subgroup fairness. Panel ranges differ, and red outlines flag the test accuracy-budget overruns.
+<!-- role: evidence -->
+Switching reaches 0.371960 against matching warm UserKNN at 0.368763. The selected cascade reaches 0.384593, and the BPR-vector meta-level model reaches 0.375364 against its interaction-cosine control at 0.369014. The meta-level ordering reverses between validation and test. That reversal is an observed outcome, not a reason to redefine selection after seeing test scores.
 
-Both figures are copied unchanged from PR #28's committed evidence, now on master. That evidence reports an audit of 228 evaluations and 215,004 lists. The present refresh independently checks the compact validation choices and final tables across all six models; it does not claim a new full replay of every original raw list. The evidence retains its generating runtime and source hashes, including generation before the final packaging commit. Merged source and generating experiment identity are therefore kept distinct. These remain single-seed results on the reused split. [Sources: diversification implementation][diversification], [six-model evidence][diversification-results], [plotting source][diversification-plots].
+<!-- role: definition -->
+An <strong>ablation</strong> removes or replaces part of a system to examine its contribution. A frozen component removal sets one Ridge coefficient to zero while keeping the others fixed. A refitted removal relearns the remaining coefficients on the same out-of-fold rows at the same penalty. The first measures dependence of this fitted combination; the second asks how much the other components can compensate.
 
-To defend a diversification result, name the input pool, the bonus, its state, the target, and the frozen strength. Then trace one chosen item. This connects an attractive aggregate chart to a concrete algorithmic choice and makes it easier to detect accidental substitutions between novelty, calibration, coverage, and exposure.
+<figure class="report-figure" id="figure-13"><a href="figures/coefficient-ablation.svg"><img src="figures/coefficient-ablation.svg" alt="Ridge coefficients beside changes in test NDCG after frozen and refitted component removal, with paired user-bootstrap intervals."></a></figure>
 
-## Evidence, navigation, and reproduction
+**Figure 13. Weight magnitude and ranking utility differ.** ItemKNN has the largest coefficient, about 0.046954, yet removing it improves test NDCG by 0.004194 without refitting and 0.002524 with refitting. Frozen FISM removal instead lowers NDCG by 0.004608. Positive values in the removal panel mean that the removal helped.
 
-The two substantive halves have equal word counts under the same rule, including figure explanations; the measured counts are in `verification.json`. Each half has six annotated figures. Snapshot metadata, references, and this navigation section sit outside that allocation.
+<!-- role: reasoning -->
+Correlated component scores, standardized feature units and the squared-rating-error objective explain why coefficients are not contribution percentages. The ranking outcome depends on order changes near the top, rather than only on regression fit. A large weight can accompany a harmful marginal effect in one fitted system.
 
-| Figure | Existing work shown | How to use it |
-| --- | --- | --- |
-| [A1: Training popularity](#figure-a1) | Saved training counts and item-band memberships | Separate catalogue share from interaction share. |
-| [A2: Validation trade-offs](#figure-a2) | Original six-model validation plot | Read feasible strengths and selected operating points. |
-| [A3: Frozen test effects](#figure-a3) | Original six-model test plot | Read gains, losses, and failures of budget transfer. |
-| [A4: Information flow](#figure-a4) | Illustrated training/selection/test responsibilities | Trace which labels can influence each decision. |
-| [A5: One calibration step](#figure-a5) | Numerical example of the implemented objective | Recalculate smoothing, KL and the greedy choice. |
-| [A6: Shared exposure](#figure-a6) | Two-user illustration of cohort state | Explain why one recommendation changes another user's result. |
-| [B1: Individual tuning](#figure-b1) | All 34 EASE/SLIM trial records | Assess regularization sensitivity and small selection gains. |
-| [B2: Hybrid comparisons](#figure-b2) | Final OOF and corrected alternative-hybrid results | Compare within experiment families using the proper controls. |
-| [B3: Coefficients and ablation](#figure-b3) | Frozen coefficients and recorded removal experiments | Distinguish regression weight from measured ranking utility. |
-| [B4: Hybrid/reranker orders](#figure-b4) | Illustrated pre/post paths on merged master | Identify the fixed controls and list-to-score conversion. |
-| [B5: Diversification validation](#figure-b5) | Original latest-PR six-model plot | Read maximizing targets and the positive loss axis. |
-| [B6: Diversification test](#figure-b6) | Original latest-PR frozen test plot | Separate relative target gains from percentage-point changes. |
+<!-- role: limitation -->
+The error bars are paired user-bootstrap intervals. A <strong>bootstrap</strong> repeatedly resamples users, keeping the competing predictions paired for each sampled user, then recalculates the difference. These intervals quantify uncertainty conditional on the split and fitted models. They omit new training, new split and selection variability. Favorable test ablations can explain behavior, but choosing a new reduced model requires development-data selection.
 
-`figures/manifest.json` records source hashes, asset hashes, and plotted values. Four original plots are copied byte-for-byte; four views visualize saved measurements; four diagrams explain implemented behavior or toy arithmetic. The generator does not train models, tune parameters, or reevaluate recommendation lists. PR #28's figure-data JSON has LF line endings in Git; restoring CRLF reproduces its recorded Windows hash. Its PNG/PDF hashes match directly. The packaged summary and figure data preserve their own checked-out hashes.
+## 9. Why hybrid and reranking order can matter
 
-| What to inspect | Main entrypoints | Report sections |
-| --- | --- | --- |
-| Metric arithmetic and edge cases | `metrics/accuracy.py`, `metrics/beyond_accuracy.py`, `metrics/_validation.py` | A2–A4 |
-| Training-only context and metadata | `data.py:prepare_metadata`, `activity_terciles`, `item_popularity_groups` | A5, B9 |
-| Reranker algorithms in PR #24 | `rerankers/calibration.py`, `item_fairness.py`, `_common.py` | A6–A7 |
-| Strength choice and provenance in PR #24 | `rerank.py:run_reranking`, `select_strength`, `source_identity` | A8–A10 |
-| Data/model boundary | `recbole_adapter.py:train`, `export_scores`, `partition_predictions` | B2–B4 |
-| Weighted hybrid | `hybrids.py`, `oof_hybrid.py`, `raw_rating_target.py`, `ridge_search.py` | B5 |
-| Alternative hybrids | `switching.py`, `cascade.py`, `feature_combination.py`, `residual_combination.py`, `feature_augmentation.py`, `meta_level.py` | B6–B7 |
-| Portable replay | `hybrid_bundle.py`, `scripts/evaluate_alternate_bundle.py` | B2, B7 |
-| Contribution analysis | `analysis/coefficients.py`, `scripts/analyze_hybrid_coefficients.py` | B8 |
-| Final comparison and subgroup reporting | `comparisons.py`, PR #26 `analysis/groups.py` | B9 |
-| Merged hybrid/reranker orders | `experiments/task3.py:score_preserving_permutation`, `switching_orders.py` | B11 |
-| Newly merged diversification | PR #28 `rerankers/diversification.py`, `rerank.py:METHODS` | A13, B12 |
+<!-- role: opening -->
+Combining models and reranking their outputs are different operations, so changing their order can change the final list. The order experiment fixes the component fits, profiles, coefficients, list length and candidate policy. This isolates the consequence of placing the same intervention before or after combination.
 
-Fresh verification: final merged master and PR #28 each ran **196 tests**, with one plotting test skipped because Matplotlib was unavailable in the project runtime. Warnings were treated as errors. The weighted reconstruction's 38 evaluations/35,834 lists were rechecked for accuracy, independent target arithmetic, masks, relevance, pool membership, baseline controls, and frozen choices. PR #28's compact evidence passed 36 selection checks, 42 final-row checks, 18 diversification summaries, and source-figure hashes. A real saved-cohort smoke run of updated PR #26 passed; its full suite and the combined PR integration were not run.
+### A controlled comparison for the weighted hybrid
 
-The earlier report's original six-model reranking audit, 1,237 bundle checksums, and alternative-hybrid portable replay remain dated historical checks in `verification.json`. They are not relabeled as fresh runs. This refresh did not retrain models. Figure generation, image inspection, assessment checks, browser rendering, and portable packaging are verified separately.
+<!-- role: method -->
+Both weighted paths standardize scores over the full eligible catalogue and use the same top-fifty pool chosen by the unchanged hybrid. In the <strong>pre</strong> path, each component is reranked before frozen Ridge fusion. In the <strong>post</strong> path, Ridge first combines the original component scores and one reranker then changes the hybrid list. Positives outside the pool remain in the relevance denominator.
 
-For the normal project suite, run from a checkout containing the desired source:
+<figure class="report-figure" id="figure-14"><a href="figures/pipeline-orders.svg"><img src="figures/pipeline-orders.svg" alt="Matched pre and post paths: rerank component lists then fuse reassigned scores, or fuse original scores then rerank, using the same top-fifty pool."></a></figure>
 
-```sh
-/home/senteran/programming/RecBole_DSAIT4335/.venv/bin/python \
-  -W error -m unittest discover -s project/tests -v
-```
+**Figure 14. A reranked list needs a score interpretation before fusion.** The pre path promotes the selected component prefix, appends unselected items in their original order and assigns the component's original descending standardized values to those positions. This preserves the score values while changing which items receive them. The post path changes the already combined ranking.
 
-For the saved reranking audit, use PR #24's checkout and the local bundle:
+<!-- role: example -->
+With scores {a:3,b:2,c:1} and reranked prefix [c], the pre conversion becomes {c:3,a:2,b:1}. It preserves the <strong>multiset</strong> of values—the values including their repetition counts. It does not replace them with reciprocal ranks. Ridge then uses its existing weights without another normalization. Equal score values can make some promoted order changes invisible to the combiner.
 
-```sh
-cd /home/senteran/programming/RecBole_DSAIT4335/project/artifacts/worktrees/jacek-rerankers
-/home/senteran/programming/RecBole_DSAIT4335/.venv/bin/python \
-  -m project.scripts.verify_reranking \
-  --run /home/senteran/programming/RecBole_DSAIT4335/project/artifacts/reranking-20261022-001/evaluation \
-  --output /tmp/reranking-study-verification.json
-```
+<!-- role: method -->
+Each method/order selects one validation strength under the same five-percent budget. Pre uses that strength for all six components, avoiding six additional independent choices. Zero strength reproduces the original hybrid in both paths. These controls make the result about one specified conversion and order policy, rather than every possible interpretation of pre-reranking.
 
-The saved bundle is local and ignored by Git. A fresh clone can inspect the committed compact hybrid evidence and portable alternative weights; it does not automatically contain the large reranking checkpoints or historical OOF caches. Historical notes are useful for provenance, but use the final corrected reports linked above for current numbers. No generalization or causal claim is added merely because a reconstruction matches stored values.
+**Table 5. Weighted-hybrid test outcomes. Its original NDCG is 0.409095.**
 
-[assignments]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/work_distribution.md
-[accuracy]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/metrics/accuracy.py
-[metric-validation]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/metrics/_validation.py
-[contracts]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/contracts.py
-[evaluation]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/evaluation.py
-[beyond]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/metrics/beyond_accuracy.py
-[data]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/data.py
-[pr24]: https://github.com/jacek-kulik/RecBole-6/pull/24
-[pr26]: https://github.com/jacek-kulik/RecBole-6/pull/26
-[rerank]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerank.py
-[calibration]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerankers/calibration.py
-[item-fairness]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerankers/item_fairness.py
-[rerank-common]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/rerankers/_common.py
-[rerank-audit]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/scripts/verify_reranking.py
-[protocol]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/configs/protocol.yaml
-[adapter]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/recbole_adapter.py
-[artifacts]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/artifacts.py
-[bundle]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/hybrid_bundle.py
-[model-configs]: https://github.com/jacek-kulik/RecBole-6/tree/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/configs/models
-[framework]: https://github.com/jacek-kulik/RecBole-6/tree/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/recbole/model/general_recommender
-[fism]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/recbole/model/general_recommender/fism.py
-[retuning]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-1.1-retuning-ease-slim.md
-[oof-doc]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/OOF_HYBRID.md
-[hybrids]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/hybrids.py
-[oof]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/oof_hybrid.py
-[oof-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-1.3-final-results.md
-[alternatives]: https://github.com/jacek-kulik/RecBole-6/tree/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys
-[alternate-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-1.4-corrected-hybrid-comparison.md
-[coefficients]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/analysis/coefficients.py
-[coefficient-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-2.3-coefficient-analysis.md
-[comparisons]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/comparisons.py
-[groups-pr]: https://github.com/jacek-kulik/RecBole-6/blob/a3a55153f426727afd20091a33f39050c02cf815/project/recsys/analysis/groups.py
-[content]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/content_based.py
-[orders]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/experiments/task3.py
-[explanations]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/analysis/explanations.py
-[rerank-plots]: https://github.com/jacek-kulik/RecBole-6/blob/580bfaa63de4b176b2018e6e2a5108e8f9e390c7/project/scripts/plot_reranking.py
+| Target | Pre NDCG loss | Pre target reduction | Post NDCG loss | Post target reduction |
+| --- | ---: | ---: | ---: | ---: |
+| Genre mismatch | 5.45% | 27.41% | 7.18% | 37.15% |
+| Popularity deviation | 3.35% | 31.68% | 4.26% | 37.85% |
+| Exposure Gini | 2.39% | 3.95% | 5.04% | 5.86% |
 
-[pr27]: https://github.com/jacek-kulik/RecBole-6/pull/27
-[pr28]: https://github.com/jacek-kulik/RecBole-6/pull/28
-[switch-orders]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/recsys/experiments/switching_orders.py
-[order-protocol]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/RERANKING_ORDERS.md
-[order-results]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/project/reports/task-3.3-reranking-orders.md
-[weighted-reproduction]: https://github.com/jacek-kulik/RecBole-6/blob/1dc9587d273b9084c70ab274e2d3d90cbc8a7eaf/hyperparameters/results/task-3.3-weighted-reproduction-2026-10-25/README.md
-[diversification]: https://github.com/jacek-kulik/RecBole-6/blob/87321da05b01eaf825420371d44899a4583f0fa2/project/recsys/rerankers/diversification.py
-[diversification-results]: https://github.com/jacek-kulik/RecBole-6/tree/87321da05b01eaf825420371d44899a4583f0fa2/hyperparameters/results/task-3.1-diversification-six-models-60-20-20
-[diversification-plots]: https://github.com/jacek-kulik/RecBole-6/blob/87321da05b01eaf825420371d44899a4583f0fa2/project/scripts/plot_diversification.py
+<!-- role: interpretation -->
+Post-reranking produces the greater reduction for every designated target, with a larger NDCG cost. The intervention acts directly on the final hybrid list, whereas fusion can partly counteract separate component changes. This interpretation is conditional on the fixed pools and score-preserving conversion. It provides no universal dominance result across other pre-processing rules.
+
+### Fixed routing versus shared cohort state
+
+<!-- role: reasoning -->
+For switching, user-local calibration gives identical lists before and after fixed routing when scores, pools, profiles and strength match. The route chooses the same component for the user, so the same deterministic local operation sees the same input. Such operations <strong>commute</strong>: their order gives the same result under those conditions.
+
+<!-- role: evidence -->
+The experiment establishes exact list equality at every tested validation strength and at the selected test strengths, which is stronger than equality of mean NDCG. The route sends 733 users to UserKNN and 210 to BPR. Its genre and popularity outcomes therefore coincide for the two orders.
+
+<!-- role: reasoning -->
+Exposure allocation depends on other users, so the same argument fails. Pre-reranking maintains separate counters over all potential users for each component, including component lists that routing later discards. Post-reranking maintains one counter over the final mixed cohort. The two policies generate different exposure histories even for a user whose own scores are unchanged.
+
+<!-- role: evidence -->
+Exposure lists differ for 747 test users. Pre loses 2.08% NDCG while reducing Gini by 4.64%; post loses 4.14% while reducing Gini by 5.27%. The result connects an aggregate trade-off to a specific state policy. It also shows why treating a cohort-dependent reranker as an independent transformation of each user would misdescribe the algorithm.
+
+## 10. Diversification: three distinct goals
+
+<!-- role: opening -->
+Gabriel's diversification methods promote genre variety, novelty or catalogue coverage. Each uses the same relevance term and strength interface as the other rerankers, but adds one designated bonus. They are alternatives with different targets, rather than one algorithm that simultaneously optimizes all beyond-accuracy outcomes.
+
+<!-- role: method -->
+Genre diversification adds the mean Jaccard distance between a candidate and the selected prefix. Its first-position bonus is zero because there is no earlier item to compare against. Later choices favor items different from what is already selected. Historical genre proportions do not enter this objective, which distinguishes variety from your genre calibration.
+
+<!-- role: method -->
+Novelty diversification adds training self-information, min-max normalized within the user's pool. Candidate novelty is fixed for that user and pool, whereas a genre-variety bonus changes as the prefix grows. Equal novelty values become zero after normalization. A head-heavy user can therefore receive a novel list that matches their history less closely.
+
+<!-- role: method -->
+Coverage diversification uses bonus one for an item not yet recommended anywhere in the current cohort call, otherwise zero. It visits rank rounds and sorted external user IDs, resetting its covered-item set each call. This is another cohort-dependent method, but it tracks first appearance rather than discounted repeated exposure. A new movie helps coverage even if many other appearances remain concentrated.
+
+<figure class="report-figure" id="figure-15"><a href="figures/diversification-validation-tradeoffs.png"><img src="figures/diversification-validation-tradeoffs.png" alt="Validation target gains for genre variety, novelty and coverage over six tuned models, with frozen strength choices."></a></figure>
+
+**Figure 15. The horizontal sign differs from Figure 9.** Here the axis is NDCG loss, so points to the left of +5% satisfy the budget. Stars mark the best target within that feasible set. The panels show different targets and use different ranges. Lines join discrete strengths; they do not demonstrate a continuous optimal frontier.
+
+<!-- role: evidence -->
+Tuned FISM keeps novelty strength at zero. Its first positive strength, 0.25, loses about 5.45% validation NDCG, and every larger tested strength is also infeasible. Zero is a valid outcome of the constrained selection rule. A finer grid below 0.25 might locate a feasible intervention, but these results do not establish that it exists.
+
+<figure class="report-figure" id="figure-16"><a href="figures/diversification-test-effects.png"><img src="figures/diversification-test-effects.png" alt="Frozen test NDCG changes and designated target gains for the three diversification variants on six tuned models."></a></figure>
+
+**Figure 16. Diversification has model-dependent costs.** Genre ILD rises by 4.67–9.66%, and catalogue coverage by 48.25–141.77%. Novelty gains range from zero for unchanged FISM to 2.05%. Grey bars show NDCG changes; colored bars show gains in that panel's target. Different target scales cannot be treated as equal amounts of benefit.
+
+<!-- role: evidence -->
+Two of eighteen diversification choices exceed five-percent test NDCG loss: SLIM and EASE coverage. Combined with the calibration/exposure study, nine of 36 choices exceed that reference on test. Some novelty choices improve both their target and accuracy: EASE gains about 1.58% self-information and 0.80% NDCG. Higher beyond-accuracy performance therefore does not imply an unavoidable accuracy penalty at every operating point.
+
+<!-- role: interpretation -->
+UserKNN coverage rises from about 10.11% to 24.44% in this study. That is roughly 141.77% relative gain but only 14.33 percentage points. A large relative bar is easier to obtain from a small baseline. The resulting catalogue share remains far below complete coverage and says nothing by itself about equal exposure or user-group quality.
+
+<!-- role: limitation -->
+All three methods act within the supplied candidate pools. Novelty cannot introduce an unseen tail movie if every model has excluded it from the top fifty. Genre variety can be constrained by similar candidate genres, and coverage can saturate when users share a narrow pool. Broader retrieval and reranking strength therefore address different bottlenecks.
+
+## 11. Group analysis: who and what receives the result?
+
+<!-- role: opening -->
+Overall averages can hide systematic differences between users and items. Victor's group-analysis implementation recomputes the shared metrics within defined cohorts and reports how recommendations, hits and exposure are distributed across item groups. It provides diagnostics for understanding an intervention. The user-fairness reranker itself remains unimplemented.
+
+### User groups and their denominators
+
+<!-- role: method -->
+Activity groups divide users by training-history counts using one-third and two-third quantiles. The current boundaries are 26 and 69: low is at most 26, medium is above 26 and at most 69, and high is above 69. Their sizes are 321, 310 and 312. Equal counts remain together, so a tercile rule need not create exactly equal groups.
+
+<!-- role: method -->
+Recorded-gender groups contain 273 F and 670 M users, with an explicit unknown group when required. Genre-preference cohorts use the user's three largest training genre-profile entries. A user can belong to several genre cohorts, so their counts overlap. These groups answer different questions about data availability, recorded attributes and observed taste.
+
+**Table 6. EASE test NDCG by training activity, illustrating why a mean needs context.**
+
+| Cohort | Users | Original | Genre calibration | Exposure reranking |
+| --- | ---: | ---: | ---: | ---: |
+| Low activity | 321 | 0.292260 | 0.258763 | 0.272368 |
+| Medium activity | 310 | 0.328824 | 0.313383 | 0.303654 |
+| High activity | 312 | 0.596292 | 0.563742 | 0.573300 |
+
+<!-- role: interpretation -->
+High-activity users receive much higher NDCG in this comparison. They have richer training histories and a different held-out relevance profile; the table alone does not isolate which factor causes the difference. Both interventions reduce NDCG in every activity cohort, while the sizes of the losses differ. A successful target reduction at the population level therefore does not establish uniform user benefit.
+
+<!-- role: method -->
+The report flags cohorts smaller than thirty but still calculates their measurements when possible. A flag warns about limited evidence; it does not suppress estimates or make them reliable. Empty cohorts retain explicit counts and unavailable values. Any explanation of a group mean should identify its population before interpreting a difference.
+
+### Item quality and audience quality are different measurements
+
+<!-- role: definition -->
+An item group's <strong>conditional precision</strong> divides relevant recommendations from that group by all recommendations from that group. Its recall divides group hits by held-out relevant items in that group. These are pooled item-occurrence calculations, unlike the macro means of per-user precision and recall. Their denominators make the questions precise.
+
+<!-- role: example -->
+EASE originally recommends only five tail-item slots across all users, with two hits. Tail precision is therefore 40%, but tail recall is only 2/3,891, about 0.0514%. After exposure reranking there are 186 tail slots and 26 hits: precision falls to about 13.98%, while recall rises to about 0.6682%. Lower conditional precision accompanies many more recovered tail interactions.
+
+<!-- role: interpretation -->
+The original 40% estimate is based on just five recommendations and cannot establish broad success for tail movies. The changed precision/recall pair instead describes a coverage–selectivity trade-off: a larger, less accurate set of tail recommendations retrieves more tail positives. Reporting only one denominator would obscure this behavior.
+
+<!-- role: definition -->
+An item group's <strong>audience accuracy</strong> describes the whole-list quality of the users receiving that group's items. Each user's metric contributes once per occurrence of the group's movies in their list. It answers “What recommendation quality do these recipients experience?” rather than “How often are this group's items hits?” The implementation also supplies analogous audience summaries for available per-user beyond-accuracy measures.
+
+<!-- role: reasoning -->
+Item-genre groups count all memberships of a multi-genre movie. An Action/Comedy recommendation contributes once to each group, so genre membership shares need not describe disjoint recommendation slots. Calibration instead divides one movie's mass across its genres. Both conventions are coherent for their respective questions; combining their numbers requires preserving that denominator distinction.
+
+<!-- ownership: shared:end -->
