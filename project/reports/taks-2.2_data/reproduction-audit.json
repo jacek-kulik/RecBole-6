@@ -1,0 +1,108 @@
+{
+  "checks": [
+    "CSV and JSON agree",
+    "per-user means agree with summaries",
+    "all six accuracy metrics independently reconstructed from rankings and relevance",
+    "gender gaps independently reconstructed",
+    "catalogue coverage and Lorenz exposure Gini independently reconstructed",
+    "all splits byte-identical across eight fits",
+    "split sizes and disjointness verified",
+    "candidate histories excluded",
+    "comparison SHA256 values verified"
+  ],
+  "models": 8,
+  "original_commit": "2c1280551f323507185a1e3a416a86831834c3d3",
+  "original_vs_reproduced": {
+    "BPR": {
+      "NDCG@10": {
+        "difference": 8.881784197001252e-16,
+        "original": 0.35449731485115216,
+        "reproduced": 0.35449731485115304
+      },
+      "matches_original_within_1e-12": true,
+      "max_absolute_metric_difference": 1.7763568394002505e-15
+    },
+    "EASE": {
+      "NDCG@10": {
+        "difference": 4.440892098500626e-16,
+        "original": 0.4048716310149402,
+        "reproduced": 0.40487163101494067
+      },
+      "matches_original_within_1e-12": true,
+      "max_absolute_metric_difference": 8.326672684688674e-16
+    },
+    "FISM": {
+      "NDCG@10": {
+        "difference": 3.885780586188048e-16,
+        "original": 0.34876484551452414,
+        "reproduced": 0.3487648455145245
+      },
+      "matches_original_within_1e-12": true,
+      "max_absolute_metric_difference": 8.881784197001252e-15
+    },
+    "ItemKNN": {
+      "NDCG@10": {
+        "difference": -0.0003114200407572376,
+        "original": 0.36370716561966226,
+        "reproduced": 0.363395745578905
+      },
+      "matches_original_within_1e-12": false,
+      "max_absolute_metric_difference": 0.0012106751502302115
+    },
+    "Popularity": {
+      "NDCG@10": {
+        "difference": 0.04935285891986513,
+        "original": 0.16237232134107824,
+        "reproduced": 0.21172518026094336
+      },
+      "matches_original_within_1e-12": false,
+      "max_absolute_metric_difference": 0.2436223631560912
+    },
+    "Random": {
+      "NDCG@10": {
+        "difference": 0.007369158443431562,
+        "original": 0.00712436167798518,
+        "reproduced": 0.014493520121416742
+      },
+      "matches_original_within_1e-12": false,
+      "max_absolute_metric_difference": 0.9869203329369798
+    },
+    "SLIM": {
+      "NDCG@10": {
+        "difference": 6.106226635438361e-16,
+        "original": 0.40326573385909437,
+        "reproduced": 0.403265733859095
+      },
+      "matches_original_within_1e-12": true,
+      "max_absolute_metric_difference": 1.7763568394002505e-15
+    },
+    "UserKNN": {
+      "NDCG@10": {
+        "difference": 0.0003376176480259785,
+        "original": 0.3683188537620898,
+        "reproduced": 0.36865647141011576
+      },
+      "matches_original_within_1e-12": false,
+      "max_absolute_metric_difference": 0.0013258645721327955
+    }
+  },
+  "per_user_rows": 7544,
+  "published_csv_line_endings": "LF; values unchanged from raw CRLF run outputs",
+  "published_sha256": {
+    "comparison.csv": "edaa4dda2e7b98fb9d6bbd5ac050a71a02dc93c79f35259b21a040155e08a0a3",
+    "comparison.json": "3214531b0058964acbecc9eca5a4d65f61e1bcfbc63d47c28240c35e5dad9f51",
+    "manifest.json": "5ccac5be1da5238fd0c86177e06af3d448617f3c676ea4ed1019c926001a9ddb",
+    "per_user.csv": "6e351065cd183a0e652fc7586e4dc211725e3f446af624d8529e465d625ea41c"
+  },
+  "runtime": {
+    "numpy": "2.4.6",
+    "python": "3.11.16 (main, Aug 27 2026, 06:18:40) [GCC 16.1.1 20260728]",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.17.1",
+    "torch": "2.13.0+rocm7.2"
+  },
+  "source_commit": "92a2c9461ddbc438eab0fc8da1959bb9b82893ba",
+  "status": "passed",
+  "unit_tests": 152,
+  "warnings_as_errors": true
+}
